@@ -61,6 +61,7 @@ import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
 import co.sorsby.debugtoolkit.core.model.NetworkTransport
 import co.sorsby.debugtoolkit.core.model.WifiSignal
 import co.sorsby.debugtoolkit.feature.NetworkViewModel
+import co.sorsby.debugtoolkit.ui.components.InfoCard
 import co.sorsby.debugtoolkit.ui.components.ScreenList
 import co.sorsby.debugtoolkit.ui.components.SectionHeader
 import co.sorsby.debugtoolkit.ui.components.yesNo
@@ -108,6 +109,7 @@ fun NetworkScreen(
             )
         }
         item { NetworkDetails(snapshot) }
+        item { InfoCard(stringResource(R.string.network_capacity_explanation)) }
     }
 }
 
@@ -332,14 +334,14 @@ private fun NetworkDetails(snapshot: NetworkSnapshot) {
             DetailRow(stringResource(R.string.network_metered), yesNo(snapshot.metered))
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             DetailRow(
-                stringResource(R.string.network_downstream),
-                snapshot.linkDownKbps?.let { rateLabel(it) }
+                stringResource(R.string.network_downstream_capacity),
+                snapshot.estimatedDownstreamKbps?.let { rateLabel(it) }
                     ?: stringResource(R.string.value_unavailable),
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             DetailRow(
-                stringResource(R.string.network_upstream),
-                snapshot.linkUpKbps?.let { rateLabel(it) }
+                stringResource(R.string.network_upstream_capacity),
+                snapshot.estimatedUpstreamKbps?.let { rateLabel(it) }
                     ?: stringResource(R.string.value_unavailable),
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
@@ -394,8 +396,8 @@ private fun NetworkScreenPreview() {
                 localAddresses = listOf("192.0.2.10"),
                 wifiRssiDbm = -52,
                 wifiSignal = WifiSignal.GOOD,
-                linkDownKbps = 30_000,
-                linkUpKbps = 12_000,
+                estimatedDownstreamKbps = 30_000,
+                estimatedUpstreamKbps = 12_000,
             ),
             permissionGranted = true,
             onRequestPermission = {},

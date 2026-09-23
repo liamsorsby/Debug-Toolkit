@@ -9,6 +9,6 @@ data class NetworkSnapshot(
     val localAddresses: List<String> = emptyList(),
     val wifiRssiDbm: Int? = null,
     val wifiSignal: WifiSignal = WifiSignal.UNAVAILABLE,
-    val linkDownKbps: Int? = null,
-    val linkUpKbps: Int? = null,
+    val estimatedDownstreamKbps: Int? = null,
+    val estimatedUpstreamKbps: Int? = null,
 )

@@ -76,7 +76,8 @@ class AppNavigationTest {
         composeRule.onNodeWithText("Network").performClick()
         composeRule.onNodeWithText("MONITORING LIVE").assertIsDisplayed()
         composeRule.onNodeWithText("Connection details").assertIsDisplayed()
-        composeRule.onNodeWithText("Refreshed every two seconds").assertIsDisplayed()
+        composeRule.onNodeWithText("Signal and link properties refresh every two seconds")
+            .assertIsDisplayed()
     }
 
     @Test

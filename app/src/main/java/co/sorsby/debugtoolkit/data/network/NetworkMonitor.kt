@@ -105,8 +105,10 @@ class AndroidNetworkMonitor(
                 .filter(String::isNotEmpty),
             wifiRssiDbm = rssi,
             wifiSignal = SignalQuality.fromRssi(rssi),
-            linkDownKbps = capabilities.linkDownstreamBandwidthKbps.takeIf { it > 0 },
-            linkUpKbps = capabilities.linkUpstreamBandwidthKbps.takeIf { it > 0 },
+            estimatedDownstreamKbps =
+                capabilities.linkDownstreamBandwidthKbps.takeIf { it > 0 },
+            estimatedUpstreamKbps =
+                capabilities.linkUpstreamBandwidthKbps.takeIf { it > 0 },
         )
     }
 

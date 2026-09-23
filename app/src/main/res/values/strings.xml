@@ -30,7 +30,7 @@
     <string name="tools_supporting">Tests run only when you start them</string>
 
     <string name="network_details_title">Connection details</string>
-    <string name="network_details_supporting">Refreshed every two seconds</string>
+    <string name="network_details_supporting">Signal and link properties refresh every two seconds</string>
     <string name="network_permission_title">Show Wi-Fi signal strength</string>
     <string name="network_permission_body">Allow nearby Wi-Fi access to display the live RSSI value. The app does not collect location.</string>
     <string name="network_permission_action">Allow access</string>
@@ -59,8 +59,9 @@
     <string name="value_not_validated">Not validated</string>
     <string name="network_internet">Internet</string>
     <string name="network_metered">Metered</string>
-    <string name="network_downstream">Downstream estimate</string>
-    <string name="network_upstream">Upstream estimate</string>
+    <string name="network_downstream_capacity">Estimated receive capacity</string>
+    <string name="network_upstream_capacity">Estimated send capacity</string>
+    <string name="network_capacity_explanation">Capacity is Android’s estimate for the first network hop, not a live internet speed measurement. Use Speed test to measure actual throughput.</string>
     <string name="network_local_addresses">Local addresses</string>
     <string name="rate_mbps">%1$.1f Mbps</string>
     <string name="rate_kbps">%1$d Kbps</string>
