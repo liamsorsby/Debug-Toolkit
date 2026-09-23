@@ -70,6 +70,14 @@ class AppNavigationTest {
     }
 
     @Test
+    fun networkTabShowsContinuousMonitor() {
+        composeRule.onNodeWithText("Network").performClick()
+        composeRule.onNodeWithText("MONITORING LIVE").assertIsDisplayed()
+        composeRule.onNodeWithText("Connection details").assertIsDisplayed()
+        composeRule.onNodeWithText("Refreshed every two seconds").assertIsDisplayed()
+    }
+
+    @Test
     fun drawerOpensSettings() {
         composeRule.onNodeWithContentDescription("Open navigation").performClick()
         composeRule.onNodeWithText("Settings").performClick()
@@ -80,7 +88,8 @@ class AppNavigationTest {
     @Test
     fun drawerOpensEveryDiagnostic() {
         openDrawerDestination("Speed test")
-        composeRule.onNodeWithText("I understand").assertIsDisplayed()
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.speed_intro))
+            .assertIsDisplayed()
 
         openDrawerDestination("Certificate inspector")
         composeRule.onNodeWithText("Inspect certificate").assertIsDisplayed()

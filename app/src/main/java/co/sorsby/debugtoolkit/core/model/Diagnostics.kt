@@ -3,16 +3,25 @@ package co.sorsby.debugtoolkit.core.model
 import java.time.Instant
 
 data class NetworkSnapshot(
+    val sampledAtEpochMillis: Long = 0,
     val connected: Boolean = false,
     val validated: Boolean = false,
     val metered: Boolean = false,
-    val transports: Set<String> = emptySet(),
+    val transports: Set<NetworkTransport> = emptySet(),
     val localAddresses: List<String> = emptyList(),
     val wifiRssiDbm: Int? = null,
     val wifiSignal: WifiSignal = WifiSignal.UNAVAILABLE,
     val linkDownKbps: Int? = null,
     val linkUpKbps: Int? = null,
 )
+
+enum class NetworkTransport {
+    WIFI,
+    CELLULAR,
+    ETHERNET,
+    VPN,
+    BLUETOOTH,
+}
 
 enum class WifiSignal {
     EXCELLENT,
@@ -89,5 +98,12 @@ sealed interface ToolState<out T> {
     data object Idle : ToolState<Nothing>
     data object Loading : ToolState<Nothing>
     data class Success<T>(val value: T) : ToolState<T>
-    data class Error(val message: String) : ToolState<Nothing>
+    data class Error(val type: ToolError) : ToolState<Nothing>
+}
+
+enum class ToolError {
+    INVALID_INPUT,
+    NETWORK,
+    SERVICE,
+    UNKNOWN,
 }

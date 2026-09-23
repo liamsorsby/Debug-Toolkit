@@ -9,6 +9,7 @@ import co.sorsby.debugtoolkit.core.model.SpeedResult
 import co.sorsby.debugtoolkit.core.model.ThemeMode
 import co.sorsby.debugtoolkit.core.model.TlsResult
 import co.sorsby.debugtoolkit.core.model.ToolState
+import co.sorsby.debugtoolkit.core.model.ToolError
 import co.sorsby.debugtoolkit.data.dns.DnsRecordType
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.http.HttpInspector
@@ -33,6 +34,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
 import java.time.Instant
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -98,7 +100,21 @@ class ToolViewModelsTest {
         })
         failure.runTest()
         advanceUntilIdle()
-        assertEquals(ToolState.Error("failed"), failure.state.value)
+        assertEquals(ToolState.Error(ToolError.SERVICE), failure.state.value)
+
+        val invalidInput = SpeedViewModel(object : SpeedTestRepository {
+            override suspend fun run(): SpeedResult = throw IllegalArgumentException()
+        })
+        invalidInput.runTest()
+        advanceUntilIdle()
+        assertEquals(ToolState.Error(ToolError.INVALID_INPUT), invalidInput.state.value)
+
+        val networkFailure = SpeedViewModel(object : SpeedTestRepository {
+            override suspend fun run(): SpeedResult = throw IOException()
+        })
+        networkFailure.runTest()
+        advanceUntilIdle()
+        assertEquals(ToolState.Error(ToolError.NETWORK), networkFailure.state.value)
     }
 
     @Test
@@ -123,7 +139,7 @@ class ToolViewModelsTest {
         })
         failure.query()
         advanceUntilIdle()
-        assertEquals(ToolState.Error("The request failed."), failure.state.value.result)
+        assertEquals(ToolState.Error(ToolError.UNKNOWN), failure.state.value.result)
     }
 
     @Test

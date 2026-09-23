@@ -33,6 +33,7 @@ android {
         debug {
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
+            isPseudoLocalesEnabled = true
         }
         release {
             optimization {

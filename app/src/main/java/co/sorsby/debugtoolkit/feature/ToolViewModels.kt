@@ -11,6 +11,7 @@ import co.sorsby.debugtoolkit.core.model.SpeedResult
 import co.sorsby.debugtoolkit.core.model.ThemeMode
 import co.sorsby.debugtoolkit.core.model.TlsResult
 import co.sorsby.debugtoolkit.core.model.ToolState
+import co.sorsby.debugtoolkit.core.model.ToolError
 import co.sorsby.debugtoolkit.data.dns.DnsRecordType
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.http.HttpInspector
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class SettingsViewModel(private val repository: SettingsRepository) : ViewModel() {
     val settings: StateFlow<AppSettings> = repository.settings.stateIn(
@@ -143,7 +145,16 @@ private fun <T> ViewModel.runTool(
         } catch (cancellation: CancellationException) {
             throw cancellation
         } catch (error: Exception) {
-            update(ToolState.Error(error.message ?: "The request failed."))
+            update(
+                ToolState.Error(
+                    when (error) {
+                        is IllegalArgumentException -> ToolError.INVALID_INPUT
+                        is IOException -> ToolError.NETWORK
+                        is IllegalStateException -> ToolError.SERVICE
+                        else -> ToolError.UNKNOWN
+                    },
+                ),
+            )
         }
     }
 }

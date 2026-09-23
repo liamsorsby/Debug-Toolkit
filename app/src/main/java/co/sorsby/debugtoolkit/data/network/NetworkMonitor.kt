@@ -12,11 +12,14 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
+import co.sorsby.debugtoolkit.core.model.NetworkTransport
 import co.sorsby.debugtoolkit.domain.SignalQuality
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 interface NetworkMonitor {
     val snapshots: Flow<NetworkSnapshot>
@@ -53,22 +56,44 @@ class AndroidNetworkMonitor(
         }
         connectivityManager.registerDefaultNetworkCallback(callback)
         trySend(snapshot())
-        awaitClose { connectivityManager.unregisterNetworkCallback(callback) }
-    }.distinctUntilChanged()
+        val sampler = launch {
+            while (isActive) {
+                delay(SAMPLE_INTERVAL_MS)
+                trySend(snapshot())
+            }
+        }
+        awaitClose {
+            sampler.cancel()
+            connectivityManager.unregisterNetworkCallback(callback)
+        }
+    }
 
     private fun snapshot(): NetworkSnapshot {
-        val network = connectivityManager.activeNetwork ?: return NetworkSnapshot()
+        val sampledAt = System.currentTimeMillis()
+        val network = connectivityManager.activeNetwork
+            ?: return NetworkSnapshot(sampledAtEpochMillis = sampledAt)
         val capabilities = connectivityManager.getNetworkCapabilities(network)
-            ?: return NetworkSnapshot()
+            ?: return NetworkSnapshot(sampledAtEpochMillis = sampledAt)
         val transports = buildSet {
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) add("Wi-Fi")
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) add("Cellular")
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) add("Ethernet")
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) add("VPN")
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) add("Bluetooth")
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                add(NetworkTransport.WIFI)
+            }
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                add(NetworkTransport.CELLULAR)
+            }
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                add(NetworkTransport.ETHERNET)
+            }
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                add(NetworkTransport.VPN)
+            }
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
+                add(NetworkTransport.BLUETOOTH)
+            }
         }
         val rssi = wifiRssi(capabilities)
         return NetworkSnapshot(
+            sampledAtEpochMillis = sampledAt,
             connected = true,
             validated = capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED),
             metered = !capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED),
@@ -109,5 +134,9 @@ class AndroidNetworkMonitor(
         }
         return ContextCompat.checkSelfPermission(context, permission) ==
             PackageManager.PERMISSION_GRANTED
+    }
+
+    private companion object {
+        const val SAMPLE_INTERVAL_MS = 2_000L
     }
 }
