@@ -21,5 +21,6 @@ data class TlsUiState(
 data class HttpUiState(
     val input: String = "",
     val method: HttpMethod = HttpMethod.GET,
+    val showResponseBody: Boolean = false,
     val result: ToolState<HttpInspection> = ToolState.Idle,
 )

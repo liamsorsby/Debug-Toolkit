@@ -172,8 +172,11 @@ class ToolViewModelsTest {
         })
         viewModel.setInput("example.com")
         viewModel.setMethod(HttpMethod.HEAD)
+        assertEquals(false, viewModel.state.value.showResponseBody)
+        viewModel.setShowResponseBody(true)
         viewModel.inspect()
         advanceUntilIdle()
+        assertTrue(viewModel.state.value.showResponseBody)
         assertEquals(ToolState.Success(result), viewModel.state.value.result)
     }
 }

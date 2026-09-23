@@ -106,6 +106,7 @@
 
     <string name="http_intro">Send a safe GET or HEAD request and inspect the response without rendering its content.</string>
     <string name="http_method">Method</string>
+    <string name="http_show_response_body">Show response body</string>
     <string name="http_selected_method">Selected %1$s</string>
     <string name="http_action">Inspect response</string>
     <string name="http_status">Status</string>

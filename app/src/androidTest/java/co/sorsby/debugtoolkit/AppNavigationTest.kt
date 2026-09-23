@@ -1,6 +1,8 @@
 package co.sorsby.debugtoolkit
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsOff
+import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
@@ -99,6 +101,11 @@ class AppNavigationTest {
 
         openDrawerDestination("HTTP inspector")
         composeRule.onNodeWithText("Inspect response").assertIsDisplayed()
+        composeRule.onNodeWithText("Show response body")
+            .assertIsDisplayed()
+            .assertIsOff()
+            .performClick()
+            .assertIsOn()
     }
 
     @Test

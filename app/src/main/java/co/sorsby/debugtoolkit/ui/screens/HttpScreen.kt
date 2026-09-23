@@ -1,9 +1,14 @@
 package co.sorsby.debugtoolkit.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
@@ -12,9 +17,12 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.sorsby.debugtoolkit.R
 import co.sorsby.debugtoolkit.core.model.HeaderValue
@@ -43,6 +51,7 @@ fun HttpRoute(viewModel: HttpViewModel = koinViewModel()) {
         state = state,
         onInputChanged = viewModel::setInput,
         onMethodChanged = viewModel::setMethod,
+        onShowResponseBodyChanged = viewModel::setShowResponseBody,
         onInspect = viewModel::inspect,
     )
 }
@@ -53,6 +62,7 @@ fun HttpScreen(
     state: HttpUiState,
     onInputChanged: (String) -> Unit,
     onMethodChanged: (HttpMethod) -> Unit,
+    onShowResponseBodyChanged: (Boolean) -> Unit,
     onInspect: () -> Unit,
 ) {
     ScreenList {
@@ -84,6 +94,24 @@ fun HttpScreen(
                         )
                     }
                 }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .toggleable(
+                            value = state.showResponseBody,
+                            onValueChange = onShowResponseBodyChanged,
+                            role = Role.Checkbox,
+                        ),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(stringResource(R.string.http_show_response_body))
+                    Checkbox(
+                        checked = state.showResponseBody,
+                        onCheckedChange = null,
+                    )
+                }
                 Button(
                     onClick = onInspect,
                     enabled = state.result !is ToolState.Loading && state.input.isNotBlank(),
@@ -93,12 +121,16 @@ fun HttpScreen(
                 }
             }
         }
-        item { ToolResult(state.result) { HttpResultView(it) } }
+        item {
+            ToolResult(state.result) {
+                HttpResultView(it, showResponseBody = state.showResponseBody)
+            }
+        }
     }
 }
 
 @Composable
-private fun HttpResultView(result: HttpInspection) {
+private fun HttpResultView(result: HttpInspection, showResponseBody: Boolean) {
     ResultCard {
         ResultHeader()
         Metric(stringResource(R.string.http_status), "${result.status} ${result.message}")
@@ -113,14 +145,16 @@ private fun HttpResultView(result: HttpInspection) {
         }
         SectionLabel(stringResource(R.string.http_headers))
         result.headers.forEach { Metric(it.name, it.value) }
-        result.bodyPreview?.let {
-            SectionLabel(
-                stringResource(
-                    if (result.bodyTruncated) R.string.http_body_preview_truncated
-                    else R.string.http_body_preview,
-                ),
-            )
-            InfoCard(it)
+        if (showResponseBody) {
+            result.bodyPreview?.let {
+                SectionLabel(
+                    stringResource(
+                        if (result.bodyTruncated) R.string.http_body_preview_truncated
+                        else R.string.http_body_preview,
+                    ),
+                )
+                InfoCard(it)
+            }
         }
     }
 }
@@ -132,6 +166,7 @@ private fun HttpScreenPreview() {
         HttpScreen(
             state = HttpUiState(
                 input = "https://example.com",
+                showResponseBody = true,
                 result = ToolState.Success(
                     HttpInspection(
                         status = 200,
@@ -149,6 +184,7 @@ private fun HttpScreenPreview() {
             ),
             onInputChanged = {},
             onMethodChanged = {},
+            onShowResponseBodyChanged = {},
             onInspect = {},
         )
     }

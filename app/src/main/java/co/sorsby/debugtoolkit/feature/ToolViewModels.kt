@@ -111,6 +111,10 @@ class HttpViewModel(private val inspector: HttpInspector) : ViewModel() {
         mutableState.value = mutableState.value.copy(method = value)
     }
 
+    fun setShowResponseBody(value: Boolean) {
+        mutableState.value = mutableState.value.copy(showResponseBody = value)
+    }
+
     fun inspect() = runTool(
         update = { mutableState.value = mutableState.value.copy(result = it) },
         action = { inspector.inspect(mutableState.value.input, mutableState.value.method) },
