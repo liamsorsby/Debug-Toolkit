@@ -24,3 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Debug Toolkit"
 include(":app")
+include(":benchmark")
+include(":baselineprofile")

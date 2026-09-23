@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "co.sorsby.debugtoolkit.benchmark-mergeBenchmarkResources-16:/values-en-rGB/values-en-rGB.xml",
+            "map": [
+                {
+                    "source": "/Users/liam.sorsby/.gradle/caches/9.7.1/transforms/15ace9c1fb3c09e4db4c1c345f11a54b/transformed/core-1.9.0/res/values-en-rGB/values-en-rGB.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,8 @@
+co.sorsby.debugtoolkit.benchmark-pngs-0 /Users/liam.sorsby/AndroidStudioProjects/DebugToolkit/benchmark/build/generated/res/pngs/debug
+co.sorsby.debugtoolkit.benchmark-updated_navigation_xml-1 /Users/liam.sorsby/AndroidStudioProjects/DebugToolkit/benchmark/build/generated/updated_navigation_xml/debug
+co.sorsby.debugtoolkit.benchmark-packageDebugResources-2 /Users/liam.sorsby/AndroidStudioProjects/DebugToolkit/benchmark/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+co.sorsby.debugtoolkit.benchmark-packageDebugResources-3 /Users/liam.sorsby/AndroidStudioProjects/DebugToolkit/benchmark/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+co.sorsby.debugtoolkit.benchmark-debug-4 /Users/liam.sorsby/AndroidStudioProjects/DebugToolkit/benchmark/build/intermediates/merged_res/debug/mergeDebugResources
+co.sorsby.debugtoolkit.benchmark-debug-5 /Users/liam.sorsby/AndroidStudioProjects/DebugToolkit/benchmark/src/debug/res
+co.sorsby.debugtoolkit.benchmark-main-6 /Users/liam.sorsby/AndroidStudioProjects/DebugToolkit/benchmark/src/main/res
+gradleHome-0 /Users/liam.sorsby/.gradle
