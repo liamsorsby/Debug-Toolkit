@@ -67,12 +67,6 @@ class SpeedViewModel(private val repository: SpeedTestRepository) : ViewModel() 
     )
 }
 
-data class DnsUiState(
-    val input: String = "",
-    val type: DnsRecordType = DnsRecordType.A,
-    val result: ToolState<DnsResult> = ToolState.Idle,
-)
-
 class DnsViewModel(private val repository: DnsRepository) : ViewModel() {
     private val mutableState = MutableStateFlow(DnsUiState())
     val state = mutableState.asStateFlow()
@@ -91,11 +85,6 @@ class DnsViewModel(private val repository: DnsRepository) : ViewModel() {
     )
 }
 
-data class TlsUiState(
-    val input: String = "",
-    val result: ToolState<TlsResult> = ToolState.Idle,
-)
-
 class TlsViewModel(private val inspector: TlsInspector) : ViewModel() {
     private val mutableState = MutableStateFlow(TlsUiState())
     val state = mutableState.asStateFlow()
@@ -109,12 +98,6 @@ class TlsViewModel(private val inspector: TlsInspector) : ViewModel() {
         action = { inspector.inspect(mutableState.value.input) },
     )
 }
-
-data class HttpUiState(
-    val input: String = "",
-    val method: HttpMethod = HttpMethod.GET,
-    val result: ToolState<HttpInspection> = ToolState.Idle,
-)
 
 class HttpViewModel(private val inspector: HttpInspector) : ViewModel() {
     private val mutableState = MutableStateFlow(HttpUiState())

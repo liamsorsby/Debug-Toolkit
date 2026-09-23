@@ -14,19 +14,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import kotlin.time.TimeSource
 
-enum class DnsRecordType(val code: Int) {
-    A(1),
-    NS(2),
-    CNAME(5),
-    SOA(6),
-    PTR(12),
-    MX(15),
-    TXT(16),
-    AAAA(28),
-    SRV(33),
-    CAA(257),
-}
-
 interface DnsRepository {
     suspend fun query(input: String, type: DnsRecordType): DnsResult
 }

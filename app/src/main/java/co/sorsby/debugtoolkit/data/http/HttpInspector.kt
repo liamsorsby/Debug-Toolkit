@@ -13,8 +13,6 @@ import okhttp3.Response
 import okio.Buffer
 import kotlin.time.TimeSource
 
-enum class HttpMethod { GET, HEAD }
-
 interface HttpInspector {
     suspend fun inspect(input: String, method: HttpMethod): HttpInspection
 }
