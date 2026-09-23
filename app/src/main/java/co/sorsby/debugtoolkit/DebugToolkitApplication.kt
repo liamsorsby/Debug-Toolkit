@@ -22,6 +22,11 @@ import co.sorsby.debugtoolkit.feature.NetworkViewModel
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.feature.SpeedViewModel
 import co.sorsby.debugtoolkit.feature.TlsViewModel
+import co.sorsby.debugtoolkit.telemetry.FirebaseJourneyTracker
+import co.sorsby.debugtoolkit.telemetry.JourneyTracker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -42,6 +47,7 @@ class DebugToolkitApplication : Application() {
 }
 
 val appModule = module {
+    single { CoroutineScope(SupervisorJob() + Dispatchers.Default) }
     single {
         OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
@@ -58,6 +64,13 @@ val appModule = module {
         }
     }
     single<SettingsRepository> { DataStoreSettingsRepository(androidContext()) }
+    single<JourneyTracker>(createdAtStart = true) {
+        FirebaseJourneyTracker(
+            context = androidContext(),
+            settingsRepository = get(),
+            scope = get(),
+        )
+    }
     single {
         androidContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }
@@ -84,8 +97,8 @@ val appModule = module {
     }
     viewModel { SettingsViewModel(get()) }
     viewModel { NetworkViewModel(get()) }
-    viewModel { DnsViewModel(get()) }
-    viewModel { TlsViewModel(get()) }
-    viewModel { HttpViewModel(get()) }
-    viewModel { SpeedViewModel(get()) }
+    viewModel { DnsViewModel(get(), get()) }
+    viewModel { TlsViewModel(get(), get()) }
+    viewModel { HttpViewModel(get(), get()) }
+    viewModel { SpeedViewModel(get(), get()) }
 }

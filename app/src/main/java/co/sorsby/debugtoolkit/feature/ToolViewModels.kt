@@ -20,6 +20,8 @@ import co.sorsby.debugtoolkit.data.network.NetworkMonitor
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
+import co.sorsby.debugtoolkit.telemetry.DiagnosticTool
+import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -57,17 +59,25 @@ class NetworkViewModel(monitor: NetworkMonitor) : ViewModel() {
     )
 }
 
-class SpeedViewModel(private val repository: SpeedTestRepository) : ViewModel() {
+class SpeedViewModel(
+    private val repository: SpeedTestRepository,
+    private val journeyTracker: JourneyTracker,
+) : ViewModel() {
     private val mutableState = MutableStateFlow<ToolState<SpeedResult>>(ToolState.Idle)
     val state = mutableState.asStateFlow()
 
     fun runTest() = runTool(
+        tool = DiagnosticTool.SPEED,
+        journeyTracker = journeyTracker,
         update = { mutableState.value = it },
         action = repository::run,
     )
 }
 
-class DnsViewModel(private val repository: DnsRepository) : ViewModel() {
+class DnsViewModel(
+    private val repository: DnsRepository,
+    private val journeyTracker: JourneyTracker,
+) : ViewModel() {
     private val mutableState = MutableStateFlow(DnsUiState())
     val state = mutableState.asStateFlow()
 
@@ -80,12 +90,17 @@ class DnsViewModel(private val repository: DnsRepository) : ViewModel() {
     }
 
     fun query() = runTool(
+        tool = DiagnosticTool.DNS,
+        journeyTracker = journeyTracker,
         update = { mutableState.value = mutableState.value.copy(result = it) },
         action = { repository.query(mutableState.value.input, mutableState.value.type) },
     )
 }
 
-class TlsViewModel(private val inspector: TlsInspector) : ViewModel() {
+class TlsViewModel(
+    private val inspector: TlsInspector,
+    private val journeyTracker: JourneyTracker,
+) : ViewModel() {
     private val mutableState = MutableStateFlow(TlsUiState())
     val state = mutableState.asStateFlow()
 
@@ -94,12 +109,17 @@ class TlsViewModel(private val inspector: TlsInspector) : ViewModel() {
     }
 
     fun inspect() = runTool(
+        tool = DiagnosticTool.TLS,
+        journeyTracker = journeyTracker,
         update = { mutableState.value = mutableState.value.copy(result = it) },
         action = { inspector.inspect(mutableState.value.input) },
     )
 }
 
-class HttpViewModel(private val inspector: HttpInspector) : ViewModel() {
+class HttpViewModel(
+    private val inspector: HttpInspector,
+    private val journeyTracker: JourneyTracker,
+) : ViewModel() {
     private val mutableState = MutableStateFlow(HttpUiState())
     val state = mutableState.asStateFlow()
 
@@ -116,32 +136,39 @@ class HttpViewModel(private val inspector: HttpInspector) : ViewModel() {
     }
 
     fun inspect() = runTool(
+        tool = DiagnosticTool.HTTP,
+        journeyTracker = journeyTracker,
         update = { mutableState.value = mutableState.value.copy(result = it) },
         action = { inspector.inspect(mutableState.value.input, mutableState.value.method) },
     )
 }
 
 private fun <T> ViewModel.runTool(
+    tool: DiagnosticTool,
+    journeyTracker: JourneyTracker,
     update: (ToolState<T>) -> Unit,
     action: suspend () -> T,
 ) {
     viewModelScope.launch {
+        val journey = journeyTracker.startTool(tool)
         update(ToolState.Loading)
         try {
             update(ToolState.Success(action()))
+            journey.succeed()
         } catch (cancellation: CancellationException) {
+            journey.cancel()
             throw cancellation
         } catch (error: Exception) {
+            val toolError = when (error) {
+                is IllegalArgumentException -> ToolError.INVALID_INPUT
+                is IOException -> ToolError.NETWORK
+                is IllegalStateException -> ToolError.SERVICE
+                else -> ToolError.UNKNOWN
+            }
             update(
-                ToolState.Error(
-                    when (error) {
-                        is IllegalArgumentException -> ToolError.INVALID_INPUT
-                        is IOException -> ToolError.NETWORK
-                        is IllegalStateException -> ToolError.SERVICE
-                        else -> ToolError.UNKNOWN
-                    },
-                ),
+                ToolState.Error(toolError),
             )
+            journey.fail(toolError, error)
         }
     }
 }

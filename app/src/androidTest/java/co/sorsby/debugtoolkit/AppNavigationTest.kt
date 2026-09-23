@@ -26,6 +26,7 @@ import co.sorsby.debugtoolkit.feature.NetworkViewModel
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.feature.SpeedViewModel
 import co.sorsby.debugtoolkit.feature.TlsViewModel
+import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -55,6 +56,7 @@ class AppNavigationTest {
         assertNotNull(koin.get<DnsRepository>())
         assertNotNull(koin.get<TlsInspector>())
         assertNotNull(koin.get<HttpInspector>())
+        assertNotNull(koin.get<JourneyTracker>())
         assertNotNull(koin.get<SettingsViewModel>())
         assertNotNull(koin.get<NetworkViewModel>())
         assertNotNull(koin.get<SpeedViewModel>())

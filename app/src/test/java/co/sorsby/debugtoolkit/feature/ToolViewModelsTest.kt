@@ -18,6 +18,9 @@ import co.sorsby.debugtoolkit.data.network.NetworkMonitor
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
+import co.sorsby.debugtoolkit.telemetry.DiagnosticTool
+import co.sorsby.debugtoolkit.telemetry.JourneyTracker
+import co.sorsby.debugtoolkit.telemetry.ToolJourney
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,10 +43,12 @@ import java.time.Instant
 @OptIn(ExperimentalCoroutinesApi::class)
 class ToolViewModelsTest {
     private val dispatcher = StandardTestDispatcher()
+    private lateinit var journeyTracker: RecordingJourneyTracker
 
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
+        journeyTracker = RecordingJourneyTracker()
     }
 
     @After
@@ -90,31 +95,36 @@ class ToolViewModelsTest {
         val result = SpeedResult(1.0, 2.0, 3.0, 4.0, 5, Instant.EPOCH)
         val success = SpeedViewModel(object : SpeedTestRepository {
             override suspend fun run() = result
-        })
+        }, journeyTracker)
         success.runTest()
         advanceUntilIdle()
         assertEquals(ToolState.Success(result), success.state.value)
 
         val failure = SpeedViewModel(object : SpeedTestRepository {
             override suspend fun run(): SpeedResult = throw IllegalStateException("failed")
-        })
+        }, journeyTracker)
         failure.runTest()
         advanceUntilIdle()
         assertEquals(ToolState.Error(ToolError.SERVICE), failure.state.value)
 
         val invalidInput = SpeedViewModel(object : SpeedTestRepository {
             override suspend fun run(): SpeedResult = throw IllegalArgumentException()
-        })
+        }, journeyTracker)
         invalidInput.runTest()
         advanceUntilIdle()
         assertEquals(ToolState.Error(ToolError.INVALID_INPUT), invalidInput.state.value)
 
         val networkFailure = SpeedViewModel(object : SpeedTestRepository {
             override suspend fun run(): SpeedResult = throw IOException()
-        })
+        }, journeyTracker)
         networkFailure.runTest()
         advanceUntilIdle()
         assertEquals(ToolState.Error(ToolError.NETWORK), networkFailure.state.value)
+        assertEquals(List(4) { DiagnosticTool.SPEED }, journeyTracker.startedTools)
+        assertEquals(
+            listOf("success", "SERVICE", "INVALID_INPUT", "NETWORK"),
+            journeyTracker.outcomes,
+        )
     }
 
     @Test
@@ -126,7 +136,7 @@ class ToolViewModelsTest {
                 assertEquals(DnsRecordType.MX, type)
                 return result
             }
-        })
+        }, journeyTracker)
         success.setInput("example.com")
         success.setType(DnsRecordType.MX)
         success.query()
@@ -136,10 +146,12 @@ class ToolViewModelsTest {
         val failure = DnsViewModel(object : DnsRepository {
             override suspend fun query(input: String, type: DnsRecordType): DnsResult =
                 throw Exception()
-        })
+        }, journeyTracker)
         failure.query()
         advanceUntilIdle()
         assertEquals(ToolState.Error(ToolError.UNKNOWN), failure.state.value.result)
+        assertEquals(listOf(DiagnosticTool.DNS, DiagnosticTool.DNS), journeyTracker.startedTools)
+        assertEquals(listOf("success", "UNKNOWN"), journeyTracker.outcomes)
     }
 
     @Test
@@ -150,11 +162,13 @@ class ToolViewModelsTest {
                 assertEquals("example.com", input)
                 return result
             }
-        })
+        }, journeyTracker)
         viewModel.setInput("example.com")
         viewModel.inspect()
         advanceUntilIdle()
         assertEquals(ToolState.Success(result), viewModel.state.value.result)
+        assertEquals(listOf(DiagnosticTool.TLS), journeyTracker.startedTools)
+        assertEquals(listOf("success"), journeyTracker.outcomes)
     }
 
     @Test
@@ -169,7 +183,7 @@ class ToolViewModelsTest {
                 assertEquals(HttpMethod.HEAD, method)
                 return result
             }
-        })
+        }, journeyTracker)
         viewModel.setInput("example.com")
         viewModel.setMethod(HttpMethod.HEAD)
         assertEquals(false, viewModel.state.value.showResponseBody)
@@ -178,6 +192,32 @@ class ToolViewModelsTest {
         advanceUntilIdle()
         assertTrue(viewModel.state.value.showResponseBody)
         assertEquals(ToolState.Success(result), viewModel.state.value.result)
+        assertEquals(listOf(DiagnosticTool.HTTP), journeyTracker.startedTools)
+        assertEquals(listOf("success"), journeyTracker.outcomes)
+    }
+}
+
+private class RecordingJourneyTracker : JourneyTracker {
+    val startedTools = mutableListOf<DiagnosticTool>()
+    val outcomes = mutableListOf<String>()
+
+    override fun trackScreen(route: String) = Unit
+
+    override fun startTool(tool: DiagnosticTool): ToolJourney {
+        startedTools += tool
+        return object : ToolJourney {
+            override fun succeed() {
+                outcomes += "success"
+            }
+
+            override fun fail(error: ToolError, cause: Exception) {
+                outcomes += error.name
+            }
+
+            override fun cancel() {
+                outcomes += "cancelled"
+            }
+        }
     }
 }
 

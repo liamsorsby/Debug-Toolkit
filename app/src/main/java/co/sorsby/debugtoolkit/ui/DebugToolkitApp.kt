@@ -28,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import co.sorsby.debugtoolkit.R
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
+import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import co.sorsby.debugtoolkit.ui.navigation.AppDestination
 import co.sorsby.debugtoolkit.ui.navigation.AppDestinations
 import co.sorsby.debugtoolkit.ui.screens.AboutScreen
@@ -54,10 +56,14 @@ import co.sorsby.debugtoolkit.ui.screens.TlsRoute
 import co.sorsby.debugtoolkit.ui.screens.ToolsScreen
 import co.sorsby.debugtoolkit.ui.theme.DebugToolkitTheme
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DebugToolkitApp(settingsViewModel: SettingsViewModel) {
+fun DebugToolkitApp(
+    settingsViewModel: SettingsViewModel,
+    journeyTracker: JourneyTracker = koinInject(),
+) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -67,6 +73,10 @@ fun DebugToolkitApp(settingsViewModel: SettingsViewModel) {
         .firstOrNull { it.route == route }
         ?.label
         ?: R.string.app_name
+
+    LaunchedEffect(route) {
+        journeyTracker.trackScreen(route)
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,

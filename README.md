@@ -28,11 +28,29 @@ can replace those bindings with deterministic fakes.
 Composable functions render state but do not call network or platform services.
 ViewModels own asynchronous work and expose immutable state flows.
 
-## Privacy and permissions
+## Firebase and privacy
 
-The app does not include analytics, Firebase, authentication, or advertising. It stores
-only theme, future analytics-consent, and Cloudflare-disclosure preferences. Consent
-defaults to unset and has the same effective behavior as denied.
+Firebase Crashlytics is enabled when Firebase is configured so production crashes,
+ANRs, and sanitized diagnostic failures can be investigated. Firebase Analytics and
+Performance Monitoring remain disabled until analytics consent is explicitly granted;
+unset consent has the same effective behavior as denied. Revoking consent disables
+both services again.
+
+Journey events contain only screen route names, diagnostic tool types, success or
+failure outcomes, categorized errors, and durations. Entered domains, URLs, DNS
+answers, certificate data, HTTP headers and bodies, local addresses, and Wi-Fi details
+are never attached to telemetry. Crashlytics breadcrumbs use the same restricted event
+set and do not assign a user identifier.
+
+To connect a Firebase project, register Android application
+`co.sorsby.debugtoolkit`, download its `google-services.json`, and place it at
+`app/google-services.json`. That file is ignored by Git. The Google Services and
+Crashlytics plugins are applied automatically when the file exists; without it the app
+remains buildable and telemetry safely operates as a no-op. Performance uses only
+explicit sanitized diagnostic traces. Automatic network instrumentation is deliberately
+disabled so inspected URLs and DNS query parameters cannot enter telemetry.
+
+The app stores only theme, analytics-consent, and Cloudflare-disclosure preferences.
 
 Network diagnostics run only after user action and results are not persisted. DNS and
 speed tests connect to Cloudflare. TLS and HTTP tools connect to the endpoint entered
