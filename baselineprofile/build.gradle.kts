@@ -23,6 +23,11 @@ baselineProfile {
 }
 
 dependencies {
+    constraints {
+        implementation(libs.wire.runtime) {
+            because("Wire 6.4.5 fixes the ByteArrayProtoReader32 length overflow")
+        }
+    }
     implementation(libs.androidx.benchmark.macro.junit4)
     implementation(libs.androidx.junit)
     implementation(libs.androidx.uiautomator)
