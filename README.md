@@ -98,7 +98,9 @@ The pull-request workflow runs JVM tests, coverage enforcement, Android lint, an
 optimized release build, profile and benchmark module builds, emulator integration
 tests, and SonarCloud analysis. The emulator job verifies Android framework readiness
 and requires successful instrumentation result files so infrastructure failures cannot
-be reported as passing tests. After every required check passes, same-repository pull
+be reported as passing tests. It builds the APKs before starting a minimum-supported
+API 29 emulator so compilation does not compete with the running device. After every
+required check passes, same-repository pull
 requests distribute a debug APK through Firebase App Distribution. Fork pull requests
 never receive deployment credentials and are not distributed.
 

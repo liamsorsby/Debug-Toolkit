@@ -21,7 +21,6 @@ done
 
 rm -rf "$results_directory"
 ./gradlew :app:connectedDebugAndroidTest \
-    --rerun \
     --stacktrace \
     --console=plain
 
