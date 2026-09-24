@@ -97,6 +97,20 @@ jobs:
           printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-service-account.json"
           printf '%s' "$PLAY_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/play-service-account.json"
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload.keystore"
+      - name: Validate release credentials
+        run: |
+          jq empty app/google-services.json || {
+            echo "::error::FIREBASE_GOOGLE_SERVICES_JSON secret is not valid JSON. Copy the raw contents of google-services.json (unescaped, no surrounding quotes) into the secret."
+            exit 1
+          }
+          jq empty "$RUNNER_TEMP/firebase-service-account.json" || {
+            echo "::error::FIREBASE_SERVICE_ACCOUNT_JSON secret is not valid JSON. Copy the raw contents of the service account key file into the secret."
+            exit 1
+          }
+          jq empty "$RUNNER_TEMP/play-service-account.json" || {
+            echo "::error::PLAY_SERVICE_ACCOUNT_JSON secret is not valid JSON. Copy the raw contents of the Play service account key file into the secret."
+            exit 1
+          }
       - name: Calculate Play version code
         env:
           VERSION_CODE_OFFSET: ${{ vars.VERSION_CODE_OFFSET }}
