@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Debug Toolkit — Privacy Policy</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --max-width: 760px;
+    --fg: #1c1b1f;
+    --bg: #fffbfe;
+    --muted: #49454f;
+    --accent: #6750a4;
+    --border: #e7e0ec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fg: #e6e1e5;
+      --bg: #1c1b1f;
+      --muted: #cac4d0;
+      --accent: #d0bcff;
+      --border: #49454f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  main {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 4px;
+  }
+  .updated {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-size: 1.15rem;
+    margin-top: 40px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+  p, li {
+    color: var(--muted);
+  }
+  a {
+    color: var(--accent);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.95rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    color: var(--fg);
+  }
+  code {
+    background: var(--border);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  footer {
+    margin-top: 56px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Debug Toolkit &middot; Last updated 24 September 2026</p>
+
+  <p>
+    Debug Toolkit ("the app") is a network diagnostics utility for Android. This policy explains
+    what data the app processes, what is sent to third parties, and the choices available to you.
+    The app does not require an account or login, and it does not collect names, email addresses,
+    or other identifying registration data.
+  </p>
+
+  <h2>Data the app stores on your device</h2>
+  <p>The app stores the following locally, using Android's private app storage:</p>
+  <ul>
+    <li>Your selected theme (light, dark, or system default)</li>
+    <li>Your analytics and cookie consent choice</li>
+    <li>Your acknowledgement of the Cloudflare network tools disclosure described below</li>
+  </ul>
+  <p>None of this local data is transmitted anywhere by the app itself.</p>
+
+  <h2>Data you choose to enter</h2>
+  <p>
+    Several tools in the app act on information you type in. This data is sent only to the
+    destination you specify, in order to perform the requested check, and is not stored by the
+    app beyond the current session:
+  </p>
+  <table>
+    <thead>
+      <tr><th>Tool</th><th>What you enter</th><th>Where it is sent</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Certificate inspector</td>
+        <td>A hostname</td>
+        <td>Directly to that hostname, to read its public TLS certificate</td>
+      </tr>
+      <tr>
+        <td>DNS lookup</td>
+        <td>A domain name and record type</td>
+        <td>Directly to that domain's authoritative servers, or to Cloudflare's public DNS
+          resolver (<code>1.1.1.1</code>) if you select it as the DNS provider</td>
+      </tr>
+      <tr>
+        <td>HTTP headers / response inspector</td>
+        <td>A URL</td>
+        <td>Directly to that URL, to read its response headers and status</td>
+      </tr>
+      <tr>
+        <td>Speed test</td>
+        <td>No manual input</td>
+        <td>Cloudflare's public speed test endpoints, to measure download, upload, and latency</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    Because these tools connect directly to servers you specify or to Cloudflare, those third
+    parties receive your device's IP address and the request itself, subject to their own privacy
+    practices. The app does not proxy, log, or retain the results once you leave the relevant
+    screen.
+  </p>
+
+  <h2>Wi-Fi and network information</h2>
+  <p>
+    The network monitor reads Wi-Fi signal strength (dBm), link speed, and connection details
+    using Android's system APIs, which may require location permission on some Android versions
+    because Wi-Fi scan results can reveal nearby network identifiers. This information stays on
+    your device and is only displayed to you.
+  </p>
+
+  <h2>Analytics, crash reporting, and performance monitoring</h2>
+  <p>
+    The app uses the following Firebase services, provided by Google, to help diagnose crashes and
+    understand feature usage:
+  </p>
+  <ul>
+    <li><strong>Firebase Crashlytics</strong> — collects crash and error diagnostics automatically,
+      so issues can be fixed. This is not gated behind consent, as it does not include personal
+      data or the content of the tools you run.</li>
+    <li><strong>Firebase Analytics</strong> and <strong>Firebase Performance Monitoring</strong> —
+      collect anonymised usage events (such as which tool was opened) and performance timings.
+      These are only enabled after you grant analytics consent in the app's settings, in line with
+      EU cookie and consent requirements. You can withdraw consent at any time from the same
+      screen, which disables further collection.</li>
+  </ul>
+  <p>
+    None of these services receive the domains, hostnames, or URLs you enter into the app's tools.
+  </p>
+
+  <h2>Children's privacy</h2>
+  <p>
+    The app is a general-purpose technical utility and is not directed at children. It does not
+    knowingly collect personal data from children.
+  </p>
+
+  <h2>Data retention</h2>
+  <p>
+    Locally stored preferences persist until you clear the app's data or uninstall it. Crash and
+    analytics data collected by Firebase is retained by Google according to Firebase's own
+    retention periods.
+  </p>
+
+  <h2>Your choices</h2>
+  <ul>
+    <li>Grant or withdraw analytics consent at any time from the app's settings screen.</li>
+    <li>Uninstalling the app removes all locally stored preferences.</li>
+    <li>Third-party destinations you query directly (certificate, DNS, and HTTP tools) are subject
+      to that destination's own privacy policy, not this one.</li>
+  </ul>
+
+  <h2>Changes to this policy</h2>
+  <p>
+    This policy may be updated as the app's features change. The "last updated" date at the top of
+    this page reflects the most recent revision.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions about this policy can be sent to
+    <a href="mailto:liam@sorsby.co">liam@sorsby.co</a>.
+  </p>
+
+  <footer>
+    &copy; 2026 Debug Toolkit. This page is served as a static site and sets no cookies of its
+    own.
+  </footer>
+</main>
+</body>
+</html>
