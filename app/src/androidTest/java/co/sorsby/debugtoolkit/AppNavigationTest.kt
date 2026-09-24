@@ -1,5 +1,7 @@
 package co.sorsby.debugtoolkit
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
@@ -10,8 +12,10 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.http.HttpInspector
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
@@ -38,6 +42,9 @@ import org.koin.core.context.GlobalContext
 
 @RunWith(AndroidJUnit4::class)
 class AppNavigationTest {
+    @get:Rule
+    val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(*requiredWifiTestPermissions())
+
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
@@ -77,8 +84,9 @@ class AppNavigationTest {
     fun networkTabShowsContinuousMonitor() {
         composeRule.onNodeWithText("Network").performClick()
         composeRule.onNodeWithText("MONITORING LIVE").assertIsDisplayed()
-        composeRule.onNodeWithText("Connection details").assertIsDisplayed()
+        composeRule.onNodeWithText("Connection details").performScrollTo().assertIsDisplayed()
         composeRule.onNodeWithText("Signal and link properties refresh every two seconds")
+            .performScrollTo()
             .assertIsDisplayed()
     }
 
@@ -133,3 +141,18 @@ class AppNavigationTest {
         composeRule.onAllNodesWithText(label).onLast().performClick()
     }
 }
+
+/**
+ * Mirrors [co.sorsby.debugtoolkit.ui.screens.NetworkScreen]'s permission requirements so the
+ * network monitoring tab renders its granted-state UI during instrumentation tests, rather than
+ * the permission request card.
+ */
+private fun requiredWifiTestPermissions(): Array<String> =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        arrayOf(Manifest.permission.NEARBY_WIFI_DEVICES)
+    } else {
+        arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+        )
+    }
