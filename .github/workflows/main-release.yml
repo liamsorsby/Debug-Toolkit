@@ -99,16 +99,20 @@ jobs:
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload.keystore"
       - name: Validate release credentials
         run: |
-          jq empty app/google-services.json || {
-            echo "::error::FIREBASE_GOOGLE_SERVICES_JSON secret is not valid JSON. Copy the raw contents of google-services.json (unescaped, no surrounding quotes) into the secret."
+          jq -e 'type == "object" and has("project_info")' app/google-services.json >/dev/null || {
+            echo "::error::FIREBASE_GOOGLE_SERVICES_JSON secret is missing or not valid google-services.json content. Copy the raw contents of google-services.json (unescaped, no surrounding quotes) into the secret."
             exit 1
           }
-          jq empty "$RUNNER_TEMP/firebase-service-account.json" || {
-            echo "::error::FIREBASE_SERVICE_ACCOUNT_JSON secret is not valid JSON. Copy the raw contents of the service account key file into the secret."
+          jq -e 'type == "object" and has("private_key")' "$RUNNER_TEMP/firebase-service-account.json" >/dev/null || {
+            echo "::error::FIREBASE_SERVICE_ACCOUNT_JSON secret is missing or not valid service account JSON. Copy the raw contents of the service account key file into the secret."
             exit 1
           }
-          jq empty "$RUNNER_TEMP/play-service-account.json" || {
-            echo "::error::PLAY_SERVICE_ACCOUNT_JSON secret is not valid JSON. Copy the raw contents of the Play service account key file into the secret."
+          jq -e 'type == "object" and has("private_key")' "$RUNNER_TEMP/play-service-account.json" >/dev/null || {
+            echo "::error::PLAY_SERVICE_ACCOUNT_JSON secret is missing or not valid service account JSON. Copy the raw contents of the Play service account key file into the secret."
+            exit 1
+          }
+          [[ -s "$RUNNER_TEMP/upload.keystore" ]] || {
+            echo "::error::ANDROID_KEYSTORE_BASE64 secret is missing or empty. Set it to the base64-encoded contents of the upload keystore."
             exit 1
           }
       - name: Calculate Play version code
