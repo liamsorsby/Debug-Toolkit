@@ -1,3 +1,4 @@
+import com.google.firebase.perf.plugin.FirebasePerfExtension
 import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
@@ -13,6 +14,7 @@ val firebaseConfigured = file("google-services.json").exists()
 if (firebaseConfigured) {
     apply(plugin = "com.google.gms.google-services")
     apply(plugin = "com.google.firebase.crashlytics")
+    apply(plugin = "com.google.firebase.firebase-perf")
 }
 val releaseStoreFile = System.getenv("ANDROID_KEYSTORE_PATH")
 val releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
@@ -60,6 +62,15 @@ android {
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             isPseudoLocalesEnabled = true
+            if (firebaseConfigured) {
+                configure<FirebasePerfExtension> {
+                    // Local JVM unit tests compile against the debug variant and run on a
+                    // stubbed Android runtime, which is incompatible with the Performance
+                    // Monitoring plugin's OkHttp bytecode instrumentation. Automatic network,
+                    // screen, and app-start traces remain enabled for the release build.
+                    setInstrumentationEnabled(false)
+                }
+            }
         }
         release {
             signingConfig = signingConfigs.findByName("release")
