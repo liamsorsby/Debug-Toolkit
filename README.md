@@ -84,3 +84,54 @@ points/adapters are excluded because they are covered by instrumentation tests o
 not contain independently testable business decisions.
 
 GitHub Actions runs these gates for pushes to `main` and all pull requests.
+
+## CI and releases
+
+Pull requests and `main` use separate GitHub Actions workflows. Pull requests must use
+a Conventional Commit title because the repository is expected to use squash merges.
+Examples include `fix(network): clarify capacity values`, `feat(dns): add HTTPS
+records`, and `feat!: redesign diagnostic storage`. The title determines whether
+semantic-release proposes a patch, minor, or major version. The first tagged release
+is `1.0.0`; subsequent releases increment from the latest `v*` tag.
+
+The pull-request workflow runs JVM tests, coverage enforcement, Android lint, an
+optimized release build, profile and benchmark module builds, emulator integration
+tests, and SonarCloud analysis. After every required check passes, same-repository pull
+requests distribute a debug APK through Firebase App Distribution. Fork pull requests
+never receive deployment credentials and are not distributed.
+
+Pushes to `main` repeat the release gates and then run semantic-release. Fastlane builds
+a signed release APK and AAB, distributes the APK through Firebase App Distribution,
+and uploads the AAB to Google Play's internal track. Semantic-release creates the Git
+tag and GitHub release only after Fastlane succeeds. Measured Macrobenchmark regression
+tests remain a managed-physical-device responsibility; GitHub-hosted emulators only
+validate instrumentation and profile compatibility.
+
+Configure these GitHub environments:
+
+- `pr-distribution` for trusted pull-request Firebase uploads.
+- `production-release` for Firebase and Google Play delivery. Repository maintainers
+  can require approval for this environment.
+
+Configure these GitHub Actions secrets:
+
+- `FIREBASE_GOOGLE_SERVICES_JSON`: contents of `app/google-services.json`.
+- `FIREBASE_APP_ID`: Firebase Android application ID.
+- `FIREBASE_SERVICE_ACCOUNT_JSON`: service account JSON with App Distribution access.
+- `PLAY_SERVICE_ACCOUNT_JSON`: Play Console service account JSON.
+- `ANDROID_KEYSTORE_BASE64`: base64-encoded Google Play upload keystore.
+- `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
+- `SONAR_TOKEN`: SonarCloud analysis token.
+
+Configure these repository or environment variables:
+
+- `SONAR_PROJECT_KEY` and `SONAR_ORGANIZATION`.
+- `FIREBASE_TESTER_GROUPS`, containing comma-separated App Distribution groups.
+- `VERSION_CODE_OFFSET`, if the Play listing already has a version code greater than
+  the `main` workflow run number. The published version code is this offset plus the
+  run number.
+
+Protect `main`, allow squash merging only, and require the Conventional PR title,
+Tests/lint/coverage/profiles, Emulator integration tests, and SonarCloud checks. Add
+`app/google-services.json` only through CI or local ignored configuration; never commit
+service accounts or signing material.

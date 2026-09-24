@@ -1,0 +1,177 @@
+name: Pull request
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  commit-policy:
+    name: Conventional PR title
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Lint squash commit title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$PR_TITLE" | npx commitlint
+
+  version-preview:
+    name: Version preview
+    needs: commit-policy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Calculate proposed semantic version
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: npm run release:preview
+
+  quality:
+    name: Tests, lint, coverage, and profiles
+    needs: commit-policy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Run JVM, lint, coverage, release, and profile gates
+        run: >
+          ./gradlew
+          qualityCheck
+          jacocoTestReport
+          assembleRelease
+          :baselineprofile:assemble
+          :benchmark:assemble
+          --stacktrace
+          --console=plain
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-reports
+          path: |
+            app/build/reports/
+            app/build/test-results/
+            app/build/outputs/apk/release/
+            baselineprofile/build/reports/
+            benchmark/build/reports/
+          if-no-files-found: warn
+
+  instrumentation:
+    name: Emulator integration tests
+    needs: commit-policy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+      - uses: gradle/actions/setup-gradle@v4
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          disable-animations: true
+          script: ./gradlew connectedDebugAndroidTest --stacktrace --console=plain
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: instrumentation-reports
+          path: app/build/reports/androidTests/
+          if-no-files-found: warn
+
+  sonarcloud:
+    name: SonarCloud
+    needs: commit-policy
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Generate analysis inputs
+        run: >
+          ./gradlew
+          testDebugUnitTest
+          lintDebug
+          jacocoTestReport
+          --stacktrace
+          --console=plain
+      - uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+            -Dsonar.qualitygate.wait=true
+
+  distribute:
+    name: Firebase test distribution
+    needs:
+      - version-preview
+      - quality
+      - instrumentation
+      - sonarcloud
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    environment: pr-distribution
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+      - uses: gradle/actions/setup-gradle@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+      - name: Materialize Firebase configuration
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.FIREBASE_GOOGLE_SERVICES_JSON }}
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          printf '%s' "$GOOGLE_SERVICES_JSON" > app/google-services.json
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-service-account.json"
+      - name: Build Firebase debug APK
+        run: ./gradlew assembleDebug --stacktrace --console=plain
+      - name: Distribute to Firebase testers
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_SERVICE_ACCOUNT_PATH: ${{ runner.temp }}/firebase-service-account.json
+          FIREBASE_TESTER_GROUPS: ${{ vars.FIREBASE_TESTER_GROUPS }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          bundle exec fastlane android distribute_pr \
+            apk_path:app/build/outputs/apk/debug/app-debug.apk \
+            release_notes:"PR #${PR_NUMBER}: ${PR_TITLE} (${COMMIT_SHA})"

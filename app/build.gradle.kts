@@ -14,6 +14,16 @@ if (firebaseConfigured) {
     apply(plugin = "com.google.gms.google-services")
     apply(plugin = "com.google.firebase.crashlytics")
 }
+val releaseStoreFile = System.getenv("ANDROID_KEYSTORE_PATH")
+val releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+val releaseKeyAlias = System.getenv("ANDROID_KEY_ALIAS")
+val releaseKeyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+val releaseSigningConfigured = listOf(
+    releaseStoreFile,
+    releaseStorePassword,
+    releaseKeyAlias,
+    releaseKeyPassword,
+).all { !it.isNullOrBlank() }
 
 jacoco {
     toolVersion = "0.8.13"
@@ -29,12 +39,22 @@ android {
         applicationId = "co.sorsby.debugtoolkit"
         minSdk = 29
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = System.getenv("VERSION_CODE")?.toIntOrNull() ?: 1
+        versionName = System.getenv("VERSION_NAME") ?: "0.1.0-local"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (releaseSigningConfigured) {
+            create("release") {
+                storeFile = file(requireNotNull(releaseStoreFile))
+                storePassword = releaseStorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
     buildTypes {
         debug {
             enableUnitTestCoverage = true
@@ -42,8 +62,9 @@ android {
             isPseudoLocalesEnabled = true
         }
         release {
+            signingConfig = signingConfigs.findByName("release")
             optimization {
-                enable = false
+                enable = true
             }
         }
         create("benchmark") {

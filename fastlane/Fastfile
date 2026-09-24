@@ -1,0 +1,47 @@
+default_platform(:android)
+opt_out_usage
+
+platform :android do
+  desc "Distribute a pull-request debug APK to Firebase testers"
+  lane :distribute_pr do |options|
+    firebase_app_distribution(
+      app: ENV.fetch("FIREBASE_APP_ID"),
+      android_artifact_type: "APK",
+      android_artifact_path: options.fetch(:apk_path),
+      service_credentials_file: ENV.fetch("FIREBASE_SERVICE_ACCOUNT_PATH"),
+      groups: ENV["FIREBASE_TESTER_GROUPS"],
+      release_notes: options.fetch(:release_notes)
+    )
+  end
+
+  desc "Build and publish a signed release to Firebase and Google Play internal"
+  lane :release do |options|
+    ENV["VERSION_NAME"] = options.fetch(:version_name)
+    ENV["VERSION_CODE"] = options.fetch(:version_code)
+
+    gradle(task: "clean")
+    gradle(task: "assemble", build_type: "Release")
+    gradle(task: "bundle", build_type: "Release")
+
+    firebase_app_distribution(
+      app: ENV.fetch("FIREBASE_APP_ID"),
+      android_artifact_type: "APK",
+      android_artifact_path: "app/build/outputs/apk/release/app-release.apk",
+      service_credentials_file: ENV.fetch("FIREBASE_SERVICE_ACCOUNT_PATH"),
+      groups: ENV["FIREBASE_TESTER_GROUPS"],
+      release_notes: "Version #{options.fetch(:version_name)}"
+    )
+
+    upload_to_play_store(
+      package_name: "co.sorsby.debugtoolkit",
+      aab: "app/build/outputs/bundle/release/app-release.aab",
+      track: "internal",
+      json_key: ENV.fetch("PLAY_SERVICE_ACCOUNT_PATH"),
+      release_status: "completed",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+end
