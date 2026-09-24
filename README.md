@@ -96,11 +96,15 @@ is `1.0.0`; subsequent releases increment from the latest `v*` tag.
 
 The pull-request workflow runs JVM tests, coverage enforcement, Android lint, an
 optimized release build, profile and benchmark module builds, emulator integration
-tests, and SonarCloud analysis. After every required check passes, same-repository pull
+tests, and SonarCloud analysis. The emulator job verifies Android framework readiness
+and requires successful instrumentation result files so infrastructure failures cannot
+be reported as passing tests. After every required check passes, same-repository pull
 requests distribute a debug APK through Firebase App Distribution. Fork pull requests
 never receive deployment credentials and are not distributed.
 
-Pushes to `main` repeat the release gates and then run semantic-release. Fastlane builds
+Pushes to `main` repeat the deterministic release gates and then run semantic-release.
+Emulator tests are not repeated because protected `main` accepts only pull requests
+that passed the required integration check. Fastlane builds
 a signed release APK and AAB during release preparation. After semantic-release creates
 the Git tag, its publish phase distributes the APK through Firebase App Distribution,
 uploads the AAB to Google Play's internal track, and creates the GitHub release. Measured

@@ -94,12 +94,14 @@ jobs:
           api-level: 35
           arch: x86_64
           disable-animations: true
-          script: ./gradlew connectedDebugAndroidTest --stacktrace --console=plain
+          script: bash .github/scripts/run-instrumentation-tests.sh
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: instrumentation-reports
-          path: app/build/reports/androidTests/
+          path: |
+            app/build/outputs/androidTest-results/
+            app/build/reports/androidTests/
           if-no-files-found: warn
 
   sonarcloud:
