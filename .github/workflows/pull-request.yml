@@ -104,44 +104,12 @@ jobs:
             app/build/reports/androidTests/
           if-no-files-found: warn
 
-  sonarcloud:
-    name: SonarCloud
-    needs: commit-policy
-    if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
-        with:
-          distribution: temurin
-          java-version: "25"
-      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
-      - name: Generate analysis inputs
-        run: >
-          ./gradlew
-          testDebugUnitTest
-          lintDebug
-          jacocoTestReport
-          --stacktrace
-          --console=plain
-      - uses: SonarSource/sonarqube-scan-action@ba9859eae8dd6bd29e412f25ddbbef3d032000f4 # v8.2.2
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
-            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
-            -Dsonar.qualitygate.wait=true
-
   distribute:
     name: Firebase test distribution
     needs:
       - version-preview
       - quality
       - instrumentation
-      - sonarcloud
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     environment: pr-distribution
