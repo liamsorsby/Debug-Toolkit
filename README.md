@@ -101,11 +101,11 @@ requests distribute a debug APK through Firebase App Distribution. Fork pull req
 never receive deployment credentials and are not distributed.
 
 Pushes to `main` repeat the release gates and then run semantic-release. Fastlane builds
-a signed release APK and AAB, distributes the APK through Firebase App Distribution,
-and uploads the AAB to Google Play's internal track. Semantic-release creates the Git
-tag and GitHub release only after Fastlane succeeds. Measured Macrobenchmark regression
-tests remain a managed-physical-device responsibility; GitHub-hosted emulators only
-validate instrumentation and profile compatibility.
+a signed release APK and AAB during release preparation. After semantic-release creates
+the Git tag, its publish phase distributes the APK through Firebase App Distribution,
+uploads the AAB to Google Play's internal track, and creates the GitHub release. Measured
+Macrobenchmark regression tests remain a managed-physical-device responsibility;
+GitHub-hosted emulators only validate instrumentation and profile compatibility.
 
 Configure these GitHub environments:
 

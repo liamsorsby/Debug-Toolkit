@@ -14,15 +14,18 @@ platform :android do
     )
   end
 
-  desc "Build and publish a signed release to Firebase and Google Play internal"
-  lane :release do |options|
+  desc "Build signed release artifacts"
+  lane :build_release do |options|
     ENV["VERSION_NAME"] = options.fetch(:version_name)
     ENV["VERSION_CODE"] = options.fetch(:version_code)
 
     gradle(task: "clean")
     gradle(task: "assemble", build_type: "Release")
     gradle(task: "bundle", build_type: "Release")
+  end
 
+  desc "Publish existing release artifacts to Firebase and Google Play internal"
+  lane :publish_release do |options|
     firebase_app_distribution(
       app: ENV.fetch("FIREBASE_APP_ID"),
       android_artifact_type: "APK",
@@ -40,6 +43,7 @@ platform :android do
       release_status: "completed",
       skip_upload_apk: true,
       skip_upload_metadata: true,
+      skip_upload_changelogs: true,
       skip_upload_images: true,
       skip_upload_screenshots: true
     )

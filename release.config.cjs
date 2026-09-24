@@ -18,8 +18,11 @@ module.exports = {
       "@semantic-release/exec",
       {
         prepareCmd:
-          "bundle exec fastlane android release " +
-          "version_name:${nextRelease.version} version_code:$VERSION_CODE"
+          "bundle exec fastlane android build_release " +
+          "version_name:${nextRelease.version} version_code:$VERSION_CODE",
+        publishCmd:
+          "bundle exec fastlane android publish_release " +
+          "version_name:${nextRelease.version}"
       }
     ],
     [
