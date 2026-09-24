@@ -87,6 +87,11 @@ android {
 }
 
 dependencies {
+    constraints {
+        implementation(libs.guava) {
+            because("Versions before 32.0.0 contain insecure temporary-file APIs")
+        }
+    }
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
