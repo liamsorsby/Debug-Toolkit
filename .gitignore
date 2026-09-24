@@ -21,3 +21,4 @@ node_modules/
 .bundle/
 vendor/bundle/
 fastlane/report.xml
+upload.keystore
