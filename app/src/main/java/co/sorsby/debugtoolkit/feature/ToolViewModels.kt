@@ -4,13 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
 import co.sorsby.debugtoolkit.core.model.AppSettings
-import co.sorsby.debugtoolkit.core.model.DnsResult
-import co.sorsby.debugtoolkit.core.model.HttpInspection
 import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
 import co.sorsby.debugtoolkit.core.model.PingMode
 import co.sorsby.debugtoolkit.core.model.SpeedResult
 import co.sorsby.debugtoolkit.core.model.ThemeMode
-import co.sorsby.debugtoolkit.core.model.TlsResult
 import co.sorsby.debugtoolkit.core.model.ToolState
 import co.sorsby.debugtoolkit.core.model.ToolError
 import co.sorsby.debugtoolkit.data.dns.DnsRecordType
