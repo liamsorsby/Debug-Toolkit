@@ -2,4 +2,13 @@
 <resources>
 
     <style name="Theme.DebugToolkit" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Shown for the brief window between process start and the first Compose frame. Reuses
+         the launcher icon's navy background and mark so cold start reads as one continuous
+         brand moment instead of a blank flash before the themed content appears. -->
+    <style name="Theme.DebugToolkit.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/brand_splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.DebugToolkit</item>
+    </style>
 </resources>

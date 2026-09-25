@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches the navy background used by the adaptive launcher icon (see
+         drawable/ic_launcher_background.xml), reused as the splash screen background so the
+         cold-start experience reads as one continuous brand moment rather than a plain flash. -->
+    <color name="brand_splash_background">#163A5F</color>
+</resources>

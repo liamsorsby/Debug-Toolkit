@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
@@ -16,11 +17,17 @@ import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             val settingsViewModel: SettingsViewModel = koinViewModel()
             val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
+            val isReady by settingsViewModel.isReady.collectAsStateWithLifecycle()
+            // Keep the branded splash on screen until the persisted settings have actually
+            // loaded, so a returning user's saved consent choice is never replaced for a frame
+            // by the first-launch gate while AppSettings()'s placeholder default is showing.
+            splashScreen.setKeepOnScreenCondition { !isReady }
             DebugToolkitTheme(
                 darkTheme = when (settings.themeMode) {
                     ThemeMode.SYSTEM -> null

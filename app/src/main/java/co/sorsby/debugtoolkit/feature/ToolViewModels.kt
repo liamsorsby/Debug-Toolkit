@@ -27,16 +27,28 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
 
 class SettingsViewModel(private val repository: SettingsRepository) : ViewModel() {
-    val settings: StateFlow<AppSettings> = repository.settings.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = AppSettings(),
-    )
+    private val hasLoadedPersistedSettings = MutableStateFlow(false)
+
+    // True once the persisted settings have been read at least once. AppSettings() is only a
+    // placeholder shown for the first frame before DataStore replies; callers that need to
+    // distinguish "real value" from "default" (for example, holding the splash screen open so a
+    // returning user's saved consent choice never flashes the first-launch gate) should wait on
+    // this before acting on `settings`.
+    val isReady: StateFlow<Boolean> = hasLoadedPersistedSettings.asStateFlow()
+
+    val settings: StateFlow<AppSettings> = repository.settings
+        .onEach { hasLoadedPersistedSettings.value = true }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = AppSettings(),
+        )
 
     fun setThemeMode(mode: ThemeMode) {
         viewModelScope.launch { repository.setThemeMode(mode) }
