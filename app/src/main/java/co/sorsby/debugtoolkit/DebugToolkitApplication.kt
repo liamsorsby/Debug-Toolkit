@@ -10,6 +10,9 @@ import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.dns.RawDnsResolver
 import co.sorsby.debugtoolkit.data.http.HttpInspector
 import co.sorsby.debugtoolkit.data.http.OkHttpInspector
+import co.sorsby.debugtoolkit.data.lan.LanScanner
+import co.sorsby.debugtoolkit.data.lan.SweepLanScanner
+import co.sorsby.debugtoolkit.data.lan.currentPrivateIpv4Address
 import co.sorsby.debugtoolkit.data.network.AndroidNetworkMonitor
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
 import co.sorsby.debugtoolkit.data.ping.PingRunner
@@ -30,6 +33,7 @@ import co.sorsby.debugtoolkit.data.whois.SocketWhoisClient
 import co.sorsby.debugtoolkit.data.whois.WhoisClient
 import co.sorsby.debugtoolkit.feature.DnsViewModel
 import co.sorsby.debugtoolkit.feature.HttpViewModel
+import co.sorsby.debugtoolkit.feature.LanScanViewModel
 import co.sorsby.debugtoolkit.feature.NetworkViewModel
 import co.sorsby.debugtoolkit.feature.PingViewModel
 import co.sorsby.debugtoolkit.feature.PortScanViewModel
@@ -125,6 +129,10 @@ val appModule = module {
             endpoint = "https://1.1.1.1/cdn-cgi/trace".toHttpUrl(),
         )
     }
+    single<LanScanner> {
+        val connectivityManager = get<ConnectivityManager>()
+        SweepLanScanner(currentAddress = { connectivityManager.currentPrivateIpv4Address() })
+    }
     single<SpeedTestRepository> {
         CloudflareSpeedTestRepository(
             client = get(),
@@ -141,4 +149,5 @@ val appModule = module {
     viewModel { PortScanViewModel(get(), get()) }
     viewModel { WhoisViewModel(get(), get()) }
     viewModel { PublicIpViewModel(get(), get()) }
+    viewModel { LanScanViewModel(get(), get()) }
 }
