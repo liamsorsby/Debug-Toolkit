@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +32,9 @@ import co.sorsby.debugtoolkit.ui.components.InfoCard
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
 import co.sorsby.debugtoolkit.ui.components.ResultHeader
+import co.sorsby.debugtoolkit.ui.components.RunToolButton
 import co.sorsby.debugtoolkit.ui.components.ScreenList
+import co.sorsby.debugtoolkit.ui.components.TimingMetric
 import co.sorsby.debugtoolkit.ui.components.ToolInputCard
 import co.sorsby.debugtoolkit.ui.components.ToolIntroCard
 import co.sorsby.debugtoolkit.ui.components.ToolResult
@@ -133,13 +134,12 @@ fun DnsScreen(
                     ),
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Button(
+                RunToolButton(
+                    text = stringResource(R.string.dns_query_action),
+                    state = state.result,
                     onClick = onQuery,
-                    enabled = state.result !is ToolState.Loading && state.input.isNotBlank(),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(stringResource(R.string.dns_query_action))
-                }
+                    enabled = state.input.isNotBlank(),
+                )
             }
         }
         item { ToolResult(state.result) { DnsResultView(it) } }
@@ -151,10 +151,7 @@ private fun DnsResultView(result: DnsResult) {
     ResultCard {
         ResultHeader()
         Metric(stringResource(R.string.dns_status), result.status.toString())
-        Metric(
-            stringResource(R.string.dns_timing),
-            stringResource(R.string.duration_milliseconds_integer, result.elapsedMs),
-        )
+        TimingMetric(result.elapsedMs)
         Metric(stringResource(R.string.dns_authenticated), yesNo(result.authenticatedData))
         Metric(stringResource(R.string.dns_authoritative), yesNo(result.authoritative))
         result.records.forEach {

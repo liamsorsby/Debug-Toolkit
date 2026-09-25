@@ -3,7 +3,6 @@ package co.sorsby.debugtoolkit.ui.screens
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Speed
-import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +20,7 @@ import co.sorsby.debugtoolkit.ui.components.InfoCard
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
 import co.sorsby.debugtoolkit.ui.components.ResultHeader
+import co.sorsby.debugtoolkit.ui.components.RunToolButton
 import co.sorsby.debugtoolkit.ui.components.ScreenList
 import co.sorsby.debugtoolkit.ui.components.ToolInputCard
 import co.sorsby.debugtoolkit.ui.components.ToolIntroCard
@@ -72,13 +72,11 @@ fun SpeedScreen(
                         Text(stringResource(R.string.speed_disclosure_action))
                     }
                 } else {
-                    Button(
+                    RunToolButton(
+                        text = stringResource(R.string.speed_action),
+                        state = state,
                         onClick = onRunTest,
-                        enabled = state !is ToolState.Loading,
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Text(stringResource(R.string.speed_action))
-                    }
+                    )
                 }
             }
         }

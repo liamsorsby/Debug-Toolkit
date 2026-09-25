@@ -101,7 +101,6 @@
     <string name="dns_nameserver_helper">Leave blank to use Cloudflare\'s recursive resolver. Enter a nameserver hostname or IP address to query it directly, without recursion.</string>
     <string name="dns_query_action">Query DNS</string>
     <string name="dns_status">Status</string>
-    <string name="dns_timing">Timing</string>
     <string name="dns_authenticated">Authenticated data</string>
     <string name="dns_authoritative">Authoritative answer</string>
     <string name="dns_no_answers">The response contained no answer records.</string>
@@ -114,7 +113,6 @@
     <string name="tls_connection">Connection</string>
     <string name="tls_protocol">Protocol</string>
     <string name="tls_cipher_suite">Cipher suite</string>
-    <string name="tls_timing">Timing</string>
     <string name="tls_certificate_number">Certificate %1$d</string>
     <string name="tls_subject">Subject</string>
     <string name="tls_issuer">Issuer</string>
@@ -132,7 +130,6 @@
     <string name="http_status">Status</string>
     <string name="http_final_url">Final URL</string>
     <string name="http_protocol">Protocol</string>
-    <string name="http_timing">Timing</string>
     <string name="http_redirect">Redirect %1$d</string>
     <string name="http_headers">Headers</string>
     <string name="http_body_preview">Body preview</string>
@@ -166,7 +163,6 @@
     <string name="portscan_ports_helper">Comma separated ports or ranges, for example 22,80,443,8000-8010. Up to 64 ports per scan.</string>
     <string name="portscan_use_common_action">Use common ports</string>
     <string name="portscan_action">Scan ports</string>
-    <string name="portscan_timing">Timing</string>
     <string name="portscan_state_open">Open</string>
     <string name="portscan_state_closed">Closed</string>
     <string name="portscan_state_filtered">Filtered (no response)</string>
@@ -176,7 +172,6 @@
     <string name="whois_domain_label">Domain name</string>
     <string name="whois_action">Look up domain</string>
     <string name="whois_server_label">Server</string>
-    <string name="whois_timing">Timing</string>
 
     <string name="publicip_intro">See the public IP address and Cloudflare edge location your traffic is currently routed through.</string>
     <string name="publicip_action">Check public IP</string>
@@ -184,13 +179,11 @@
     <string name="publicip_country_label">Country</string>
     <string name="publicip_colo_label">Nearest Cloudflare location</string>
     <string name="publicip_warp_label">Cloudflare WARP</string>
-    <string name="publicip_timing">Timing</string>
 
     <string name="lanscan_intro">Sweep your local network to see which other devices respond, alongside their IP address and response time.</string>
     <string name="lanscan_action">Scan network</string>
     <string name="lanscan_subnet_label">Subnet</string>
     <string name="lanscan_addresses_scanned_label">Addresses scanned</string>
-    <string name="lanscan_timing">Timing</string>
     <string name="lanscan_device_hostname_unknown">Hostname unavailable</string>
     <string name="lanscan_device_response_time">%1$s (%2$d ms)</string>
     <string name="lanscan_no_devices">No other devices responded on this subnet.</string>
@@ -205,6 +198,7 @@
     <string name="speed_upload">Upload</string>
     <string name="speed_transferred">Transferred</string>
     <string name="speed_measured">Measured</string>
+    <string name="tool_timing">Timing</string>
     <string name="duration_milliseconds">%1$.1f ms</string>
     <string name="duration_milliseconds_integer">%1$d ms</string>
     <string name="size_megabytes">%1$.2f MB</string>

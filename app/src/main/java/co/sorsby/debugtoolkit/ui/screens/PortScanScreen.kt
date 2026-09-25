@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Radar
-import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,7 +25,9 @@ import co.sorsby.debugtoolkit.feature.PortScanViewModel
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
 import co.sorsby.debugtoolkit.ui.components.ResultHeader
+import co.sorsby.debugtoolkit.ui.components.RunToolButton
 import co.sorsby.debugtoolkit.ui.components.ScreenList
+import co.sorsby.debugtoolkit.ui.components.TimingMetric
 import co.sorsby.debugtoolkit.ui.components.ToolInputCard
 import co.sorsby.debugtoolkit.ui.components.ToolIntroCard
 import co.sorsby.debugtoolkit.ui.components.ToolResult
@@ -91,15 +92,12 @@ fun PortScanScreen(
                 ) {
                     Text(stringResource(R.string.portscan_use_common_action))
                 }
-                Button(
+                RunToolButton(
+                    text = stringResource(R.string.portscan_action),
+                    state = state.result,
                     onClick = onScan,
-                    enabled = state.result !is ToolState.Loading &&
-                        state.host.isNotBlank() &&
-                        state.ports.isNotBlank(),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(stringResource(R.string.portscan_action))
-                }
+                    enabled = state.host.isNotBlank() && state.ports.isNotBlank(),
+                )
             }
         }
         item { ToolResult(state.result) { PortScanResultView(it) } }
@@ -110,10 +108,7 @@ fun PortScanScreen(
 private fun PortScanResultView(result: PortScanResult) {
     ResultCard {
         ResultHeader()
-        Metric(
-            stringResource(R.string.portscan_timing),
-            stringResource(R.string.duration_milliseconds_integer, result.elapsedMs),
-        )
+        TimingMetric(result.elapsedMs)
         result.entries.forEach { entry -> PortEntryRow(entry) }
     }
 }

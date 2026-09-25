@@ -1,13 +1,9 @@
 package co.sorsby.debugtoolkit.ui.screens
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Public
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,7 +15,9 @@ import co.sorsby.debugtoolkit.feature.PublicIpViewModel
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
 import co.sorsby.debugtoolkit.ui.components.ResultHeader
+import co.sorsby.debugtoolkit.ui.components.RunToolButton
 import co.sorsby.debugtoolkit.ui.components.ScreenList
+import co.sorsby.debugtoolkit.ui.components.TimingMetric
 import co.sorsby.debugtoolkit.ui.components.ToolInputCard
 import co.sorsby.debugtoolkit.ui.components.ToolIntroCard
 import co.sorsby.debugtoolkit.ui.components.ToolResult
@@ -44,13 +42,11 @@ fun PublicIpScreen(state: PublicIpUiState, onLookup: () -> Unit) {
         }
         item {
             ToolInputCard {
-                Button(
+                RunToolButton(
+                    text = stringResource(R.string.publicip_action),
+                    state = state.result,
                     onClick = onLookup,
-                    enabled = state.result !is ToolState.Loading,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(stringResource(R.string.publicip_action))
-                }
+                )
             }
         }
         item { ToolResult(state.result) { PublicIpResultView(it) } }
@@ -71,10 +67,7 @@ private fun PublicIpResultView(result: PublicIpResult) {
             result.cloudflareColo ?: stringResource(R.string.value_unavailable),
         )
         Metric(stringResource(R.string.publicip_warp_label), yesNo(result.warpEnabled))
-        Metric(
-            stringResource(R.string.publicip_timing),
-            stringResource(R.string.duration_milliseconds_integer, result.elapsedMs),
-        )
+        TimingMetric(result.elapsedMs)
     }
 }
 

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.NetworkPing
-import androidx.compose.material3.Button
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -29,6 +28,7 @@ import co.sorsby.debugtoolkit.ui.components.InfoCard
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
 import co.sorsby.debugtoolkit.ui.components.ResultHeader
+import co.sorsby.debugtoolkit.ui.components.RunToolButton
 import co.sorsby.debugtoolkit.ui.components.ScreenList
 import co.sorsby.debugtoolkit.ui.components.ToolInputCard
 import co.sorsby.debugtoolkit.ui.components.ToolIntroCard
@@ -98,21 +98,18 @@ fun PingScreen(
                     ),
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Button(
+                RunToolButton(
+                    text = stringResource(
+                        if (state.mode == PingMode.PING) {
+                            R.string.ping_action
+                        } else {
+                            R.string.traceroute_action
+                        },
+                    ),
+                    state = activeResult,
                     onClick = onRun,
-                    enabled = activeResult !is ToolState.Loading && state.input.isNotBlank(),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(
-                        stringResource(
-                            if (state.mode == PingMode.PING) {
-                                R.string.ping_action
-                            } else {
-                                R.string.traceroute_action
-                            },
-                        ),
-                    )
-                }
+                    enabled = state.input.isNotBlank(),
+                )
             }
         }
         item {

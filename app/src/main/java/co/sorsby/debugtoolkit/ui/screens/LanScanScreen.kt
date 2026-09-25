@@ -1,13 +1,9 @@
 package co.sorsby.debugtoolkit.ui.screens
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeviceHub
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -21,8 +17,10 @@ import co.sorsby.debugtoolkit.ui.components.InfoCard
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
 import co.sorsby.debugtoolkit.ui.components.ResultHeader
+import co.sorsby.debugtoolkit.ui.components.RunToolButton
 import co.sorsby.debugtoolkit.ui.components.ScreenList
 import co.sorsby.debugtoolkit.ui.components.SectionLabel
+import co.sorsby.debugtoolkit.ui.components.TimingMetric
 import co.sorsby.debugtoolkit.ui.components.ToolInputCard
 import co.sorsby.debugtoolkit.ui.components.ToolIntroCard
 import co.sorsby.debugtoolkit.ui.components.ToolResult
@@ -46,13 +44,11 @@ fun LanScanScreen(state: LanScanUiState, onScan: () -> Unit) {
         }
         item {
             ToolInputCard {
-                Button(
+                RunToolButton(
+                    text = stringResource(R.string.lanscan_action),
+                    state = state.result,
                     onClick = onScan,
-                    enabled = state.result !is ToolState.Loading,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(stringResource(R.string.lanscan_action))
-                }
+                )
             }
         }
         item { ToolResult(state.result) { LanScanResultView(it) } }
@@ -68,10 +64,7 @@ private fun LanScanResultView(result: LanScanResult) {
             stringResource(R.string.lanscan_addresses_scanned_label),
             result.addressesScanned.toString(),
         )
-        Metric(
-            stringResource(R.string.lanscan_timing),
-            stringResource(R.string.duration_milliseconds_integer, result.elapsedMs),
-        )
+        TimingMetric(result.elapsedMs)
         if (result.devices.isEmpty()) {
             InfoCard(stringResource(R.string.lanscan_no_devices))
         } else {
