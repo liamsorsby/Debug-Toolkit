@@ -30,7 +30,7 @@
     <string name="tools_supporting">Tests run only when you start them</string>
 
     <string name="network_details_title">Connection details</string>
-    <string name="network_details_supporting">Signal and link properties refresh every two seconds</string>
+    <string name="network_details_supporting">Signal and link properties update live as they change</string>
     <string name="network_permission_title">Show Wi-Fi signal strength</string>
     <string name="network_permission_body">Allow nearby Wi-Fi access to display the live RSSI value. The app does not collect location.</string>
     <string name="network_permission_action">Allow access</string>
@@ -136,7 +136,7 @@
     <string name="settings_appearance">Appearance</string>
     <string name="settings_appearance_supporting">Choose how the app follows your device theme.</string>
     <string name="settings_analytics">Optional analytics</string>
-    <string name="settings_analytics_supporting">Allow privacy-safe screen journeys, diagnostic outcomes, and performance measurements. Entered endpoints and diagnostic results are never included.</string>
+    <string name="settings_analytics_supporting">Allow privacy-safe screen journeys and diagnostic outcomes to help improve the app. Entered endpoints and diagnostic results are never included. Crash and performance monitoring run separately to keep the app reliable, regardless of this choice.</string>
     <string name="theme_system">System default</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
@@ -144,8 +144,14 @@
     <string name="consent_denied">Denied</string>
     <string name="consent_granted">Granted</string>
 
+    <string name="consent_gate_title">Before you start</string>
+    <string name="consent_gate_body">Debug Toolkit uses privacy-safe analytics to understand which tools are useful and where diagnostics fail, so it can be improved over time. Entered endpoints and diagnostic results are never collected. Crash and performance monitoring always run, separately from this choice, to keep the app stable.</string>
+    <string name="consent_gate_body_secondary">You can change this at any time from Settings.</string>
+    <string name="consent_gate_accept">Accept</string>
+    <string name="consent_gate_decline">Decline</string>
+
     <string name="about_privacy">Privacy</string>
-    <string name="about_privacy_body">Debug Toolkit stores only theme and consent preferences. Crash reports are collected to diagnose failures. Analytics and performance collection require explicit consent and never include entered endpoints or diagnostic results. DNS and speed tests contact Cloudflare; certificate and HTTP tools contact the endpoint you enter.</string>
+    <string name="about_privacy_body">Debug Toolkit stores only theme and consent preferences. Crash and performance monitoring are collected at all times to diagnose failures and keep the app reliable. Analytics require explicit consent and never include entered endpoints or diagnostic results. DNS and speed tests contact Cloudflare; certificate and HTTP tools contact the endpoint you enter.</string>
     <string name="about_measurements">Measurements</string>
     <string name="about_measurements_body">Wi-Fi dBm indicates signal strength, not physical distance. Speed results are point-in-time estimates affected by device and network conditions.</string>
 </resources>

@@ -31,6 +31,9 @@ class FirebaseJourneyTracker(
 
     init {
         crashlytics?.setCrashlyticsCollectionEnabled(true)
+        // Performance monitoring reports app-health metrics (not user behavior) and runs
+        // unconditionally, independent of analytics consent, matching Crashlytics.
+        performance?.isPerformanceCollectionEnabled = true
         scope.launch {
             settingsRepository.settings.collectLatest { settings ->
                 setJourneyCollectionEnabled(
@@ -55,9 +58,9 @@ class FirebaseJourneyTracker(
 
     override fun startTool(tool: DiagnosticTool): ToolJourney {
         crashlytics?.log("tool:${tool.eventValue}:started")
-        val trace = withJourneyCollection {
+        val trace = performance?.newTrace("tool_${tool.eventValue}")?.also(Trace::start)
+        withJourneyCollection {
             analytics?.logEvent("tool_started", tool.parameters())
-            performance?.newTrace("tool_${tool.eventValue}")?.also(Trace::start)
         }
         return FirebaseToolJourney(
             tool = tool,
@@ -81,7 +84,6 @@ class FirebaseJourneyTracker(
                 ),
             )
             analytics?.setAnalyticsCollectionEnabled(enabled)
-            performance?.isPerformanceCollectionEnabled = enabled
             journeyCollectionEnabled = enabled
         }
     }
@@ -95,15 +97,15 @@ class FirebaseJourneyTracker(
     ) {
         synchronized(consentLock) {
             if (journeyCollectionEnabled) {
-                trace?.putAttribute("outcome", outcome)
-                errorType?.let { trace?.putAttribute("error_type", it) }
                 analytics?.logEvent(
                     "tool_completed",
                     tool.parameters(outcome, elapsedMs, errorType),
                 )
             }
-            trace?.stop()
         }
+        trace?.putAttribute("outcome", outcome)
+        errorType?.let { trace?.putAttribute("error_type", it) }
+        trace?.stop()
     }
 
     private fun <T> withJourneyCollection(action: () -> T): T? =

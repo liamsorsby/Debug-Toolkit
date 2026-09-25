@@ -6,9 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
 import co.sorsby.debugtoolkit.core.model.ThemeMode
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.ui.DebugToolkitApp
+import co.sorsby.debugtoolkit.ui.screens.ConsentGateScreen
 import co.sorsby.debugtoolkit.ui.theme.DebugToolkitTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -26,7 +28,14 @@ class MainActivity : ComponentActivity() {
                     ThemeMode.DARK -> true
                 },
             ) {
-                DebugToolkitApp(settingsViewModel)
+                if (settings.analyticsConsent == AnalyticsConsent.UNSET) {
+                    ConsentGateScreen(
+                        onAccept = { settingsViewModel.setConsent(AnalyticsConsent.GRANTED) },
+                        onDecline = { settingsViewModel.setConsent(AnalyticsConsent.DENIED) },
+                    )
+                } else {
+                    DebugToolkitApp(settingsViewModel)
+                }
             }
         }
     }

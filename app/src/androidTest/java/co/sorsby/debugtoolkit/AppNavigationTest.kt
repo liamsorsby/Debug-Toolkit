@@ -37,16 +37,22 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.koin.core.context.GlobalContext
 
 @RunWith(AndroidJUnit4::class)
 class AppNavigationTest {
-    @get:Rule
-    val permissionRule: GrantPermissionRule = GrantPermissionRule.grant(*requiredWifiTestPermissions())
+    private val composeRule = createAndroidComposeRule<MainActivity>()
 
+    // Every test in this class exercises the main app content, so consent is granted before
+    // MainActivity launches. The consent gate itself is covered separately in ConsentGateTest.
     @get:Rule
-    val composeRule = createAndroidComposeRule<MainActivity>()
+    val ruleChain: RuleChain = RuleChain
+        .outerRule(GrantPermissionRule.grant(*requiredWifiTestPermissions()))
+        .around(GrantedConsentRule())
+        .around(composeRule)
+        .around(AccessibilityCheckRule())
 
     @Test
     fun applicationPackageIsCorrect() {
@@ -85,7 +91,7 @@ class AppNavigationTest {
         composeRule.onNodeWithText("Network").performClick()
         composeRule.onNodeWithText("MONITORING LIVE").assertIsDisplayed()
         composeRule.onNodeWithText("Connection details").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithText("Signal and link properties refresh every two seconds")
+        composeRule.onNodeWithText("Signal and link properties update live as they change")
             .performScrollTo()
             .assertIsDisplayed()
     }
@@ -96,6 +102,15 @@ class AppNavigationTest {
         composeRule.onNodeWithText("Settings").performClick()
         composeRule.onNodeWithText("Appearance").assertIsDisplayed()
         composeRule.onNodeWithText("Optional analytics").assertIsDisplayed()
+    }
+
+    @Test
+    fun settingsHidesUndecidedConsentOption() {
+        composeRule.onNodeWithContentDescription("Open navigation").performClick()
+        composeRule.onNodeWithText("Settings").performClick()
+        composeRule.onNodeWithText("Not decided").assertDoesNotExist()
+        composeRule.onNodeWithText("Granted").assertIsDisplayed()
+        composeRule.onNodeWithText("Denied").assertIsDisplayed()
     }
 
     @Test
@@ -133,7 +148,7 @@ class AppNavigationTest {
         assertEquals(ThemeMode.DARK, settings.themeMode)
         assertEquals(AnalyticsConsent.DENIED, settings.analyticsConsent)
         repository.setThemeMode(ThemeMode.SYSTEM)
-        repository.setAnalyticsConsent(AnalyticsConsent.UNSET)
+        repository.setAnalyticsConsent(AnalyticsConsent.GRANTED)
     }
 
     private fun openDrawerDestination(label: String) {
