@@ -18,18 +18,29 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.http.HttpInspector
+import co.sorsby.debugtoolkit.data.lan.LanScanner
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
+import co.sorsby.debugtoolkit.data.ping.PingRunner
+import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
+import co.sorsby.debugtoolkit.data.portscan.PortScanner
+import co.sorsby.debugtoolkit.data.publicip.PublicIpLookup
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
+import co.sorsby.debugtoolkit.data.whois.WhoisClient
 import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
 import co.sorsby.debugtoolkit.core.model.ThemeMode
 import co.sorsby.debugtoolkit.feature.DnsViewModel
 import co.sorsby.debugtoolkit.feature.HttpViewModel
+import co.sorsby.debugtoolkit.feature.LanScanViewModel
 import co.sorsby.debugtoolkit.feature.NetworkViewModel
+import co.sorsby.debugtoolkit.feature.PingViewModel
+import co.sorsby.debugtoolkit.feature.PortScanViewModel
+import co.sorsby.debugtoolkit.feature.PublicIpViewModel
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.feature.SpeedViewModel
 import co.sorsby.debugtoolkit.feature.TlsViewModel
+import co.sorsby.debugtoolkit.feature.WhoisViewModel
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -69,6 +80,12 @@ class AppNavigationTest {
         assertNotNull(koin.get<DnsRepository>())
         assertNotNull(koin.get<TlsInspector>())
         assertNotNull(koin.get<HttpInspector>())
+        assertNotNull(koin.get<PingRunner>())
+        assertNotNull(koin.get<TracerouteRunner>())
+        assertNotNull(koin.get<PortScanner>())
+        assertNotNull(koin.get<WhoisClient>())
+        assertNotNull(koin.get<PublicIpLookup>())
+        assertNotNull(koin.get<LanScanner>())
         assertNotNull(koin.get<JourneyTracker>())
         assertNotNull(koin.get<SettingsViewModel>())
         assertNotNull(koin.get<NetworkViewModel>())
@@ -76,6 +93,11 @@ class AppNavigationTest {
         assertNotNull(koin.get<DnsViewModel>())
         assertNotNull(koin.get<TlsViewModel>())
         assertNotNull(koin.get<HttpViewModel>())
+        assertNotNull(koin.get<PingViewModel>())
+        assertNotNull(koin.get<PortScanViewModel>())
+        assertNotNull(koin.get<WhoisViewModel>())
+        assertNotNull(koin.get<PublicIpViewModel>())
+        assertNotNull(koin.get<LanScanViewModel>())
     }
 
     @Test
@@ -84,6 +106,11 @@ class AppNavigationTest {
         composeRule.onAllNodesWithText("Certificate inspector").onFirst().assertIsDisplayed()
         composeRule.onAllNodesWithText("DNS lookup").onFirst().assertIsDisplayed()
         composeRule.onAllNodesWithText("HTTP inspector").onFirst().assertIsDisplayed()
+        composeRule.onAllNodesWithText("Ping and traceroute").onFirst().assertIsDisplayed()
+        composeRule.onAllNodesWithText("Port scanner").onFirst().assertIsDisplayed()
+        composeRule.onAllNodesWithText("WHOIS lookup").onFirst().assertIsDisplayed()
+        composeRule.onAllNodesWithText("Public IP and location").onFirst().assertIsDisplayed()
+        composeRule.onAllNodesWithText("Local network scanner").onFirst().assertIsDisplayed()
     }
 
     @Test
@@ -132,6 +159,33 @@ class AppNavigationTest {
             .assertIsOff()
             .performClick()
             .assertIsOn()
+    }
+
+    @Test
+    fun drawerOpensEveryNewDiagnostic() {
+        openDrawerDestination("Ping and traceroute")
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.ping_intro))
+            .assertIsDisplayed()
+
+        openDrawerDestination("Port scanner")
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.portscan_intro))
+            .assertIsDisplayed()
+
+        openDrawerDestination("WHOIS lookup")
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.whois_intro))
+            .assertIsDisplayed()
+
+        openDrawerDestination("Public IP and location")
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.publicip_intro))
+            .assertIsDisplayed()
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.publicip_action))
+            .assertIsDisplayed()
+
+        openDrawerDestination("Local network scanner")
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.lanscan_intro))
+            .assertIsDisplayed()
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.lanscan_action))
+            .assertIsDisplayed()
     }
 
     @Test
