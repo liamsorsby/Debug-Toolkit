@@ -7,7 +7,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
-import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
 import co.sorsby.debugtoolkit.core.model.ToolError
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +36,7 @@ class FirebaseJourneyTracker(
         scope.launch {
             settingsRepository.settings.collectLatest { settings ->
                 setJourneyCollectionEnabled(
-                    settings.analyticsConsent == AnalyticsConsent.GRANTED,
+                    AnalyticsConsentPolicy.journeyCollectionEnabled(settings.analyticsConsent),
                 )
             }
         }
@@ -72,17 +71,7 @@ class FirebaseJourneyTracker(
 
     private fun setJourneyCollectionEnabled(enabled: Boolean) {
         synchronized(consentLock) {
-            analytics?.setConsent(
-                mapOf(
-                    FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE to enabled.consentStatus(),
-                    FirebaseAnalytics.ConsentType.AD_STORAGE to
-                        FirebaseAnalytics.ConsentStatus.DENIED,
-                    FirebaseAnalytics.ConsentType.AD_USER_DATA to
-                        FirebaseAnalytics.ConsentStatus.DENIED,
-                    FirebaseAnalytics.ConsentType.AD_PERSONALIZATION to
-                        FirebaseAnalytics.ConsentStatus.DENIED,
-                ),
-            )
+            analytics?.setConsent(AnalyticsConsentPolicy.consentSettings(enabled))
             analytics?.setAnalyticsCollectionEnabled(enabled)
             journeyCollectionEnabled = enabled
         }
@@ -186,10 +175,3 @@ private fun DiagnosticTool.parameters(
 
 private val ToolError.eventValue: String
     get() = name.lowercase()
-
-private fun Boolean.consentStatus(): FirebaseAnalytics.ConsentStatus =
-    if (this) {
-        FirebaseAnalytics.ConsentStatus.GRANTED
-    } else {
-        FirebaseAnalytics.ConsentStatus.DENIED
-    }

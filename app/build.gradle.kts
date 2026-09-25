@@ -184,15 +184,29 @@ val coverageClasses = fileTree(
     include("co/sorsby/debugtoolkit/data/whois/**")
     include("co/sorsby/debugtoolkit/data/publicip/**")
     include("co/sorsby/debugtoolkit/data/lan/**")
+    include("co/sorsby/debugtoolkit/data/network/**")
+    include("co/sorsby/debugtoolkit/data/settings/**")
     include("co/sorsby/debugtoolkit/data/speed/**")
     include("co/sorsby/debugtoolkit/data/tls/**")
     include("co/sorsby/debugtoolkit/feature/**")
+    // Only the consent rules are covered here. The rest of the telemetry package is a Firebase
+    // adapter whose collaborators are all SDK singletons that cannot be constructed on the
+    // unit test JVM, so covering it would assert nothing.
+    include("co/sorsby/debugtoolkit/telemetry/AnalyticsConsentPolicy*")
     exclude("**/*\$\$serializer*")
     exclude("**/*\$Companion*")
     exclude("**/*UiState*")
     exclude("**/DnsPayload*")
     exclude("**/DnsAnswer*")
+    // Thin wrappers over the Android framework. Each one only reads platform state and hands
+    // it to a pure counterpart that is covered above: AndroidNetworkMonitor to
+    // NetworkSnapshotFactory, DataStoreSettingsRepository to SettingsDecoder, and
+    // AndroidLinkAddress to LinkAddressSelector. They cannot run on the unit test JVM, so
+    // including them would only report unreachable lines rather than untested logic.
     exclude("**/AndroidLinkAddress*")
+    exclude("**/AndroidNetworkMonitor*")
+    exclude("**/DataStoreSettingsRepository*")
+    exclude("**/SettingsRepositoryKt*")
 }
 val coverageExecutionData = layout.buildDirectory.file(
     "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
