@@ -20,7 +20,7 @@ class ShellPingRunner(
         val target = InputValidation.host(host)
         require(count in 1..MAX_PROBES) { "Send between 1 and $MAX_PROBES probes." }
         val result = processRunner.run(
-            command = listOf("/system/bin/ping", "-4", "-c", count.toString(), target),
+            command = listOf("/system/bin/ping", "-c", count.toString(), target),
             timeoutSeconds = count.toLong() * PER_PROBE_TIMEOUT_SECONDS + BASE_TIMEOUT_SECONDS,
         )
         return PingOutputParser.parse(target, result.output)
