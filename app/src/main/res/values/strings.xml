@@ -81,10 +81,13 @@
     <string name="dns_domain_label">Domain</string>
     <string name="dns_ip_label">IP address</string>
     <string name="dns_record_type">Record type</string>
+    <string name="dns_nameserver_label">Nameserver (optional)</string>
+    <string name="dns_nameserver_helper">Leave blank to use Cloudflare\'s recursive resolver. Enter a nameserver hostname or IP address to query it directly, without recursion.</string>
     <string name="dns_query_action">Query DNS</string>
     <string name="dns_status">Status</string>
     <string name="dns_timing">Timing</string>
     <string name="dns_authenticated">Authenticated data</string>
+    <string name="dns_authoritative">Authoritative answer</string>
     <string name="dns_no_answers">The response contained no answer records.</string>
     <string name="dns_answer_label">%1$s · TTL %2$d</string>
     <string name="dns_authority_label">Authority · %1$s · TTL %2$d</string>

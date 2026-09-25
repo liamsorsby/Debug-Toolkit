@@ -49,6 +49,7 @@ fun DnsRoute(viewModel: DnsViewModel = koinViewModel()) {
         state = state,
         onInputChanged = viewModel::setInput,
         onTypeChanged = viewModel::setType,
+        onNameserverChanged = viewModel::setNameserver,
         onQuery = viewModel::query,
     )
 }
@@ -58,6 +59,7 @@ fun DnsScreen(
     state: DnsUiState,
     onInputChanged: (String) -> Unit,
     onTypeChanged: (DnsRecordType) -> Unit,
+    onNameserverChanged: (String) -> Unit,
     onQuery: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -119,6 +121,18 @@ fun DnsScreen(
                         }
                     }
                 }
+                OutlinedTextField(
+                    value = state.nameserver,
+                    onValueChange = onNameserverChanged,
+                    label = { Text(stringResource(R.string.dns_nameserver_label)) },
+                    supportingText = { Text(stringResource(R.string.dns_nameserver_helper)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Ascii,
+                        imeAction = ImeAction.Done,
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                )
                 Button(
                     onClick = onQuery,
                     enabled = state.result !is ToolState.Loading && state.input.isNotBlank(),
@@ -142,6 +156,7 @@ private fun DnsResultView(result: DnsResult) {
             stringResource(R.string.duration_milliseconds_integer, result.elapsedMs),
         )
         Metric(stringResource(R.string.dns_authenticated), yesNo(result.authenticatedData))
+        Metric(stringResource(R.string.dns_authoritative), yesNo(result.authoritative))
         result.records.forEach {
             Metric(stringResource(R.string.dns_answer_label, it.name, it.ttlSeconds), it.value)
         }
@@ -178,6 +193,7 @@ private fun DnsScreenPreview() {
             ),
             onInputChanged = {},
             onTypeChanged = {},
+            onNameserverChanged = {},
             onQuery = {},
         )
     }
