@@ -8,6 +8,9 @@ import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
 import co.sorsby.debugtoolkit.core.model.PingMode
 import co.sorsby.debugtoolkit.core.model.PingProbe
 import co.sorsby.debugtoolkit.core.model.PingResult
+import co.sorsby.debugtoolkit.core.model.PortScanEntry
+import co.sorsby.debugtoolkit.core.model.PortScanResult
+import co.sorsby.debugtoolkit.core.model.PortState
 import co.sorsby.debugtoolkit.core.model.SpeedResult
 import co.sorsby.debugtoolkit.core.model.ThemeMode
 import co.sorsby.debugtoolkit.core.model.TlsResult
@@ -22,6 +25,7 @@ import co.sorsby.debugtoolkit.data.http.HttpMethod
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
 import co.sorsby.debugtoolkit.data.ping.PingRunner
 import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
+import co.sorsby.debugtoolkit.data.portscan.PortScanner
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
@@ -269,6 +273,70 @@ class ToolViewModelsTest {
         viewModel.run()
         advanceUntilIdle()
         assertEquals(ToolState.Error(ToolError.INVALID_INPUT), viewModel.state.value.pingResult)
+    }
+
+    @Test
+    fun `port scan parses ports, scans, and exposes the result`() = runTest(dispatcher) {
+        val result = PortScanResult(
+            host = "example.com",
+            entries = listOf(PortScanEntry(80, PortState.OPEN), PortScanEntry(22, PortState.FILTERED)),
+            elapsedMs = 120,
+        )
+        val viewModel = PortScanViewModel(
+            scanner = object : PortScanner {
+                override suspend fun scan(host: String, ports: List<Int>): PortScanResult {
+                    assertEquals("example.com", host)
+                    assertEquals(listOf(22, 80), ports)
+                    return result
+                }
+            },
+            journeyTracker = journeyTracker,
+        )
+        viewModel.setHost("example.com")
+        viewModel.setPorts("80,22")
+
+        viewModel.scan()
+        advanceUntilIdle()
+
+        assertEquals(ToolState.Success(result), viewModel.state.value.result)
+        assertEquals(listOf(DiagnosticTool.PORT_SCAN), journeyTracker.startedTools)
+        assertEquals(listOf("success"), journeyTracker.outcomes)
+    }
+
+    @Test
+    fun `port scan surfaces an invalid port list as invalid input`() = runTest(dispatcher) {
+        val viewModel = PortScanViewModel(
+            scanner = object : PortScanner {
+                override suspend fun scan(host: String, ports: List<Int>): PortScanResult =
+                    throw AssertionError("Should not scan with an invalid port list.")
+            },
+            journeyTracker = journeyTracker,
+        )
+        viewModel.setHost("example.com")
+        viewModel.setPorts("not-a-port")
+
+        viewModel.scan()
+        advanceUntilIdle()
+
+        assertEquals(ToolState.Error(ToolError.INVALID_INPUT), viewModel.state.value.result)
+    }
+
+    @Test
+    fun `port scan use common ports fills the preset list`() {
+        val viewModel = PortScanViewModel(
+            scanner = object : PortScanner {
+                override suspend fun scan(host: String, ports: List<Int>): PortScanResult =
+                    throw AssertionError("Not used in this test.")
+            },
+            journeyTracker = journeyTracker,
+        )
+
+        viewModel.useCommonPorts()
+
+        assertEquals(
+            co.sorsby.debugtoolkit.data.portscan.PortListParser.COMMON_PORTS.joinToString(","),
+            viewModel.state.value.ports,
+        )
     }
 }
 

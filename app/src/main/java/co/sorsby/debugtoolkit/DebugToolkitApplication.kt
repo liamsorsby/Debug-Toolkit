@@ -16,6 +16,8 @@ import co.sorsby.debugtoolkit.data.ping.PingRunner
 import co.sorsby.debugtoolkit.data.ping.ShellPingRunner
 import co.sorsby.debugtoolkit.data.ping.ShellTracerouteRunner
 import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
+import co.sorsby.debugtoolkit.data.portscan.PortScanner
+import co.sorsby.debugtoolkit.data.portscan.SocketPortScanner
 import co.sorsby.debugtoolkit.data.settings.DataStoreSettingsRepository
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.CloudflareSpeedTestRepository
@@ -26,6 +28,7 @@ import co.sorsby.debugtoolkit.feature.DnsViewModel
 import co.sorsby.debugtoolkit.feature.HttpViewModel
 import co.sorsby.debugtoolkit.feature.NetworkViewModel
 import co.sorsby.debugtoolkit.feature.PingViewModel
+import co.sorsby.debugtoolkit.feature.PortScanViewModel
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.feature.SpeedViewModel
 import co.sorsby.debugtoolkit.feature.TlsViewModel
@@ -108,6 +111,7 @@ val appModule = module {
     single<HttpInspector> { OkHttpInspector(get()) }
     single<PingRunner> { ShellPingRunner() }
     single<TracerouteRunner> { ShellTracerouteRunner() }
+    single<PortScanner> { SocketPortScanner() }
     single<SpeedTestRepository> {
         CloudflareSpeedTestRepository(
             client = get(),
@@ -121,4 +125,5 @@ val appModule = module {
     viewModel { HttpViewModel(get(), get()) }
     viewModel { SpeedViewModel(get(), get()) }
     viewModel { PingViewModel(get(), get(), get()) }
+    viewModel { PortScanViewModel(get(), get()) }
 }

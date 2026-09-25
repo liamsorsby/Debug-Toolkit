@@ -20,6 +20,8 @@ import co.sorsby.debugtoolkit.data.http.HttpMethod
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
 import co.sorsby.debugtoolkit.data.ping.PingRunner
 import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
+import co.sorsby.debugtoolkit.data.portscan.PortListParser
+import co.sorsby.debugtoolkit.data.portscan.PortScanner
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
@@ -203,6 +205,36 @@ class PingViewModel(
         const val PING_PROBE_COUNT = 5
         const val TRACEROUTE_MAX_HOPS = 20
     }
+}
+
+class PortScanViewModel(
+    private val scanner: PortScanner,
+    private val journeyTracker: JourneyTracker,
+) : ViewModel() {
+    private val mutableState = MutableStateFlow(PortScanUiState())
+    val state = mutableState.asStateFlow()
+
+    fun setHost(value: String) {
+        mutableState.value = mutableState.value.copy(host = value)
+    }
+
+    fun setPorts(value: String) {
+        mutableState.value = mutableState.value.copy(ports = value)
+    }
+
+    fun useCommonPorts() {
+        setPorts(PortListParser.COMMON_PORTS.joinToString(","))
+    }
+
+    fun scan() = runTool(
+        tool = DiagnosticTool.PORT_SCAN,
+        journeyTracker = journeyTracker,
+        update = { mutableState.value = mutableState.value.copy(result = it) },
+        action = {
+            val ports = PortListParser.parse(mutableState.value.ports)
+            scanner.scan(mutableState.value.host, ports)
+        },
+    )
 }
 
 private fun <T> ViewModel.runTool(

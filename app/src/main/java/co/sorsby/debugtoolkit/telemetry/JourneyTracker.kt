@@ -20,4 +20,5 @@ enum class DiagnosticTool(val eventValue: String) {
     HTTP("http"),
     PING("ping"),
     TRACEROUTE("traceroute"),
+    PORT_SCAN("portscan"),
 }

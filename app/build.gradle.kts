@@ -174,6 +174,7 @@ val coverageClasses = fileTree(
     include("co/sorsby/debugtoolkit/data/dns/**")
     include("co/sorsby/debugtoolkit/data/http/**")
     include("co/sorsby/debugtoolkit/data/ping/**")
+    include("co/sorsby/debugtoolkit/data/portscan/**")
     include("co/sorsby/debugtoolkit/data/speed/**")
     include("co/sorsby/debugtoolkit/data/tls/**")
     include("co/sorsby/debugtoolkit/feature/**")
