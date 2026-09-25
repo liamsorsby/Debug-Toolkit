@@ -2,8 +2,11 @@ package co.sorsby.debugtoolkit.feature
 
 import co.sorsby.debugtoolkit.core.model.DnsResult
 import co.sorsby.debugtoolkit.core.model.HttpInspection
+import co.sorsby.debugtoolkit.core.model.PingMode
+import co.sorsby.debugtoolkit.core.model.PingResult
 import co.sorsby.debugtoolkit.core.model.TlsResult
 import co.sorsby.debugtoolkit.core.model.ToolState
+import co.sorsby.debugtoolkit.core.model.TracerouteResult
 import co.sorsby.debugtoolkit.data.dns.DnsRecordType
 import co.sorsby.debugtoolkit.data.http.HttpMethod
 
@@ -24,4 +27,11 @@ data class HttpUiState(
     val method: HttpMethod = HttpMethod.GET,
     val showResponseBody: Boolean = false,
     val result: ToolState<HttpInspection> = ToolState.Idle,
+)
+
+data class PingUiState(
+    val input: String = "",
+    val mode: PingMode = PingMode.PING,
+    val pingResult: ToolState<PingResult> = ToolState.Idle,
+    val tracerouteResult: ToolState<TracerouteResult> = ToolState.Idle,
 )

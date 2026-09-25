@@ -100,4 +100,21 @@ class InputValidationTest {
             SpeedMath.megabitsPerSecond(1, 0)
         }
     }
+
+    @Test
+    fun `host accepts plain hostnames and IPv4 addresses`() {
+        assertEquals("example.com", InputValidation.host(" example.com "))
+        assertEquals("192.0.2.1", InputValidation.host("192.0.2.1"))
+    }
+
+    @Test
+    fun `host rejects blank values, whitespace, schemes, ports and flag-like input`() {
+        assertThrows(IllegalArgumentException::class.java) { InputValidation.host("") }
+        assertThrows(IllegalArgumentException::class.java) { InputValidation.host("  ") }
+        assertThrows(IllegalArgumentException::class.java) { InputValidation.host("example.com:443") }
+        assertThrows(IllegalArgumentException::class.java) { InputValidation.host("https://example.com") }
+        assertThrows(IllegalArgumentException::class.java) { InputValidation.host("example.com/path") }
+        assertThrows(IllegalArgumentException::class.java) { InputValidation.host("has space.com") }
+        assertThrows(IllegalArgumentException::class.java) { InputValidation.host("-oProxyCommand=evil") }
+    }
 }

@@ -63,6 +63,24 @@ object InputValidation {
         return value
     }
 
+    /**
+     * Validates a bare hostname or IP address with no scheme, port, or path, for tools that
+     * shell out to or open a raw socket against a target (ping, traceroute, port scanner,
+     * WHOIS). Rejects anything that looks like a command line argument, since these values may
+     * end up in a process argument list.
+     */
+    fun host(input: String): String {
+        val value = input.trim()
+        require(value.isNotEmpty()) { "Enter a hostname or IP address." }
+        require(!value.any(Char::isWhitespace) && value.first() != '-') {
+            "Enter a valid hostname or IP address."
+        }
+        require(value.none { it in "/\\?#@:" }) {
+            "Enter a hostname or IP address without a scheme, port, or path."
+        }
+        return value
+    }
+
     private fun validLabel(label: String): Boolean =
         label.isNotEmpty() &&
             label.length <= 63 &&
