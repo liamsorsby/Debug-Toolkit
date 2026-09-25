@@ -18,6 +18,15 @@ val DarkSurface = Color(0xFF171C23)
 val LightBackground = Color(0xFFF7F9FC)
 val LightSurface = Color(0xFFFFFFFF)
 
+// Fixed signature gradient stops (navy to cyan), independent of the active MaterialTheme
+// color scheme. Used sparingly on a handful of signature surfaces (splash, top bar, drawer
+// header, hero cards) so the app keeps a recognisable brand identity even when dynamic color
+// (Material You) is active and overrides every other role with wallpaper-derived tones.
+val BrandGradientLightStart = Blue40
+val BrandGradientLightEnd = Cyan40
+val BrandGradientDarkStart = Color(0xFF0B2440)
+val BrandGradientDarkEnd = Color(0xFF04333D)
+
 // Full tonal extension of the brand palette, used to fill in every Material 3
 // color role (containers, surface tiers, outlines, inverse colors) so both
 // light and dark themes look deliberately designed instead of falling back to
