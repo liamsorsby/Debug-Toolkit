@@ -30,7 +30,6 @@ class ShellTracerouteRunner(
             val result = processRunner.run(
                 command = listOf(
                     "/system/bin/ping",
-                    "-4",
                     "-c",
                     "1",
                     "-t",

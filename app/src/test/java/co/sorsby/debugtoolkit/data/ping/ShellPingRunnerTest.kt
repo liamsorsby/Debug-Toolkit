@@ -29,7 +29,7 @@ class ShellPingRunnerTest {
 
         val result = runner.ping("example.com", count = 1)
 
-        assertEquals(listOf("/system/bin/ping", "-4", "-c", "1", "example.com"), capturedCommand)
+        assertEquals(listOf("/system/bin/ping", "-c", "1", "example.com"), capturedCommand)
         assertEquals(1, result.transmitted)
         assertEquals(1, result.received)
     }
