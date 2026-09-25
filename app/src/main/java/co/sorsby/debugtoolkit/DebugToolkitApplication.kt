@@ -18,6 +18,8 @@ import co.sorsby.debugtoolkit.data.ping.ShellTracerouteRunner
 import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
 import co.sorsby.debugtoolkit.data.portscan.PortScanner
 import co.sorsby.debugtoolkit.data.portscan.SocketPortScanner
+import co.sorsby.debugtoolkit.data.publicip.CloudflareTraceLookup
+import co.sorsby.debugtoolkit.data.publicip.PublicIpLookup
 import co.sorsby.debugtoolkit.data.settings.DataStoreSettingsRepository
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.CloudflareSpeedTestRepository
@@ -31,6 +33,7 @@ import co.sorsby.debugtoolkit.feature.HttpViewModel
 import co.sorsby.debugtoolkit.feature.NetworkViewModel
 import co.sorsby.debugtoolkit.feature.PingViewModel
 import co.sorsby.debugtoolkit.feature.PortScanViewModel
+import co.sorsby.debugtoolkit.feature.PublicIpViewModel
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.feature.SpeedViewModel
 import co.sorsby.debugtoolkit.feature.TlsViewModel
@@ -116,6 +119,12 @@ val appModule = module {
     single<TracerouteRunner> { ShellTracerouteRunner() }
     single<PortScanner> { SocketPortScanner() }
     single<WhoisClient> { SocketWhoisClient() }
+    single<PublicIpLookup> {
+        CloudflareTraceLookup(
+            client = get(),
+            endpoint = "https://1.1.1.1/cdn-cgi/trace".toHttpUrl(),
+        )
+    }
     single<SpeedTestRepository> {
         CloudflareSpeedTestRepository(
             client = get(),
@@ -131,4 +140,5 @@ val appModule = module {
     viewModel { PingViewModel(get(), get(), get()) }
     viewModel { PortScanViewModel(get(), get()) }
     viewModel { WhoisViewModel(get(), get()) }
+    viewModel { PublicIpViewModel(get(), get()) }
 }

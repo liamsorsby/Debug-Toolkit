@@ -178,6 +178,14 @@
     <string name="whois_server_label">Server</string>
     <string name="whois_timing">Timing</string>
 
+    <string name="publicip_intro">See the public IP address and Cloudflare edge location your traffic is currently routed through.</string>
+    <string name="publicip_action">Check public IP</string>
+    <string name="publicip_address_label">IP address</string>
+    <string name="publicip_country_label">Country</string>
+    <string name="publicip_colo_label">Nearest Cloudflare location</string>
+    <string name="publicip_warp_label">Cloudflare WARP</string>
+    <string name="publicip_timing">Timing</string>
+
     <string name="speed_intro">Measure latency, jitter, download, and upload against Cloudflare.</string>
     <string name="speed_disclosure">This test sends and receives up to 7.2 MB through Cloudflare. Cloudflare receives your IP address as part of the connection.</string>
     <string name="speed_disclosure_action">I understand</string>
