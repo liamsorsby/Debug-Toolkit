@@ -230,4 +230,6 @@
     <string name="about_privacy_body">Debug Toolkit stores only theme and consent preferences. Crash and performance monitoring are collected at all times to diagnose failures and keep the app reliable. Analytics require explicit consent and never include entered endpoints or diagnostic results. DNS and speed tests contact Cloudflare; certificate and HTTP tools contact the endpoint you enter.</string>
     <string name="about_measurements">Measurements</string>
     <string name="about_measurements_body">Wi-Fi dBm indicates signal strength, not physical distance. Speed results are point-in-time estimates affected by device and network conditions.</string>
+    <string name="about_terms">Terms of use</string>
+    <string name="about_terms_body">The port scanner, ping/traceroute, WHOIS lookup, and local network scanner send traffic to hosts and devices you specify. Only use these tools against systems and networks you own or have permission to test. You are solely responsible for complying with applicable laws and third-party terms; the developer accepts no liability for misuse.</string>
 </resources>

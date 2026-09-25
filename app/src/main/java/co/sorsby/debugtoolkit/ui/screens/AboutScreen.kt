@@ -3,6 +3,7 @@ package co.sorsby.debugtoolkit.ui.screens
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +27,13 @@ fun AboutScreen() {
                 icon = Icons.Default.Info,
                 title = stringResource(R.string.about_measurements),
                 body = stringResource(R.string.about_measurements_body),
+            )
+        }
+        item {
+            InformationCard(
+                icon = Icons.Default.Warning,
+                title = stringResource(R.string.about_terms),
+                body = stringResource(R.string.about_terms_body),
             )
         }
     }
