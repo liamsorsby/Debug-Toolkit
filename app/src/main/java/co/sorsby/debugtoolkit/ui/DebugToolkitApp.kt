@@ -55,13 +55,19 @@ import co.sorsby.debugtoolkit.ui.navigation.AppDestination
 import co.sorsby.debugtoolkit.ui.navigation.AppDestinations
 import co.sorsby.debugtoolkit.ui.screens.AboutScreen
 import co.sorsby.debugtoolkit.ui.screens.DnsRoute
+import co.sorsby.debugtoolkit.ui.components.SectionLabel
 import co.sorsby.debugtoolkit.ui.screens.HttpRoute
+import co.sorsby.debugtoolkit.ui.screens.LanScanRoute
 import co.sorsby.debugtoolkit.ui.screens.NetworkRoute
 import co.sorsby.debugtoolkit.ui.screens.OverviewScreen
+import co.sorsby.debugtoolkit.ui.screens.PingRoute
+import co.sorsby.debugtoolkit.ui.screens.PortScanRoute
+import co.sorsby.debugtoolkit.ui.screens.PublicIpRoute
 import co.sorsby.debugtoolkit.ui.screens.SettingsRoute
 import co.sorsby.debugtoolkit.ui.screens.SpeedRoute
 import co.sorsby.debugtoolkit.ui.screens.TlsRoute
 import co.sorsby.debugtoolkit.ui.screens.ToolsScreen
+import co.sorsby.debugtoolkit.ui.screens.WhoisRoute
 import co.sorsby.debugtoolkit.ui.theme.BrandGradient
 import co.sorsby.debugtoolkit.ui.theme.DebugToolkitTheme
 import kotlinx.coroutines.launch
@@ -168,12 +174,27 @@ private fun AppDrawer(
             )
         }
         Spacer(Modifier.height(12.dp))
-        AppDestinations.drawer.forEach { destination ->
+        AppDestinations.diagnosticsBySection.forEach { (section, destinations) ->
+            if (destinations.isEmpty()) return@forEach
+            SectionLabel(stringResource(section.label))
+            destinations.forEach { destination ->
+                NavigationDrawerItem(
+                    label = { Text(stringResource(destination.label)) },
+                    selected = selectedRoute == destination.route,
+                    icon = { Icon(destination.icon, contentDescription = null) },
+                    onClick = { onDestinationSelected(destination) },
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                )
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+        listOf(AppDestinations.Settings, AppDestinations.About).forEach { destination ->
             NavigationDrawerItem(
                 label = { Text(stringResource(destination.label)) },
                 selected = selectedRoute == destination.route,
                 icon = { Icon(destination.icon, contentDescription = null) },
                 onClick = { onDestinationSelected(destination) },
+                modifier = Modifier.padding(horizontal = 12.dp),
             )
         }
     }
@@ -220,9 +241,14 @@ private fun AppNavHost(
         composable(AppDestinations.Network.route) { NetworkRoute() }
         composable(AppDestinations.Tools.route) { ToolsScreen(navigate) }
         composable(AppDestinations.Speed.route) { SpeedRoute(settingsViewModel) }
+        composable(AppDestinations.Ping.route) { PingRoute() }
+        composable(AppDestinations.PublicIp.route) { PublicIpRoute() }
         composable(AppDestinations.Tls.route) { TlsRoute() }
+        composable(AppDestinations.PortScanner.route) { PortScanRoute() }
         composable(AppDestinations.Dns.route) { DnsRoute() }
+        composable(AppDestinations.Whois.route) { WhoisRoute() }
         composable(AppDestinations.Http.route) { HttpRoute() }
+        composable(AppDestinations.LanScanner.route) { LanScanRoute() }
         composable(AppDestinations.Settings.route) { SettingsRoute(settingsViewModel) }
         composable(AppDestinations.About.route) { AboutScreen() }
     }

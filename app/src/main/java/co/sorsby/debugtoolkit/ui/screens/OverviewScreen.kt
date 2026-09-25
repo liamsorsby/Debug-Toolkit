@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import co.sorsby.debugtoolkit.R
 import co.sorsby.debugtoolkit.ui.components.ScreenList
 import co.sorsby.debugtoolkit.ui.components.SectionHeader
+import co.sorsby.debugtoolkit.ui.components.SectionLabel
 import co.sorsby.debugtoolkit.ui.navigation.AppDestination
 import co.sorsby.debugtoolkit.ui.navigation.AppDestinations
 import co.sorsby.debugtoolkit.ui.theme.BrandGradient
@@ -61,9 +62,13 @@ fun ToolsScreen(onDestinationSelected: (String) -> Unit) {
                 stringResource(R.string.tools_supporting),
             )
         }
-        items(AppDestinations.diagnostics.size) { index ->
-            val destination = AppDestinations.diagnostics[index]
-            ToolCard(destination) { onDestinationSelected(destination.route) }
+        AppDestinations.diagnosticsBySection.forEach { (section, destinations) ->
+            if (destinations.isEmpty()) return@forEach
+            item { SectionLabel(stringResource(section.label)) }
+            items(destinations.size) { index ->
+                val destination = destinations[index]
+                ToolCard(destination) { onDestinationSelected(destination.route) }
+            }
         }
     }
 }
