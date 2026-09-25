@@ -17,10 +17,26 @@
     <string name="nav_dns_description">Query individual records</string>
     <string name="nav_http">HTTP inspector</string>
     <string name="nav_http_description">Headers and responses</string>
+    <string name="nav_ping">Ping and traceroute</string>
+    <string name="nav_ping_description">Reachability and route hops</string>
+    <string name="nav_portscan">Port scanner</string>
+    <string name="nav_portscan_description">Check open TCP ports on a host</string>
+    <string name="nav_whois">WHOIS lookup</string>
+    <string name="nav_whois_description">Registrar and expiry details</string>
+    <string name="nav_publicip">Public IP and location</string>
+    <string name="nav_publicip_description">Your address as seen externally</string>
+    <string name="nav_lanscan">Local network scanner</string>
+    <string name="nav_lanscan_description">Discover devices on this network</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_settings_description">Appearance and privacy</string>
     <string name="nav_about">About</string>
     <string name="nav_about_description">Privacy and measurement notes</string>
+
+    <string name="nav_section_connectivity">Connectivity</string>
+    <string name="nav_section_security">Security</string>
+    <string name="nav_section_discovery">Discovery</string>
+
+    <string name="tool_coming_soon">This tool is being built and will be available in an upcoming release.</string>
 
     <string name="overview_tools_title">Diagnostic tools</string>
     <string name="overview_tools_supporting">Inspect a specific part of the connection</string>
@@ -30,7 +46,7 @@
     <string name="tools_supporting">Tests run only when you start them</string>
 
     <string name="network_details_title">Connection details</string>
-    <string name="network_details_supporting">Signal and link properties refresh every two seconds</string>
+    <string name="network_details_supporting">Signal and link properties update live as they change</string>
     <string name="network_permission_title">Show Wi-Fi signal strength</string>
     <string name="network_permission_body">Allow nearby Wi-Fi access to display the live RSSI value. The app does not collect location.</string>
     <string name="network_permission_action">Allow access</string>
@@ -81,10 +97,12 @@
     <string name="dns_domain_label">Domain</string>
     <string name="dns_ip_label">IP address</string>
     <string name="dns_record_type">Record type</string>
+    <string name="dns_nameserver_label">Nameserver (optional)</string>
+    <string name="dns_nameserver_helper">Leave blank to use Cloudflare\'s recursive resolver. Enter a nameserver hostname or IP address to query it directly, without recursion.</string>
     <string name="dns_query_action">Query DNS</string>
     <string name="dns_status">Status</string>
-    <string name="dns_timing">Timing</string>
     <string name="dns_authenticated">Authenticated data</string>
+    <string name="dns_authoritative">Authoritative answer</string>
     <string name="dns_no_answers">The response contained no answer records.</string>
     <string name="dns_answer_label">%1$s · TTL %2$d</string>
     <string name="dns_authority_label">Authority · %1$s · TTL %2$d</string>
@@ -95,7 +113,6 @@
     <string name="tls_connection">Connection</string>
     <string name="tls_protocol">Protocol</string>
     <string name="tls_cipher_suite">Cipher suite</string>
-    <string name="tls_timing">Timing</string>
     <string name="tls_certificate_number">Certificate %1$d</string>
     <string name="tls_subject">Subject</string>
     <string name="tls_issuer">Issuer</string>
@@ -113,11 +130,63 @@
     <string name="http_status">Status</string>
     <string name="http_final_url">Final URL</string>
     <string name="http_protocol">Protocol</string>
-    <string name="http_timing">Timing</string>
     <string name="http_redirect">Redirect %1$d</string>
     <string name="http_headers">Headers</string>
     <string name="http_body_preview">Body preview</string>
     <string name="http_body_preview_truncated">Body preview (truncated)</string>
+
+    <string name="ping_intro">Check reachability with ping, or trace the route packets take to a host.</string>
+    <string name="ping_mode_ping">Ping</string>
+    <string name="ping_mode_traceroute">Traceroute</string>
+    <string name="ping_host_label">Host or IP address</string>
+    <string name="ping_host_helper">IPv4 hostname or address, no scheme or port.</string>
+    <string name="ping_action">Run ping</string>
+    <string name="traceroute_action">Run traceroute</string>
+    <string name="ping_transmitted">Sent</string>
+    <string name="ping_received">Received</string>
+    <string name="ping_packet_loss">Packet loss</string>
+    <string name="ping_min">Minimum</string>
+    <string name="ping_avg">Average</string>
+    <string name="ping_max">Maximum</string>
+    <string name="ping_jitter">Jitter</string>
+    <string name="ping_probe_label">Probe %1$d</string>
+    <string name="ping_probe_timeout">No reply</string>
+    <string name="percentage">%1$.0f%%</string>
+    <string name="traceroute_hop_label">Hop %1$d</string>
+    <string name="traceroute_hop_no_reply">No reply</string>
+    <string name="traceroute_reached">Reached the destination</string>
+    <string name="traceroute_not_reached">Did not reach the destination within the hop limit.</string>
+
+    <string name="portscan_intro">Check whether specific TCP ports on a host are open, closed, or filtered by a firewall.</string>
+    <string name="portscan_host_label">Host or IP address</string>
+    <string name="portscan_ports_label">Ports</string>
+    <string name="portscan_ports_helper">Comma separated ports or ranges, for example 22,80,443,8000-8010. Up to 64 ports per scan.</string>
+    <string name="portscan_use_common_action">Use common ports</string>
+    <string name="portscan_action">Scan ports</string>
+    <string name="portscan_state_open">Open</string>
+    <string name="portscan_state_closed">Closed</string>
+    <string name="portscan_state_filtered">Filtered (no response)</string>
+    <string name="portscan_port_label">Port %1$d</string>
+
+    <string name="whois_intro">Look up domain registration details from the authoritative WHOIS registry.</string>
+    <string name="whois_domain_label">Domain name</string>
+    <string name="whois_action">Look up domain</string>
+    <string name="whois_server_label">Server</string>
+
+    <string name="publicip_intro">See the public IP address and Cloudflare edge location your traffic is currently routed through.</string>
+    <string name="publicip_action">Check public IP</string>
+    <string name="publicip_address_label">IP address</string>
+    <string name="publicip_country_label">Country</string>
+    <string name="publicip_colo_label">Nearest Cloudflare location</string>
+    <string name="publicip_warp_label">Cloudflare WARP</string>
+
+    <string name="lanscan_intro">Sweep your local network to see which other devices respond, alongside their IP address and response time.</string>
+    <string name="lanscan_action">Scan network</string>
+    <string name="lanscan_subnet_label">Subnet</string>
+    <string name="lanscan_addresses_scanned_label">Addresses scanned</string>
+    <string name="lanscan_device_hostname_unknown">Hostname unavailable</string>
+    <string name="lanscan_device_response_time">%1$s (%2$d ms)</string>
+    <string name="lanscan_no_devices">No other devices responded on this subnet.</string>
 
     <string name="speed_intro">Measure latency, jitter, download, and upload against Cloudflare.</string>
     <string name="speed_disclosure">This test sends and receives up to 7.2 MB through Cloudflare. Cloudflare receives your IP address as part of the connection.</string>
@@ -129,6 +198,7 @@
     <string name="speed_upload">Upload</string>
     <string name="speed_transferred">Transferred</string>
     <string name="speed_measured">Measured</string>
+    <string name="tool_timing">Timing</string>
     <string name="duration_milliseconds">%1$.1f ms</string>
     <string name="duration_milliseconds_integer">%1$d ms</string>
     <string name="size_megabytes">%1$.2f MB</string>
@@ -136,7 +206,7 @@
     <string name="settings_appearance">Appearance</string>
     <string name="settings_appearance_supporting">Choose how the app follows your device theme.</string>
     <string name="settings_analytics">Optional analytics</string>
-    <string name="settings_analytics_supporting">Allow privacy-safe screen journeys, diagnostic outcomes, and performance measurements. Entered endpoints and diagnostic results are never included.</string>
+    <string name="settings_analytics_supporting">Allow privacy-safe screen journeys and diagnostic outcomes to help improve the app. Entered endpoints and diagnostic results are never included. Crash and performance monitoring run separately to keep the app reliable, regardless of this choice.</string>
     <string name="theme_system">System default</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
@@ -144,8 +214,16 @@
     <string name="consent_denied">Denied</string>
     <string name="consent_granted">Granted</string>
 
+    <string name="consent_gate_title">Before you start</string>
+    <string name="consent_gate_body">Debug Toolkit uses privacy-safe analytics to understand which tools are useful and where diagnostics fail, so it can be improved over time. Entered endpoints and diagnostic results are never collected. Crash and performance monitoring always run, separately from this choice, to keep the app stable.</string>
+    <string name="consent_gate_body_secondary">You can change this at any time from Settings.</string>
+    <string name="consent_gate_accept">Accept</string>
+    <string name="consent_gate_decline">Decline</string>
+
     <string name="about_privacy">Privacy</string>
-    <string name="about_privacy_body">Debug Toolkit stores only theme and consent preferences. Crash reports are collected to diagnose failures. Analytics and performance collection require explicit consent and never include entered endpoints or diagnostic results. DNS and speed tests contact Cloudflare; certificate and HTTP tools contact the endpoint you enter.</string>
+    <string name="about_privacy_body">Debug Toolkit stores only theme and consent preferences. Crash and performance monitoring are collected at all times to diagnose failures and keep the app reliable. Analytics require explicit consent and never include entered endpoints or diagnostic results. DNS and speed tests contact Cloudflare; certificate and HTTP tools contact the endpoint you enter.</string>
     <string name="about_measurements">Measurements</string>
     <string name="about_measurements_body">Wi-Fi dBm indicates signal strength, not physical distance. Speed results are point-in-time estimates affected by device and network conditions.</string>
+    <string name="about_terms">Terms of use</string>
+    <string name="about_terms_body">The port scanner, ping/traceroute, WHOIS lookup, and local network scanner send traffic to hosts and devices you specify. Only use these tools against systems and networks you own or have permission to test. You are solely responsible for complying with applicable laws and third-party terms; the developer accepts no liability for misuse.</string>
 </resources>

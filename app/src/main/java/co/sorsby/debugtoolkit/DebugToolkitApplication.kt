@@ -5,25 +5,46 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import co.sorsby.debugtoolkit.data.dns.CloudflareDnsRepository
+import co.sorsby.debugtoolkit.data.dns.DirectNameserverResolver
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
+import co.sorsby.debugtoolkit.data.dns.RawDnsResolver
 import co.sorsby.debugtoolkit.data.http.HttpInspector
 import co.sorsby.debugtoolkit.data.http.OkHttpInspector
+import co.sorsby.debugtoolkit.data.lan.LanScanner
+import co.sorsby.debugtoolkit.data.lan.SweepLanScanner
+import co.sorsby.debugtoolkit.data.lan.currentPrivateIpv4Address
 import co.sorsby.debugtoolkit.data.network.AndroidNetworkMonitor
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
+import co.sorsby.debugtoolkit.data.ping.PingRunner
+import co.sorsby.debugtoolkit.data.ping.ShellPingRunner
+import co.sorsby.debugtoolkit.data.ping.ShellTracerouteRunner
+import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
+import co.sorsby.debugtoolkit.data.portscan.PortScanner
+import co.sorsby.debugtoolkit.data.portscan.SocketPortScanner
+import co.sorsby.debugtoolkit.data.publicip.CloudflareTraceLookup
+import co.sorsby.debugtoolkit.data.publicip.PublicIpLookup
 import co.sorsby.debugtoolkit.data.settings.DataStoreSettingsRepository
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.CloudflareSpeedTestRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.SocketTlsInspector
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
+import co.sorsby.debugtoolkit.data.whois.SocketWhoisClient
+import co.sorsby.debugtoolkit.data.whois.WhoisClient
 import co.sorsby.debugtoolkit.feature.DnsViewModel
 import co.sorsby.debugtoolkit.feature.HttpViewModel
+import co.sorsby.debugtoolkit.feature.LanScanViewModel
 import co.sorsby.debugtoolkit.feature.NetworkViewModel
+import co.sorsby.debugtoolkit.feature.PingViewModel
+import co.sorsby.debugtoolkit.feature.PortScanViewModel
+import co.sorsby.debugtoolkit.feature.PublicIpViewModel
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.feature.SpeedViewModel
 import co.sorsby.debugtoolkit.feature.TlsViewModel
+import co.sorsby.debugtoolkit.feature.WhoisViewModel
 import co.sorsby.debugtoolkit.telemetry.FirebaseJourneyTracker
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
+import com.newrelic.agent.android.NewRelic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -39,6 +60,13 @@ import java.util.concurrent.TimeUnit
 class DebugToolkitApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        // New Relic reports app-health metrics (crashes, network, and startup performance), so
+        // it is started unconditionally like Crashlytics/Performance Monitoring, independent of
+        // analytics consent. It only starts when a token has been supplied for this build
+        // variant; local builds without one simply skip it.
+        if (BuildConfig.NEW_RELIC_TOKEN.isNotBlank()) {
+            NewRelic.withApplicationToken(BuildConfig.NEW_RELIC_TOKEN).start(this)
+        }
         startKoin {
             androidContext(this@DebugToolkitApplication)
             modules(appModule)
@@ -80,15 +108,31 @@ val appModule = module {
     single<NetworkMonitor> {
         AndroidNetworkMonitor(androidContext(), get(), get())
     }
+    single<DirectNameserverResolver> { RawDnsResolver() }
     single<DnsRepository> {
         CloudflareDnsRepository(
             client = get(),
             json = get(),
             endpoint = "https://cloudflare-dns.com/dns-query".toHttpUrl(),
+            nameserverResolver = get(),
         )
     }
     single<TlsInspector> { SocketTlsInspector() }
     single<HttpInspector> { OkHttpInspector(get()) }
+    single<PingRunner> { ShellPingRunner() }
+    single<TracerouteRunner> { ShellTracerouteRunner() }
+    single<PortScanner> { SocketPortScanner() }
+    single<WhoisClient> { SocketWhoisClient() }
+    single<PublicIpLookup> {
+        CloudflareTraceLookup(
+            client = get(),
+            endpoint = "https://1.1.1.1/cdn-cgi/trace".toHttpUrl(),
+        )
+    }
+    single<LanScanner> {
+        val connectivityManager = get<ConnectivityManager>()
+        SweepLanScanner(currentAddress = { connectivityManager.currentPrivateIpv4Address() })
+    }
     single<SpeedTestRepository> {
         CloudflareSpeedTestRepository(
             client = get(),
@@ -101,4 +145,9 @@ val appModule = module {
     viewModel { TlsViewModel(get(), get()) }
     viewModel { HttpViewModel(get(), get()) }
     viewModel { SpeedViewModel(get(), get()) }
+    viewModel { PingViewModel(get(), get(), get()) }
+    viewModel { PortScanViewModel(get(), get()) }
+    viewModel { WhoisViewModel(get(), get()) }
+    viewModel { PublicIpViewModel(get(), get()) }
+    viewModel { LanScanViewModel(get(), get()) }
 }

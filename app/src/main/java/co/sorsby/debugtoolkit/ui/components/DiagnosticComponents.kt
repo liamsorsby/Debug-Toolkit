@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
@@ -48,7 +50,8 @@ fun ScreenList(content: LazyListScope.() -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .testTag("screenList"),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         content = content,
@@ -80,6 +83,36 @@ fun EndpointField(value: String, onValueChange: (String) -> Unit) {
             imeAction = ImeAction.Done,
         ),
         modifier = Modifier.fillMaxWidth(),
+    )
+}
+
+/**
+ * The primary action button shared by every tool screen. The button is always disabled while
+ * that tool is running, so callers only need to supply the conditions specific to their own
+ * inputs (for example, a non-blank host) via [enabled].
+ */
+@Composable
+fun RunToolButton(
+    text: String,
+    state: ToolState<*>,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled && state !is ToolState.Loading,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(text)
+    }
+}
+
+/** Reports how long a tool run took. Every tool measures this the same way, in milliseconds. */
+@Composable
+fun TimingMetric(elapsedMs: Long) {
+    Metric(
+        stringResource(R.string.tool_timing),
+        stringResource(R.string.duration_milliseconds_integer, elapsedMs),
     )
 }
 

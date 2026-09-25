@@ -18,4 +18,10 @@ enum class DiagnosticTool(val eventValue: String) {
     DNS("dns"),
     TLS("tls"),
     HTTP("http"),
+    PING("ping"),
+    TRACEROUTE("traceroute"),
+    PORT_SCAN("portscan"),
+    WHOIS("whois"),
+    PUBLIC_IP("publicip"),
+    LAN_SCAN("lanscan"),
 }

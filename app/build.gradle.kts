@@ -1,6 +1,7 @@
 import com.google.firebase.perf.plugin.FirebasePerfExtension
 import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -10,16 +11,32 @@ plugins {
     jacoco
 }
 
+// Local, gitignored overrides for secrets that are normally supplied as environment variables
+// in CI. Lets a developer set values once on their machine instead of exporting shell env vars.
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
+}
+fun secret(name: String): String = System.getenv(name) ?: localProperties.getProperty(name).orEmpty()
+
 val firebaseConfigured = file("google-services.json").exists()
 if (firebaseConfigured) {
     apply(plugin = "com.google.gms.google-services")
     apply(plugin = "com.google.firebase.crashlytics")
     apply(plugin = "com.google.firebase.firebase-perf")
 }
-val releaseStoreFile = System.getenv("ANDROID_KEYSTORE_PATH")
-val releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
-val releaseKeyAlias = System.getenv("ANDROID_KEY_ALIAS")
-val releaseKeyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+val newRelicDebugToken = secret("NEW_RELIC_DEBUG_TOKEN")
+val newRelicReleaseToken = secret("NEW_RELIC_RELEASE_TOKEN")
+val newRelicConfigured = newRelicDebugToken.isNotBlank() || newRelicReleaseToken.isNotBlank()
+if (newRelicConfigured) {
+    apply(plugin = "newrelic")
+}
+val releaseStoreFile = secret("ANDROID_KEYSTORE_PATH").ifBlank { null }
+val releaseStorePassword = secret("ANDROID_KEYSTORE_PASSWORD").ifBlank { null }
+val releaseKeyAlias = secret("ANDROID_KEY_ALIAS").ifBlank { null }
+val releaseKeyPassword = secret("ANDROID_KEY_PASSWORD").ifBlank { null }
 val releaseSigningConfigured = listOf(
     releaseStoreFile,
     releaseStorePassword,
@@ -62,6 +79,7 @@ android {
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             isPseudoLocalesEnabled = true
+            buildConfigField("String", "NEW_RELIC_TOKEN", "\"$newRelicDebugToken\"")
             if (firebaseConfigured) {
                 configure<FirebasePerfExtension> {
                     // Local JVM unit tests compile against the debug variant and run on a
@@ -74,6 +92,7 @@ android {
         }
         release {
             signingConfig = signingConfigs.findByName("release")
+            buildConfigField("String", "NEW_RELIC_TOKEN", "\"$newRelicReleaseToken\"")
             optimization {
                 enable = true
             }
@@ -111,6 +130,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -125,6 +145,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
+    implementation(libs.newrelic.android.agent)
     baselineProfile(project(":baselineprofile"))
     testImplementation(libs.junit)
     testImplementation(libs.koin.test.junit4)
@@ -134,6 +155,13 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.accessibility) {
+        // accessibility-test-framework bundles an old protobuf-lite that collides with the
+        // app's protobuf-java classes (used by Firebase Performance) at instrumentation
+        // runtime, crashing app startup with a NoSuchMethodError. The app's own protobuf
+        // dependency satisfies everything this library needs.
+        exclude(group = "com.google.protobuf", module = "protobuf-lite")
+    }
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
@@ -151,14 +179,34 @@ val coverageClasses = fileTree(
     include("co/sorsby/debugtoolkit/core/network/**")
     include("co/sorsby/debugtoolkit/data/dns/**")
     include("co/sorsby/debugtoolkit/data/http/**")
+    include("co/sorsby/debugtoolkit/data/ping/**")
+    include("co/sorsby/debugtoolkit/data/portscan/**")
+    include("co/sorsby/debugtoolkit/data/whois/**")
+    include("co/sorsby/debugtoolkit/data/publicip/**")
+    include("co/sorsby/debugtoolkit/data/lan/**")
+    include("co/sorsby/debugtoolkit/data/network/**")
+    include("co/sorsby/debugtoolkit/data/settings/**")
     include("co/sorsby/debugtoolkit/data/speed/**")
     include("co/sorsby/debugtoolkit/data/tls/**")
     include("co/sorsby/debugtoolkit/feature/**")
+    // Only the consent rules are covered here. The rest of the telemetry package is a Firebase
+    // adapter whose collaborators are all SDK singletons that cannot be constructed on the
+    // unit test JVM, so covering it would assert nothing.
+    include("co/sorsby/debugtoolkit/telemetry/AnalyticsConsentPolicy*")
     exclude("**/*\$\$serializer*")
     exclude("**/*\$Companion*")
     exclude("**/*UiState*")
     exclude("**/DnsPayload*")
     exclude("**/DnsAnswer*")
+    // Thin wrappers over the Android framework. Each one only reads platform state and hands
+    // it to a pure counterpart that is covered above: AndroidNetworkMonitor to
+    // NetworkSnapshotFactory, DataStoreSettingsRepository to SettingsDecoder, and
+    // AndroidLinkAddress to LinkAddressSelector. They cannot run on the unit test JVM, so
+    // including them would only report unreachable lines rather than untested logic.
+    exclude("**/AndroidLinkAddress*")
+    exclude("**/AndroidNetworkMonitor*")
+    exclude("**/DataStoreSettingsRepository*")
+    exclude("**/SettingsRepositoryKt*")
 }
 val coverageExecutionData = layout.buildDirectory.file(
     "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",

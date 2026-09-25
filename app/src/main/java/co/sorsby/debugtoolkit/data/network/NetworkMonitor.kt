@@ -2,7 +2,10 @@ package co.sorsby.debugtoolkit.data.network
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Network
@@ -13,13 +16,9 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
 import co.sorsby.debugtoolkit.core.model.NetworkTransport
-import co.sorsby.debugtoolkit.domain.SignalQuality
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 
 interface NetworkMonitor {
     val snapshots: Flow<NetworkSnapshot>
@@ -56,14 +55,26 @@ class AndroidNetworkMonitor(
         }
         connectivityManager.registerDefaultNetworkCallback(callback)
         trySend(snapshot())
-        val sampler = launch {
-            while (isActive) {
-                delay(SAMPLE_INTERVAL_MS)
+
+        // Wi-Fi signal strength does not reliably trigger onCapabilitiesChanged on every
+        // OEM skin, so this broadcast receiver provides genuinely event-driven RSSI updates:
+        // it fires only when the system detects an actual signal-strength change, rather than
+        // on a fixed timer.
+        val rssiReceiver = object : BroadcastReceiver() {
+            override fun onReceive(receivedContext: Context, intent: Intent) {
                 trySend(snapshot())
             }
         }
+        val rssiFilter = IntentFilter(WifiManager.RSSI_CHANGED_ACTION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(rssiReceiver, rssiFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("UnspecifiedRegisterReceiverFlag")
+            context.registerReceiver(rssiReceiver, rssiFilter)
+        }
+
         awaitClose {
-            sampler.cancel()
+            context.unregisterReceiver(rssiReceiver)
             connectivityManager.unregisterNetworkCallback(callback)
         }
     }
@@ -71,45 +82,30 @@ class AndroidNetworkMonitor(
     private fun snapshot(): NetworkSnapshot {
         val sampledAt = System.currentTimeMillis()
         val network = connectivityManager.activeNetwork
-            ?: return NetworkSnapshot(sampledAtEpochMillis = sampledAt)
+            ?: return NetworkSnapshotFactory.disconnected(sampledAt)
         val capabilities = connectivityManager.getNetworkCapabilities(network)
-            ?: return NetworkSnapshot(sampledAtEpochMillis = sampledAt)
-        val transports = buildSet {
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                add(NetworkTransport.WIFI)
-            }
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                add(NetworkTransport.CELLULAR)
-            }
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                add(NetworkTransport.ETHERNET)
-            }
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
-                add(NetworkTransport.VPN)
-            }
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
-                add(NetworkTransport.BLUETOOTH)
-            }
-        }
-        val rssi = wifiRssi(capabilities)
-        return NetworkSnapshot(
+            ?: return NetworkSnapshotFactory.disconnected(sampledAt)
+        return NetworkSnapshotFactory.connected(
             sampledAtEpochMillis = sampledAt,
-            connected = true,
+            transports = capabilities.transports(),
             validated = capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED),
-            metered = !capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED),
-            transports = transports,
+            notMetered = capabilities.hasCapability(
+                NetworkCapabilities.NET_CAPABILITY_NOT_METERED,
+            ),
             localAddresses = connectivityManager.getLinkProperties(network)
                 ?.linkAddresses
                 .orEmpty()
-                .map { it.address.hostAddress.orEmpty() }
-                .filter(String::isNotEmpty),
-            wifiRssiDbm = rssi,
-            wifiSignal = SignalQuality.fromRssi(rssi),
-            estimatedDownstreamKbps =
-                capabilities.linkDownstreamBandwidthKbps.takeIf { it > 0 },
-            estimatedUpstreamKbps =
-                capabilities.linkUpstreamBandwidthKbps.takeIf { it > 0 },
+                .map { it.address.hostAddress.orEmpty() },
+            wifiRssiDbm = wifiRssi(capabilities),
+            linkDownstreamKbps = capabilities.linkDownstreamBandwidthKbps,
+            linkUpstreamKbps = capabilities.linkUpstreamBandwidthKbps,
         )
+    }
+
+    private fun NetworkCapabilities.transports(): Set<NetworkTransport> = buildSet {
+        TRANSPORTS.forEach { (platformTransport, transport) ->
+            if (hasTransport(platformTransport)) add(transport)
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -125,7 +121,7 @@ class AndroidNetworkMonitor(
         } else {
             wifiManager.connectionInfo
         }
-        return info?.rssi?.takeUnless { it <= -127 }
+        return info?.rssi?.let(NetworkSnapshotFactory::usableRssi)
     }
 
     private fun hasWifiPermission(): Boolean {
@@ -139,6 +135,12 @@ class AndroidNetworkMonitor(
     }
 
     private companion object {
-        const val SAMPLE_INTERVAL_MS = 2_000L
+        val TRANSPORTS = mapOf(
+            NetworkCapabilities.TRANSPORT_WIFI to NetworkTransport.WIFI,
+            NetworkCapabilities.TRANSPORT_CELLULAR to NetworkTransport.CELLULAR,
+            NetworkCapabilities.TRANSPORT_ETHERNET to NetworkTransport.ETHERNET,
+            NetworkCapabilities.TRANSPORT_VPN to NetworkTransport.VPN,
+            NetworkCapabilities.TRANSPORT_BLUETOOTH to NetworkTransport.BLUETOOTH,
+        )
     }
 }

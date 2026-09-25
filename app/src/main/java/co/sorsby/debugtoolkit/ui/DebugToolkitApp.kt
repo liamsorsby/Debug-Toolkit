@@ -1,6 +1,12 @@
 package co.sorsby.debugtoolkit.ui
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +24,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
@@ -26,12 +34,15 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,13 +58,20 @@ import co.sorsby.debugtoolkit.ui.navigation.AppDestination
 import co.sorsby.debugtoolkit.ui.navigation.AppDestinations
 import co.sorsby.debugtoolkit.ui.screens.AboutScreen
 import co.sorsby.debugtoolkit.ui.screens.DnsRoute
+import co.sorsby.debugtoolkit.ui.components.SectionLabel
 import co.sorsby.debugtoolkit.ui.screens.HttpRoute
+import co.sorsby.debugtoolkit.ui.screens.LanScanRoute
 import co.sorsby.debugtoolkit.ui.screens.NetworkRoute
 import co.sorsby.debugtoolkit.ui.screens.OverviewScreen
+import co.sorsby.debugtoolkit.ui.screens.PingRoute
+import co.sorsby.debugtoolkit.ui.screens.PortScanRoute
+import co.sorsby.debugtoolkit.ui.screens.PublicIpRoute
 import co.sorsby.debugtoolkit.ui.screens.SettingsRoute
 import co.sorsby.debugtoolkit.ui.screens.SpeedRoute
 import co.sorsby.debugtoolkit.ui.screens.TlsRoute
 import co.sorsby.debugtoolkit.ui.screens.ToolsScreen
+import co.sorsby.debugtoolkit.ui.screens.WhoisRoute
+import co.sorsby.debugtoolkit.ui.theme.BrandGradient
 import co.sorsby.debugtoolkit.ui.theme.DebugToolkitTheme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -92,17 +110,24 @@ fun DebugToolkitApp(
     ) {
         Scaffold(
             topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text(stringResource(title)) },
-                    navigationIcon = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(
-                                Icons.Default.Menu,
-                                contentDescription = stringResource(R.string.navigation_open),
-                            )
-                        }
-                    },
-                )
+                Box(modifier = Modifier.background(BrandGradient.brush())) {
+                    CenterAlignedTopAppBar(
+                        title = { Text(stringResource(title)) },
+                        navigationIcon = {
+                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                Icon(
+                                    Icons.Default.Menu,
+                                    contentDescription = stringResource(R.string.navigation_open),
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Transparent,
+                            titleContentColor = Color.White,
+                            navigationIconContentColor = Color.White,
+                        ),
+                    )
+                }
             },
             bottomBar = {
                 AppBottomBar(
@@ -122,40 +147,68 @@ private fun AppDrawer(
     onDestinationSelected: (AppDestination) -> Unit,
 ) {
     ModalDrawerSheet {
+        // The drawer lists every destination, which is taller than a short screen (and any
+        // handset in landscape) can show at once. Without its own scroll the trailing items,
+        // Settings and About included, are simply unreachable.
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .padding(horizontal = 24.dp, vertical = 28.dp),
+                .verticalScroll(rememberScrollState())
+                .testTag("drawerContent"),
         ) {
-            Surface(
-                shape = RoundedCornerShape(14.dp),
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(48.dp),
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(BrandGradient.brush())
+                    .padding(horizontal = 24.dp, vertical = 28.dp),
             ) {
-                Icon(
-                    Icons.Default.NetworkCheck,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.padding(12.dp),
+                Surface(
+                    shape = RoundedCornerShape(14.dp),
+                    color = Color.White,
+                    modifier = Modifier.size(48.dp),
+                ) {
+                    Icon(
+                        Icons.Default.NetworkCheck,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(12.dp),
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White,
+                )
+                Text(
+                    stringResource(R.string.app_tagline),
+                    color = Color.White.copy(alpha = 0.82f),
                 )
             }
-            Spacer(Modifier.height(16.dp))
-            Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleLarge)
-            Text(
-                stringResource(R.string.app_tagline),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-        }
-        Spacer(Modifier.height(12.dp))
-        AppDestinations.drawer.forEach { destination ->
-            NavigationDrawerItem(
-                label = { Text(stringResource(destination.label)) },
-                selected = selectedRoute == destination.route,
-                icon = { Icon(destination.icon, contentDescription = null) },
-                onClick = { onDestinationSelected(destination) },
-            )
-        }
+            Spacer(Modifier.height(12.dp))
+            AppDestinations.diagnosticsBySection.forEach { (section, destinations) ->
+                if (destinations.isEmpty()) return@forEach
+                SectionLabel(stringResource(section.label))
+                destinations.forEach { destination ->
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(destination.label)) },
+                        selected = selectedRoute == destination.route,
+                        icon = { Icon(destination.icon, contentDescription = null) },
+                        onClick = { onDestinationSelected(destination) },
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                    )
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+            listOf(AppDestinations.Settings, AppDestinations.About).forEach { destination ->
+                NavigationDrawerItem(
+                    label = { Text(stringResource(destination.label)) },
+                    selected = selectedRoute == destination.route,
+                    icon = { Icon(destination.icon, contentDescription = null) },
+                    onClick = { onDestinationSelected(destination) },
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                )
+            }
+            }
     }
 }
 
@@ -187,14 +240,27 @@ private fun AppNavHost(
         navController = navController,
         startDestination = AppDestinations.Overview.route,
         modifier = Modifier.padding(padding),
+        enterTransition = {
+            fadeIn(tween(220)) + slideInHorizontally(tween(220)) { it / 6 }
+        },
+        exitTransition = { fadeOut(tween(120)) },
+        popEnterTransition = { fadeIn(tween(220)) },
+        popExitTransition = {
+            fadeOut(tween(120)) + slideOutHorizontally(tween(120)) { it / 6 }
+        },
     ) {
         composable(AppDestinations.Overview.route) { OverviewScreen(navigate) }
         composable(AppDestinations.Network.route) { NetworkRoute() }
         composable(AppDestinations.Tools.route) { ToolsScreen(navigate) }
         composable(AppDestinations.Speed.route) { SpeedRoute(settingsViewModel) }
+        composable(AppDestinations.Ping.route) { PingRoute() }
+        composable(AppDestinations.PublicIp.route) { PublicIpRoute() }
         composable(AppDestinations.Tls.route) { TlsRoute() }
+        composable(AppDestinations.PortScanner.route) { PortScanRoute() }
         composable(AppDestinations.Dns.route) { DnsRoute() }
+        composable(AppDestinations.Whois.route) { WhoisRoute() }
         composable(AppDestinations.Http.route) { HttpRoute() }
+        composable(AppDestinations.LanScanner.route) { LanScanRoute() }
         composable(AppDestinations.Settings.route) { SettingsRoute(settingsViewModel) }
         composable(AppDestinations.About.route) { AboutScreen() }
     }

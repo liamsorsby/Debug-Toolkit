@@ -7,7 +7,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
-import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
 import co.sorsby.debugtoolkit.core.model.ToolError
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import kotlinx.coroutines.CoroutineScope
@@ -31,10 +30,13 @@ class FirebaseJourneyTracker(
 
     init {
         crashlytics?.setCrashlyticsCollectionEnabled(true)
+        // Performance monitoring reports app-health metrics (not user behavior) and runs
+        // unconditionally, independent of analytics consent, matching Crashlytics.
+        performance?.isPerformanceCollectionEnabled = true
         scope.launch {
             settingsRepository.settings.collectLatest { settings ->
                 setJourneyCollectionEnabled(
-                    settings.analyticsConsent == AnalyticsConsent.GRANTED,
+                    AnalyticsConsentPolicy.journeyCollectionEnabled(settings.analyticsConsent),
                 )
             }
         }
@@ -55,9 +57,9 @@ class FirebaseJourneyTracker(
 
     override fun startTool(tool: DiagnosticTool): ToolJourney {
         crashlytics?.log("tool:${tool.eventValue}:started")
-        val trace = withJourneyCollection {
+        val trace = performance?.newTrace("tool_${tool.eventValue}")?.also(Trace::start)
+        withJourneyCollection {
             analytics?.logEvent("tool_started", tool.parameters())
-            performance?.newTrace("tool_${tool.eventValue}")?.also(Trace::start)
         }
         return FirebaseToolJourney(
             tool = tool,
@@ -69,19 +71,8 @@ class FirebaseJourneyTracker(
 
     private fun setJourneyCollectionEnabled(enabled: Boolean) {
         synchronized(consentLock) {
-            analytics?.setConsent(
-                mapOf(
-                    FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE to enabled.consentStatus(),
-                    FirebaseAnalytics.ConsentType.AD_STORAGE to
-                        FirebaseAnalytics.ConsentStatus.DENIED,
-                    FirebaseAnalytics.ConsentType.AD_USER_DATA to
-                        FirebaseAnalytics.ConsentStatus.DENIED,
-                    FirebaseAnalytics.ConsentType.AD_PERSONALIZATION to
-                        FirebaseAnalytics.ConsentStatus.DENIED,
-                ),
-            )
+            analytics?.setConsent(AnalyticsConsentPolicy.consentSettings(enabled))
             analytics?.setAnalyticsCollectionEnabled(enabled)
-            performance?.isPerformanceCollectionEnabled = enabled
             journeyCollectionEnabled = enabled
         }
     }
@@ -95,15 +86,15 @@ class FirebaseJourneyTracker(
     ) {
         synchronized(consentLock) {
             if (journeyCollectionEnabled) {
-                trace?.putAttribute("outcome", outcome)
-                errorType?.let { trace?.putAttribute("error_type", it) }
                 analytics?.logEvent(
                     "tool_completed",
                     tool.parameters(outcome, elapsedMs, errorType),
                 )
             }
-            trace?.stop()
         }
+        trace?.putAttribute("outcome", outcome)
+        errorType?.let { trace?.putAttribute("error_type", it) }
+        trace?.stop()
     }
 
     private fun <T> withJourneyCollection(action: () -> T): T? =
@@ -184,10 +175,3 @@ private fun DiagnosticTool.parameters(
 
 private val ToolError.eventValue: String
     get() = name.lowercase()
-
-private fun Boolean.consentStatus(): FirebaseAnalytics.ConsentStatus =
-    if (this) {
-        FirebaseAnalytics.ConsentStatus.GRANTED
-    } else {
-        FirebaseAnalytics.ConsentStatus.DENIED
-    }

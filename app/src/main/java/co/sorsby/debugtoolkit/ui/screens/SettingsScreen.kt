@@ -67,7 +67,7 @@ fun SettingsScreen(
                 title = stringResource(R.string.settings_analytics),
                 supportingText = stringResource(R.string.settings_analytics_supporting),
             ) {
-                AnalyticsConsent.entries.forEach { consent ->
+                AnalyticsConsent.entries.filter { it != AnalyticsConsent.UNSET }.forEach { consent ->
                     ChoiceRow(
                         label = consentLabel(consent),
                         selected = settings.analyticsConsent == consent,

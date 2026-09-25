@@ -1,14 +1,10 @@
 package co.sorsby.debugtoolkit.ui.screens
 
 import android.icu.text.ListFormatter
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Security
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,8 +18,10 @@ import co.sorsby.debugtoolkit.ui.components.EndpointField
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
 import co.sorsby.debugtoolkit.ui.components.ResultHeader
+import co.sorsby.debugtoolkit.ui.components.RunToolButton
 import co.sorsby.debugtoolkit.ui.components.ScreenList
 import co.sorsby.debugtoolkit.ui.components.SectionLabel
+import co.sorsby.debugtoolkit.ui.components.TimingMetric
 import co.sorsby.debugtoolkit.ui.components.ToolInputCard
 import co.sorsby.debugtoolkit.ui.components.ToolIntroCard
 import co.sorsby.debugtoolkit.ui.components.ToolResult
@@ -60,13 +58,12 @@ fun TlsScreen(
         item {
             ToolInputCard {
                 EndpointField(state.input, onInputChanged)
-                Button(
+                RunToolButton(
+                    text = stringResource(R.string.tls_action),
+                    state = state.result,
                     onClick = onInspect,
-                    enabled = state.result !is ToolState.Loading && state.input.isNotBlank(),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(stringResource(R.string.tls_action))
-                }
+                    enabled = state.input.isNotBlank(),
+                )
             }
         }
         item { ToolResult(state.result) { TlsResultView(it) } }
@@ -80,10 +77,7 @@ private fun TlsResultView(result: TlsResult) {
         Metric(stringResource(R.string.tls_connection), "${result.host}:${result.port}")
         Metric(stringResource(R.string.tls_protocol), result.protocol)
         Metric(stringResource(R.string.tls_cipher_suite), result.cipherSuite)
-        Metric(
-            stringResource(R.string.tls_timing),
-            stringResource(R.string.duration_milliseconds_integer, result.elapsedMs),
-        )
+        TimingMetric(result.elapsedMs)
         result.certificates.forEachIndexed { index, certificate ->
             SectionLabel(stringResource(R.string.tls_certificate_number, index + 1))
             Metric(stringResource(R.string.tls_subject), certificate.subject)

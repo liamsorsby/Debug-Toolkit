@@ -28,6 +28,19 @@ adb kill-server
 adb start-server
 adb -s "$serial" wait-for-device
 
+# Espresso refuses to interact with a view hierarchy whose window lacks focus, which is how a
+# headless emulator sits once the display sleeps or the keyguard is showing. Waking the device,
+# dismissing the keyguard and pinning the screen on keeps every activity focusable for the whole
+# run, rather than only until the first idle timeout.
+prepare_display() {
+    adb -s "$serial" shell input keyevent KEYCODE_WAKEUP || true
+    adb -s "$serial" shell wm dismiss-keyguard || true
+    adb -s "$serial" shell svc power stayon true || true
+    adb -s "$serial" shell settings put system screen_off_timeout 1800000 || true
+}
+
+prepare_display
+
 rm -rf "$results_directory"
 
 attempt=1
@@ -41,6 +54,7 @@ until ./gradlew :app:connectedDebugAndroidTest --stacktrace --console=plain; do
     adb kill-server
     adb start-server
     adb -s "$serial" wait-for-device
+    prepare_display
     attempt=$((attempt + 1))
 done
 

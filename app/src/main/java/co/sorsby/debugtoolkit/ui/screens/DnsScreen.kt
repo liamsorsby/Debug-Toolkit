@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dns
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +32,9 @@ import co.sorsby.debugtoolkit.ui.components.InfoCard
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
 import co.sorsby.debugtoolkit.ui.components.ResultHeader
+import co.sorsby.debugtoolkit.ui.components.RunToolButton
 import co.sorsby.debugtoolkit.ui.components.ScreenList
+import co.sorsby.debugtoolkit.ui.components.TimingMetric
 import co.sorsby.debugtoolkit.ui.components.ToolInputCard
 import co.sorsby.debugtoolkit.ui.components.ToolIntroCard
 import co.sorsby.debugtoolkit.ui.components.ToolResult
@@ -49,6 +50,7 @@ fun DnsRoute(viewModel: DnsViewModel = koinViewModel()) {
         state = state,
         onInputChanged = viewModel::setInput,
         onTypeChanged = viewModel::setType,
+        onNameserverChanged = viewModel::setNameserver,
         onQuery = viewModel::query,
     )
 }
@@ -58,6 +60,7 @@ fun DnsScreen(
     state: DnsUiState,
     onInputChanged: (String) -> Unit,
     onTypeChanged: (DnsRecordType) -> Unit,
+    onNameserverChanged: (String) -> Unit,
     onQuery: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -119,13 +122,24 @@ fun DnsScreen(
                         }
                     }
                 }
-                Button(
-                    onClick = onQuery,
-                    enabled = state.result !is ToolState.Loading && state.input.isNotBlank(),
+                OutlinedTextField(
+                    value = state.nameserver,
+                    onValueChange = onNameserverChanged,
+                    label = { Text(stringResource(R.string.dns_nameserver_label)) },
+                    supportingText = { Text(stringResource(R.string.dns_nameserver_helper)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Ascii,
+                        imeAction = ImeAction.Done,
+                    ),
                     modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(stringResource(R.string.dns_query_action))
-                }
+                )
+                RunToolButton(
+                    text = stringResource(R.string.dns_query_action),
+                    state = state.result,
+                    onClick = onQuery,
+                    enabled = state.input.isNotBlank(),
+                )
             }
         }
         item { ToolResult(state.result) { DnsResultView(it) } }
@@ -137,11 +151,9 @@ private fun DnsResultView(result: DnsResult) {
     ResultCard {
         ResultHeader()
         Metric(stringResource(R.string.dns_status), result.status.toString())
-        Metric(
-            stringResource(R.string.dns_timing),
-            stringResource(R.string.duration_milliseconds_integer, result.elapsedMs),
-        )
+        TimingMetric(result.elapsedMs)
         Metric(stringResource(R.string.dns_authenticated), yesNo(result.authenticatedData))
+        Metric(stringResource(R.string.dns_authoritative), yesNo(result.authoritative))
         result.records.forEach {
             Metric(stringResource(R.string.dns_answer_label, it.name, it.ttlSeconds), it.value)
         }
@@ -178,6 +190,7 @@ private fun DnsScreenPreview() {
             ),
             onInputChanged = {},
             onTypeChanged = {},
+            onNameserverChanged = {},
             onQuery = {},
         )
     }

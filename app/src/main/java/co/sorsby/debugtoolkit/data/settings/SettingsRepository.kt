@@ -22,11 +22,10 @@ private val Context.dataStore by preferencesDataStore("settings")
 
 class DataStoreSettingsRepository(private val context: Context) : SettingsRepository {
     override val settings: Flow<AppSettings> = context.dataStore.data.map { values ->
-        AppSettings(
-            themeMode = values[THEME]?.let { enumValueOrNull<ThemeMode>(it) } ?: ThemeMode.SYSTEM,
-            analyticsConsent = values[CONSENT]?.let { enumValueOrNull<AnalyticsConsent>(it) }
-                ?: AnalyticsConsent.UNSET,
-            cloudflareDisclosureAccepted = values[CLOUDFLARE_DISCLOSURE] ?: false,
+        SettingsDecoder.decode(
+            themeMode = values[THEME],
+            analyticsConsent = values[CONSENT],
+            cloudflareDisclosureAccepted = values[CLOUDFLARE_DISCLOSURE],
         )
     }
 
@@ -41,9 +40,6 @@ class DataStoreSettingsRepository(private val context: Context) : SettingsReposi
     override suspend fun acceptCloudflareDisclosure() {
         context.dataStore.edit { it[CLOUDFLARE_DISCLOSURE] = true }
     }
-
-    private inline fun <reified T : Enum<T>> enumValueOrNull(value: String): T? =
-        enumValues<T>().firstOrNull { it.name == value }
 
     private companion object {
         val THEME = stringPreferencesKey("theme")

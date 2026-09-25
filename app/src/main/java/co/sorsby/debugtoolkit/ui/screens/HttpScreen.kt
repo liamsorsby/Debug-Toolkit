@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Language
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,8 +35,10 @@ import co.sorsby.debugtoolkit.ui.components.InfoCard
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
 import co.sorsby.debugtoolkit.ui.components.ResultHeader
+import co.sorsby.debugtoolkit.ui.components.RunToolButton
 import co.sorsby.debugtoolkit.ui.components.ScreenList
 import co.sorsby.debugtoolkit.ui.components.SectionLabel
+import co.sorsby.debugtoolkit.ui.components.TimingMetric
 import co.sorsby.debugtoolkit.ui.components.ToolInputCard
 import co.sorsby.debugtoolkit.ui.components.ToolIntroCard
 import co.sorsby.debugtoolkit.ui.components.ToolResult
@@ -112,13 +113,12 @@ fun HttpScreen(
                         onCheckedChange = null,
                     )
                 }
-                Button(
+                RunToolButton(
+                    text = stringResource(R.string.http_action),
+                    state = state.result,
                     onClick = onInspect,
-                    enabled = state.result !is ToolState.Loading && state.input.isNotBlank(),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(stringResource(R.string.http_action))
-                }
+                    enabled = state.input.isNotBlank(),
+                )
             }
         }
         item {
@@ -136,10 +136,7 @@ private fun HttpResultView(result: HttpInspection, showResponseBody: Boolean) {
         Metric(stringResource(R.string.http_status), "${result.status} ${result.message}")
         Metric(stringResource(R.string.http_final_url), result.finalUrl)
         Metric(stringResource(R.string.http_protocol), result.protocol)
-        Metric(
-            stringResource(R.string.http_timing),
-            stringResource(R.string.duration_milliseconds_integer, result.elapsedMs),
-        )
+        TimingMetric(result.elapsedMs)
         result.redirects.forEach {
             Metric(stringResource(R.string.http_redirect, it.status), "${it.from}\n${it.to}")
         }

@@ -1,5 +1,6 @@
 package co.sorsby.debugtoolkit.data.dns
 
+import co.sorsby.debugtoolkit.core.model.DnsResult
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
@@ -22,6 +23,7 @@ class CloudflareDnsRepositoryTest {
             OkHttpClient(),
             Json { ignoreUnknownKeys = true },
             server.url("/dns-query"),
+            FailingNameserverResolver,
         )
     }
 
@@ -74,10 +76,50 @@ class CloudflareDnsRepositoryTest {
     }
 
     @Test
+    fun `query sends the correct type code for newly supported record types`() = runTest {
+        server.enqueue(MockResponse().setBody("""{"Status":0}"""))
+        repository.query("example.com", DnsRecordType.DNSKEY)
+        assertEquals("48", server.takeRequest().requestUrl?.queryParameter("type"))
+    }
+
+    @Test
     fun `query rejects HTTP failures`() = runTest {
         server.enqueue(MockResponse().setResponseCode(503))
         assertThrows(IllegalStateException::class.java) {
             runTest { repository.query("example.com", DnsRecordType.A) }
         }
     }
+
+    @Test
+    fun `query delegates to the nameserver resolver instead of Cloudflare when one is supplied`() =
+        runTest {
+            val fakeResult = DnsResult(0, false, false, emptyList(), emptyList(), emptyList(), 3)
+            var capturedNameserver: String? = null
+            val delegating = CloudflareDnsRepository(
+                OkHttpClient(),
+                Json { ignoreUnknownKeys = true },
+                server.url("/dns-query"),
+                object : DirectNameserverResolver {
+                    override suspend fun query(
+                        nameserver: String,
+                        input: String,
+                        type: DnsRecordType,
+                    ): DnsResult {
+                        capturedNameserver = nameserver
+                        return fakeResult
+                    }
+                },
+            )
+
+            val result = delegating.query("example.com", DnsRecordType.A, "8.8.8.8")
+
+            assertEquals(fakeResult, result)
+            assertEquals("8.8.8.8", capturedNameserver)
+            assertEquals(0, server.requestCount)
+        }
+}
+
+private object FailingNameserverResolver : DirectNameserverResolver {
+    override suspend fun query(nameserver: String, input: String, type: DnsRecordType): DnsResult =
+        error("The nameserver resolver should not be used unless a nameserver is supplied.")
 }
