@@ -20,6 +20,14 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        // The default icon exit animation relies on a ValueAnimator completion callback that
+        // never fires when animations are globally disabled (Android's "disable animations"
+        // developer option, and every instrumented test environment, including the CI emulator).
+        // Without this listener the splash view is left attached indefinitely once the keep-on-
+        // screen condition clears below, which blocks Espresso/Compose idle detection forever.
+        // Removing the view immediately is a safe no-op visually, since disabled-animation
+        // environments would have skipped the animation anyway.
+        splashScreen.setOnExitAnimationListener { splashScreenView -> splashScreenView.remove() }
         setContent {
             val settingsViewModel: SettingsViewModel = koinViewModel()
             val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
