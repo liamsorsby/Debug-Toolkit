@@ -10,6 +10,7 @@ import co.sorsby.debugtoolkit.data.http.HttpMethod
 data class DnsUiState(
     val input: String = "",
     val type: DnsRecordType = DnsRecordType.A,
+    val nameserver: String = "",
     val result: ToolState<DnsResult> = ToolState.Idle,
 )
 

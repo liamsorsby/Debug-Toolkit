@@ -101,11 +101,21 @@ class DnsViewModel(
         mutableState.value = mutableState.value.copy(type = value)
     }
 
+    fun setNameserver(value: String) {
+        mutableState.value = mutableState.value.copy(nameserver = value)
+    }
+
     fun query() = runTool(
         tool = DiagnosticTool.DNS,
         journeyTracker = journeyTracker,
         update = { mutableState.value = mutableState.value.copy(result = it) },
-        action = { repository.query(mutableState.value.input, mutableState.value.type) },
+        action = {
+            repository.query(
+                input = mutableState.value.input,
+                type = mutableState.value.type,
+                nameserver = mutableState.value.nameserver.ifBlank { null },
+            )
+        },
     )
 }
 
