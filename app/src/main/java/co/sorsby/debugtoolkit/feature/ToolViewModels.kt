@@ -25,6 +25,7 @@ import co.sorsby.debugtoolkit.data.portscan.PortScanner
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
+import co.sorsby.debugtoolkit.data.whois.WhoisClient
 import co.sorsby.debugtoolkit.telemetry.DiagnosticTool
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import kotlinx.coroutines.CancellationException
@@ -234,6 +235,25 @@ class PortScanViewModel(
             val ports = PortListParser.parse(mutableState.value.ports)
             scanner.scan(mutableState.value.host, ports)
         },
+    )
+}
+
+class WhoisViewModel(
+    private val client: WhoisClient,
+    private val journeyTracker: JourneyTracker,
+) : ViewModel() {
+    private val mutableState = MutableStateFlow(WhoisUiState())
+    val state = mutableState.asStateFlow()
+
+    fun setInput(value: String) {
+        mutableState.value = mutableState.value.copy(input = value)
+    }
+
+    fun lookup() = runTool(
+        tool = DiagnosticTool.WHOIS,
+        journeyTracker = journeyTracker,
+        update = { mutableState.value = mutableState.value.copy(result = it) },
+        action = { client.lookup(mutableState.value.input) },
     )
 }
 
