@@ -1,8 +1,10 @@
 package co.sorsby.debugtoolkit.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -19,6 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,6 +32,7 @@ import co.sorsby.debugtoolkit.ui.components.ScreenList
 import co.sorsby.debugtoolkit.ui.components.SectionHeader
 import co.sorsby.debugtoolkit.ui.navigation.AppDestination
 import co.sorsby.debugtoolkit.ui.navigation.AppDestinations
+import co.sorsby.debugtoolkit.ui.theme.BrandGradient
 import co.sorsby.debugtoolkit.ui.theme.DebugToolkitTheme
 
 @Composable
@@ -64,37 +70,36 @@ fun ToolsScreen(onDestinationSelected: (String) -> Unit) {
 
 @Composable
 private fun HeroCard() {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-        ),
-        shape = RoundedCornerShape(28.dp),
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 6.dp, shape = RoundedCornerShape(28.dp))
+            .clip(RoundedCornerShape(28.dp))
+            .background(BrandGradient.brush())
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Column(
-            modifier = Modifier.padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+        Surface(
+            shape = CircleShape,
+            color = Color.White.copy(alpha = 0.18f),
+            modifier = Modifier.size(48.dp),
         ) {
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(48.dp),
-            ) {
-                Icon(
-                    Icons.Default.NetworkCheck,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.padding(12.dp),
-                )
-            }
-            Text(
-                stringResource(R.string.overview_hero_title),
-                style = MaterialTheme.typography.headlineSmall,
-            )
-            Text(
-                stringResource(R.string.overview_hero_body),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            Icon(
+                Icons.Default.NetworkCheck,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.padding(12.dp),
             )
         }
+        Text(
+            stringResource(R.string.overview_hero_title),
+            style = MaterialTheme.typography.headlineSmall,
+            color = Color.White,
+        )
+        Text(
+            stringResource(R.string.overview_hero_body),
+            color = Color.White.copy(alpha = 0.85f),
+        )
     }
 }
 
