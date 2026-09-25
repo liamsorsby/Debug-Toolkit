@@ -74,6 +74,13 @@ class CloudflareDnsRepositoryTest {
     }
 
     @Test
+    fun `query sends the correct type code for newly supported record types`() = runTest {
+        server.enqueue(MockResponse().setBody("""{"Status":0}"""))
+        repository.query("example.com", DnsRecordType.DNSKEY)
+        assertEquals("48", server.takeRequest().requestUrl?.queryParameter("type"))
+    }
+
+    @Test
     fun `query rejects HTTP failures`() = runTest {
         server.enqueue(MockResponse().setResponseCode(503))
         assertThrows(IllegalStateException::class.java) {
