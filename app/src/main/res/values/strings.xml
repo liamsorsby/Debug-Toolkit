@@ -160,6 +160,18 @@
     <string name="traceroute_reached">Reached the destination</string>
     <string name="traceroute_not_reached">Did not reach the destination within the hop limit.</string>
 
+    <string name="portscan_intro">Check whether specific TCP ports on a host are open, closed, or filtered by a firewall.</string>
+    <string name="portscan_host_label">Host or IP address</string>
+    <string name="portscan_ports_label">Ports</string>
+    <string name="portscan_ports_helper">Comma separated ports or ranges, for example 22,80,443,8000-8010. Up to 64 ports per scan.</string>
+    <string name="portscan_use_common_action">Use common ports</string>
+    <string name="portscan_action">Scan ports</string>
+    <string name="portscan_timing">Timing</string>
+    <string name="portscan_state_open">Open</string>
+    <string name="portscan_state_closed">Closed</string>
+    <string name="portscan_state_filtered">Filtered (no response)</string>
+    <string name="portscan_port_label">Port %1$d</string>
+
     <string name="speed_intro">Measure latency, jitter, download, and upload against Cloudflare.</string>
     <string name="speed_disclosure">This test sends and receives up to 7.2 MB through Cloudflare. Cloudflare receives your IP address as part of the connection.</string>
     <string name="speed_disclosure_action">I understand</string>

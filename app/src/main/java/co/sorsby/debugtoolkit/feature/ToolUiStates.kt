@@ -4,6 +4,7 @@ import co.sorsby.debugtoolkit.core.model.DnsResult
 import co.sorsby.debugtoolkit.core.model.HttpInspection
 import co.sorsby.debugtoolkit.core.model.PingMode
 import co.sorsby.debugtoolkit.core.model.PingResult
+import co.sorsby.debugtoolkit.core.model.PortScanResult
 import co.sorsby.debugtoolkit.core.model.TlsResult
 import co.sorsby.debugtoolkit.core.model.ToolState
 import co.sorsby.debugtoolkit.core.model.TracerouteResult
@@ -34,4 +35,10 @@ data class PingUiState(
     val mode: PingMode = PingMode.PING,
     val pingResult: ToolState<PingResult> = ToolState.Idle,
     val tracerouteResult: ToolState<TracerouteResult> = ToolState.Idle,
+)
+
+data class PortScanUiState(
+    val host: String = "",
+    val ports: String = "",
+    val result: ToolState<PortScanResult> = ToolState.Idle,
 )
