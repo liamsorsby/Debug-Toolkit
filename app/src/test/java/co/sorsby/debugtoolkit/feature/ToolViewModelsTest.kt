@@ -1,5 +1,6 @@
 package co.sorsby.debugtoolkit.feature
 
+import androidx.lifecycle.viewModelScope
 import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
 import co.sorsby.debugtoolkit.core.model.AppSettings
 import co.sorsby.debugtoolkit.core.model.DnsResult
@@ -30,6 +31,7 @@ import co.sorsby.debugtoolkit.data.lan.LanScanner
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
 import co.sorsby.debugtoolkit.data.ping.PingRunner
 import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
+import co.sorsby.debugtoolkit.data.portscan.PortListParser
 import co.sorsby.debugtoolkit.data.portscan.PortScanner
 import co.sorsby.debugtoolkit.data.publicip.PublicIpLookup
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
@@ -39,13 +41,14 @@ import co.sorsby.debugtoolkit.data.whois.WhoisClient
 import co.sorsby.debugtoolkit.telemetry.DiagnosticTool
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import co.sorsby.debugtoolkit.telemetry.ToolJourney
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -93,6 +96,20 @@ class ToolViewModelsTest {
     }
 
     @Test
+    fun `settings are not ready until the repository emits`() = runTest(dispatcher) {
+        val repository = FakeSettingsRepository()
+        val viewModel = SettingsViewModel(repository)
+
+        assertEquals(false, viewModel.isReady.value)
+
+        val collection = backgroundScope.launch { viewModel.settings.collect {} }
+        advanceUntilIdle()
+
+        assertTrue(viewModel.isReady.value)
+        collection.cancel()
+    }
+
+    @Test
     fun `network snapshot is observed`() = runTest(dispatcher) {
         val snapshots = MutableStateFlow(NetworkSnapshot())
         val viewModel = NetworkViewModel(object : NetworkMonitor {
@@ -109,40 +126,45 @@ class ToolViewModelsTest {
     }
 
     @Test
-    fun `speed test exposes success and errors`() = runTest(dispatcher) {
+    fun `speed test exposes a successful result`() = runTest(dispatcher) {
         val result = SpeedResult(1.0, 2.0, 3.0, 4.0, 5, Instant.EPOCH)
-        val success = SpeedViewModel(object : SpeedTestRepository {
+        val viewModel = SpeedViewModel(object : SpeedTestRepository {
             override suspend fun run() = result
         }, journeyTracker)
-        success.runTest()
-        advanceUntilIdle()
-        assertEquals(ToolState.Success(result), success.state.value)
 
-        val failure = SpeedViewModel(object : SpeedTestRepository {
-            override suspend fun run(): SpeedResult = throw IllegalStateException("failed")
-        }, journeyTracker)
-        failure.runTest()
+        viewModel.runTest()
         advanceUntilIdle()
-        assertEquals(ToolState.Error(ToolError.SERVICE), failure.state.value)
 
-        val invalidInput = SpeedViewModel(object : SpeedTestRepository {
-            override suspend fun run(): SpeedResult = throw IllegalArgumentException()
-        }, journeyTracker)
-        invalidInput.runTest()
-        advanceUntilIdle()
-        assertEquals(ToolState.Error(ToolError.INVALID_INPUT), invalidInput.state.value)
+        assertEquals(ToolState.Success(result), viewModel.state.value)
+        assertEquals(listOf(DiagnosticTool.SPEED), journeyTracker.startedTools)
+        assertEquals(listOf("success"), journeyTracker.outcomes)
+    }
 
-        val networkFailure = SpeedViewModel(object : SpeedTestRepository {
-            override suspend fun run(): SpeedResult = throw IOException()
-        }, journeyTracker)
-        networkFailure.runTest()
-        advanceUntilIdle()
-        assertEquals(ToolState.Error(ToolError.NETWORK), networkFailure.state.value)
-        assertEquals(List(4) { DiagnosticTool.SPEED }, journeyTracker.startedTools)
-        assertEquals(
-            listOf("success", "SERVICE", "INVALID_INPUT", "NETWORK"),
-            journeyTracker.outcomes,
+    @Test
+    fun `a failing tool maps the exception to a tool error and reports it`() = runTest(dispatcher) {
+        val expectedErrors = listOf(
+            IllegalArgumentException("bad input") to ToolError.INVALID_INPUT,
+            IOException("offline") to ToolError.NETWORK,
+            IllegalStateException("upstream") to ToolError.SERVICE,
+            Exception("something else") to ToolError.UNKNOWN,
         )
+
+        expectedErrors.forEach { (thrown, expected) ->
+            val tracker = RecordingJourneyTracker()
+            val viewModel = SpeedViewModel(object : SpeedTestRepository {
+                override suspend fun run(): SpeedResult = throw thrown
+            }, tracker)
+
+            viewModel.runTest()
+            advanceUntilIdle()
+
+            assertEquals(
+                "${thrown::class.simpleName} should surface as $expected",
+                ToolState.Error(expected),
+                viewModel.state.value,
+            )
+            assertEquals(listOf(expected.name), tracker.outcomes)
+        }
     }
 
     @Test
@@ -171,6 +193,57 @@ class ToolViewModelsTest {
         assertEquals(ToolState.Error(ToolError.UNKNOWN), failure.state.value.result)
         assertEquals(listOf(DiagnosticTool.DNS, DiagnosticTool.DNS), journeyTracker.startedTools)
         assertEquals(listOf("success", "UNKNOWN"), journeyTracker.outcomes)
+    }
+
+    @Test
+    fun `DNS passes an explicit nameserver through and exposes the loading state`() =
+        runTest(dispatcher) {
+            val result = DnsResult(0, true, true, emptyList(), emptyList(), emptyList(), 1)
+            val inFlight = CompletableDeferred<Unit>()
+            val viewModel = DnsViewModel(object : DnsRepository {
+                override suspend fun query(
+                    input: String,
+                    type: DnsRecordType,
+                    nameserver: String?,
+                ): DnsResult {
+                    assertEquals("1.1.1.1", nameserver)
+                    inFlight.await()
+                    return result
+                }
+            }, journeyTracker)
+            viewModel.setInput("example.com")
+            viewModel.setNameserver("1.1.1.1")
+
+            viewModel.query()
+            advanceUntilIdle()
+
+            // The query is suspended part-way through, which is the state the Run button reads
+            // to disable itself for the duration of the run.
+            assertEquals(ToolState.Loading, viewModel.state.value.result)
+
+            inFlight.complete(Unit)
+            advanceUntilIdle()
+            assertEquals(ToolState.Success(result), viewModel.state.value.result)
+        }
+
+    @Test
+    fun `a cancelled tool run is recorded as cancelled, not as an error`() = runTest(dispatcher) {
+        val viewModel = WhoisViewModel(
+            client = object : WhoisClient {
+                override suspend fun lookup(domain: String): WhoisResult = awaitCancellation()
+            },
+            journeyTracker = journeyTracker,
+        )
+        viewModel.setInput("example.com")
+
+        viewModel.lookup()
+        advanceUntilIdle()
+        assertEquals(ToolState.Loading, viewModel.state.value.result)
+
+        viewModel.viewModelScope.coroutineContext.cancelChildren()
+        advanceUntilIdle()
+
+        assertEquals(listOf("cancelled"), journeyTracker.outcomes)
     }
 
     @Test
@@ -341,7 +414,7 @@ class ToolViewModelsTest {
         viewModel.useCommonPorts()
 
         assertEquals(
-            co.sorsby.debugtoolkit.data.portscan.PortListParser.COMMON_PORTS.joinToString(","),
+            PortListParser.COMMON_PORTS.joinToString(","),
             viewModel.state.value.ports,
         )
     }
