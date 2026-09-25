@@ -155,7 +155,13 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.espresso.accessibility)
+    androidTestImplementation(libs.androidx.espresso.accessibility) {
+        // accessibility-test-framework bundles an old protobuf-lite that collides with the
+        // app's protobuf-java classes (used by Firebase Performance) at instrumentation
+        // runtime, crashing app startup with a NoSuchMethodError. The app's own protobuf
+        // dependency satisfies everything this library needs.
+        exclude(group = "com.google.protobuf", module = "protobuf-lite")
+    }
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
