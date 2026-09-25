@@ -138,6 +138,28 @@
     <string name="http_body_preview">Body preview</string>
     <string name="http_body_preview_truncated">Body preview (truncated)</string>
 
+    <string name="ping_intro">Check reachability with ping, or trace the route packets take to a host.</string>
+    <string name="ping_mode_ping">Ping</string>
+    <string name="ping_mode_traceroute">Traceroute</string>
+    <string name="ping_host_label">Host or IP address</string>
+    <string name="ping_host_helper">IPv4 hostname or address, no scheme or port.</string>
+    <string name="ping_action">Run ping</string>
+    <string name="traceroute_action">Run traceroute</string>
+    <string name="ping_transmitted">Sent</string>
+    <string name="ping_received">Received</string>
+    <string name="ping_packet_loss">Packet loss</string>
+    <string name="ping_min">Minimum</string>
+    <string name="ping_avg">Average</string>
+    <string name="ping_max">Maximum</string>
+    <string name="ping_jitter">Jitter</string>
+    <string name="ping_probe_label">Probe %1$d</string>
+    <string name="ping_probe_timeout">No reply</string>
+    <string name="percentage">%1$.0f%%</string>
+    <string name="traceroute_hop_label">Hop %1$d</string>
+    <string name="traceroute_hop_no_reply">No reply</string>
+    <string name="traceroute_reached">Reached the destination</string>
+    <string name="traceroute_not_reached">Did not reach the destination within the hop limit.</string>
+
     <string name="speed_intro">Measure latency, jitter, download, and upload against Cloudflare.</string>
     <string name="speed_disclosure">This test sends and receives up to 7.2 MB through Cloudflare. Cloudflare receives your IP address as part of the connection.</string>
     <string name="speed_disclosure_action">I understand</string>

@@ -7,6 +7,7 @@ import co.sorsby.debugtoolkit.core.model.AppSettings
 import co.sorsby.debugtoolkit.core.model.DnsResult
 import co.sorsby.debugtoolkit.core.model.HttpInspection
 import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
+import co.sorsby.debugtoolkit.core.model.PingMode
 import co.sorsby.debugtoolkit.core.model.SpeedResult
 import co.sorsby.debugtoolkit.core.model.ThemeMode
 import co.sorsby.debugtoolkit.core.model.TlsResult
@@ -17,6 +18,8 @@ import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.http.HttpInspector
 import co.sorsby.debugtoolkit.data.http.HttpMethod
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
+import co.sorsby.debugtoolkit.data.ping.PingRunner
+import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
@@ -163,6 +166,43 @@ class HttpViewModel(
         update = { mutableState.value = mutableState.value.copy(result = it) },
         action = { inspector.inspect(mutableState.value.input, mutableState.value.method) },
     )
+}
+
+class PingViewModel(
+    private val pingRunner: PingRunner,
+    private val tracerouteRunner: TracerouteRunner,
+    private val journeyTracker: JourneyTracker,
+) : ViewModel() {
+    private val mutableState = MutableStateFlow(PingUiState())
+    val state = mutableState.asStateFlow()
+
+    fun setInput(value: String) {
+        mutableState.value = mutableState.value.copy(input = value)
+    }
+
+    fun setMode(value: PingMode) {
+        mutableState.value = mutableState.value.copy(mode = value)
+    }
+
+    fun run() = when (mutableState.value.mode) {
+        PingMode.PING -> runTool(
+            tool = DiagnosticTool.PING,
+            journeyTracker = journeyTracker,
+            update = { mutableState.value = mutableState.value.copy(pingResult = it) },
+            action = { pingRunner.ping(mutableState.value.input, count = PING_PROBE_COUNT) },
+        )
+        PingMode.TRACEROUTE -> runTool(
+            tool = DiagnosticTool.TRACEROUTE,
+            journeyTracker = journeyTracker,
+            update = { mutableState.value = mutableState.value.copy(tracerouteResult = it) },
+            action = { tracerouteRunner.traceroute(mutableState.value.input, maxHops = TRACEROUTE_MAX_HOPS) },
+        )
+    }
+
+    private companion object {
+        const val PING_PROBE_COUNT = 5
+        const val TRACEROUTE_MAX_HOPS = 20
+    }
 }
 
 private fun <T> ViewModel.runTool(

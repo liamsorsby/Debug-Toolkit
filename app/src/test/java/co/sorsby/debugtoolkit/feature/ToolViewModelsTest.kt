@@ -5,16 +5,23 @@ import co.sorsby.debugtoolkit.core.model.AppSettings
 import co.sorsby.debugtoolkit.core.model.DnsResult
 import co.sorsby.debugtoolkit.core.model.HttpInspection
 import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
+import co.sorsby.debugtoolkit.core.model.PingMode
+import co.sorsby.debugtoolkit.core.model.PingProbe
+import co.sorsby.debugtoolkit.core.model.PingResult
 import co.sorsby.debugtoolkit.core.model.SpeedResult
 import co.sorsby.debugtoolkit.core.model.ThemeMode
 import co.sorsby.debugtoolkit.core.model.TlsResult
 import co.sorsby.debugtoolkit.core.model.ToolState
 import co.sorsby.debugtoolkit.core.model.ToolError
+import co.sorsby.debugtoolkit.core.model.TracerouteHop
+import co.sorsby.debugtoolkit.core.model.TracerouteResult
 import co.sorsby.debugtoolkit.data.dns.DnsRecordType
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.http.HttpInspector
 import co.sorsby.debugtoolkit.data.http.HttpMethod
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
+import co.sorsby.debugtoolkit.data.ping.PingRunner
+import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
@@ -195,6 +202,73 @@ class ToolViewModelsTest {
         assertEquals(ToolState.Success(result), viewModel.state.value.result)
         assertEquals(listOf(DiagnosticTool.HTTP), journeyTracker.startedTools)
         assertEquals(listOf("success"), journeyTracker.outcomes)
+    }
+
+    @Test
+    fun `ping state runs the mode-appropriate action and records the outcome`() = runTest(dispatcher) {
+        val pingResult = PingResult(
+            host = "example.com",
+            transmitted = 1,
+            received = 1,
+            packetLossPercent = 0.0,
+            probes = listOf(PingProbe(1, 12.0)),
+            minMs = 12.0,
+            avgMs = 12.0,
+            maxMs = 12.0,
+            jitterMs = 0.0,
+        )
+        val tracerouteResult = TracerouteResult(
+            host = "example.com",
+            hops = listOf(TracerouteHop(1, "93.184.216.34", 12.0)),
+            reachedDestination = true,
+        )
+        val viewModel = PingViewModel(
+            pingRunner = object : PingRunner {
+                override suspend fun ping(host: String, count: Int): PingResult {
+                    assertEquals("example.com", host)
+                    return pingResult
+                }
+            },
+            tracerouteRunner = object : TracerouteRunner {
+                override suspend fun traceroute(host: String, maxHops: Int): TracerouteResult {
+                    assertEquals("example.com", host)
+                    return tracerouteResult
+                }
+            },
+            journeyTracker = journeyTracker,
+        )
+        viewModel.setInput("example.com")
+
+        viewModel.run()
+        advanceUntilIdle()
+        assertEquals(ToolState.Success(pingResult), viewModel.state.value.pingResult)
+        assertEquals(ToolState.Idle, viewModel.state.value.tracerouteResult)
+
+        viewModel.setMode(PingMode.TRACEROUTE)
+        viewModel.run()
+        advanceUntilIdle()
+        assertEquals(ToolState.Success(tracerouteResult), viewModel.state.value.tracerouteResult)
+        assertEquals(listOf(DiagnosticTool.PING, DiagnosticTool.TRACEROUTE), journeyTracker.startedTools)
+        assertEquals(listOf("success", "success"), journeyTracker.outcomes)
+    }
+
+    @Test
+    fun `ping state maps a failure to a tool error`() = runTest(dispatcher) {
+        val viewModel = PingViewModel(
+            pingRunner = object : PingRunner {
+                override suspend fun ping(host: String, count: Int): PingResult =
+                    throw IllegalArgumentException("bad host")
+            },
+            tracerouteRunner = object : TracerouteRunner {
+                override suspend fun traceroute(host: String, maxHops: Int): TracerouteResult =
+                    throw IllegalStateException("unavailable")
+            },
+            journeyTracker = journeyTracker,
+        )
+
+        viewModel.run()
+        advanceUntilIdle()
+        assertEquals(ToolState.Error(ToolError.INVALID_INPUT), viewModel.state.value.pingResult)
     }
 }
 
