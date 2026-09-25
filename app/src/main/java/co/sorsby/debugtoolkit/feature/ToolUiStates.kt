@@ -5,6 +5,7 @@ import co.sorsby.debugtoolkit.core.model.HttpInspection
 import co.sorsby.debugtoolkit.core.model.PingMode
 import co.sorsby.debugtoolkit.core.model.PingResult
 import co.sorsby.debugtoolkit.core.model.PortScanResult
+import co.sorsby.debugtoolkit.core.model.PublicIpResult
 import co.sorsby.debugtoolkit.core.model.TlsResult
 import co.sorsby.debugtoolkit.core.model.ToolState
 import co.sorsby.debugtoolkit.core.model.TracerouteResult
@@ -47,4 +48,8 @@ data class PortScanUiState(
 data class WhoisUiState(
     val input: String = "",
     val result: ToolState<WhoisResult> = ToolState.Idle,
+)
+
+data class PublicIpUiState(
+    val result: ToolState<PublicIpResult> = ToolState.Idle,
 )

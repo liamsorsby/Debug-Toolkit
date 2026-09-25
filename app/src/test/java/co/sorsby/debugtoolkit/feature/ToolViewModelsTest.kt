@@ -11,6 +11,7 @@ import co.sorsby.debugtoolkit.core.model.PingResult
 import co.sorsby.debugtoolkit.core.model.PortScanEntry
 import co.sorsby.debugtoolkit.core.model.PortScanResult
 import co.sorsby.debugtoolkit.core.model.PortState
+import co.sorsby.debugtoolkit.core.model.PublicIpResult
 import co.sorsby.debugtoolkit.core.model.SpeedResult
 import co.sorsby.debugtoolkit.core.model.ThemeMode
 import co.sorsby.debugtoolkit.core.model.TlsResult
@@ -27,6 +28,7 @@ import co.sorsby.debugtoolkit.data.network.NetworkMonitor
 import co.sorsby.debugtoolkit.data.ping.PingRunner
 import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
 import co.sorsby.debugtoolkit.data.portscan.PortScanner
+import co.sorsby.debugtoolkit.data.publicip.PublicIpLookup
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
@@ -383,6 +385,46 @@ class ToolViewModelsTest {
         advanceUntilIdle()
 
         assertEquals(ToolState.Error(ToolError.INVALID_INPUT), viewModel.state.value.result)
+    }
+
+    @Test
+    fun `public ip looks up and exposes the result`() = runTest(dispatcher) {
+        val result = PublicIpResult(
+            ipAddress = "203.0.113.10",
+            countryCode = "GB",
+            cloudflareColo = "LHR",
+            warpEnabled = false,
+            elapsedMs = 60,
+        )
+        val viewModel = PublicIpViewModel(
+            lookup = object : PublicIpLookup {
+                override suspend fun lookup(): PublicIpResult = result
+            },
+            journeyTracker = journeyTracker,
+        )
+
+        viewModel.lookup()
+        advanceUntilIdle()
+
+        assertEquals(ToolState.Success(result), viewModel.state.value.result)
+        assertEquals(listOf(DiagnosticTool.PUBLIC_IP), journeyTracker.startedTools)
+        assertEquals(listOf("success"), journeyTracker.outcomes)
+    }
+
+    @Test
+    fun `public ip surfaces a service failure`() = runTest(dispatcher) {
+        val viewModel = PublicIpViewModel(
+            lookup = object : PublicIpLookup {
+                override suspend fun lookup(): PublicIpResult =
+                    throw IllegalStateException("Trace service returned HTTP 500.")
+            },
+            journeyTracker = journeyTracker,
+        )
+
+        viewModel.lookup()
+        advanceUntilIdle()
+
+        assertEquals(ToolState.Error(ToolError.SERVICE), viewModel.state.value.result)
     }
 }
 

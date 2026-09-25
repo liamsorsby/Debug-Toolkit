@@ -22,4 +22,5 @@ enum class DiagnosticTool(val eventValue: String) {
     TRACEROUTE("traceroute"),
     PORT_SCAN("portscan"),
     WHOIS("whois"),
+    PUBLIC_IP("publicip"),
 }

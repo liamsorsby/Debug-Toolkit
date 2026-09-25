@@ -22,6 +22,7 @@ import co.sorsby.debugtoolkit.data.ping.PingRunner
 import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
 import co.sorsby.debugtoolkit.data.portscan.PortListParser
 import co.sorsby.debugtoolkit.data.portscan.PortScanner
+import co.sorsby.debugtoolkit.data.publicip.PublicIpLookup
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
@@ -254,6 +255,21 @@ class WhoisViewModel(
         journeyTracker = journeyTracker,
         update = { mutableState.value = mutableState.value.copy(result = it) },
         action = { client.lookup(mutableState.value.input) },
+    )
+}
+
+class PublicIpViewModel(
+    private val lookup: PublicIpLookup,
+    private val journeyTracker: JourneyTracker,
+) : ViewModel() {
+    private val mutableState = MutableStateFlow(PublicIpUiState())
+    val state = mutableState.asStateFlow()
+
+    fun lookup() = runTool(
+        tool = DiagnosticTool.PUBLIC_IP,
+        journeyTracker = journeyTracker,
+        update = { mutableState.value = mutableState.value.copy(result = it) },
+        action = { lookup.lookup() },
     )
 }
 
