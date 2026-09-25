@@ -4,6 +4,8 @@ import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
 import co.sorsby.debugtoolkit.core.model.AppSettings
 import co.sorsby.debugtoolkit.core.model.DnsResult
 import co.sorsby.debugtoolkit.core.model.HttpInspection
+import co.sorsby.debugtoolkit.core.model.LanDevice
+import co.sorsby.debugtoolkit.core.model.LanScanResult
 import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
 import co.sorsby.debugtoolkit.core.model.PingMode
 import co.sorsby.debugtoolkit.core.model.PingProbe
@@ -24,6 +26,7 @@ import co.sorsby.debugtoolkit.data.dns.DnsRecordType
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.http.HttpInspector
 import co.sorsby.debugtoolkit.data.http.HttpMethod
+import co.sorsby.debugtoolkit.data.lan.LanScanner
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
 import co.sorsby.debugtoolkit.data.ping.PingRunner
 import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
@@ -422,6 +425,45 @@ class ToolViewModelsTest {
         )
 
         viewModel.lookup()
+        advanceUntilIdle()
+
+        assertEquals(ToolState.Error(ToolError.SERVICE), viewModel.state.value.result)
+    }
+
+    @Test
+    fun `lan scan sweeps the subnet and exposes the result`() = runTest(dispatcher) {
+        val result = LanScanResult(
+            subnetCidr = "192.168.1.0/24",
+            devices = listOf(LanDevice("192.168.1.2", "router.local", 4)),
+            addressesScanned = 253,
+            elapsedMs = 4_000,
+        )
+        val viewModel = LanScanViewModel(
+            scanner = object : LanScanner {
+                override suspend fun scan(): LanScanResult = result
+            },
+            journeyTracker = journeyTracker,
+        )
+
+        viewModel.scan()
+        advanceUntilIdle()
+
+        assertEquals(ToolState.Success(result), viewModel.state.value.result)
+        assertEquals(listOf(DiagnosticTool.LAN_SCAN), journeyTracker.startedTools)
+        assertEquals(listOf("success"), journeyTracker.outcomes)
+    }
+
+    @Test
+    fun `lan scan surfaces missing connectivity as a service error`() = runTest(dispatcher) {
+        val viewModel = LanScanViewModel(
+            scanner = object : LanScanner {
+                override suspend fun scan(): LanScanResult =
+                    throw IllegalStateException("Connect to a Wi-Fi or Ethernet network.")
+            },
+            journeyTracker = journeyTracker,
+        )
+
+        viewModel.scan()
         advanceUntilIdle()
 
         assertEquals(ToolState.Error(ToolError.SERVICE), viewModel.state.value.result)

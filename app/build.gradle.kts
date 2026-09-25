@@ -177,6 +177,7 @@ val coverageClasses = fileTree(
     include("co/sorsby/debugtoolkit/data/portscan/**")
     include("co/sorsby/debugtoolkit/data/whois/**")
     include("co/sorsby/debugtoolkit/data/publicip/**")
+    include("co/sorsby/debugtoolkit/data/lan/**")
     include("co/sorsby/debugtoolkit/data/speed/**")
     include("co/sorsby/debugtoolkit/data/tls/**")
     include("co/sorsby/debugtoolkit/feature/**")
@@ -185,6 +186,7 @@ val coverageClasses = fileTree(
     exclude("**/*UiState*")
     exclude("**/DnsPayload*")
     exclude("**/DnsAnswer*")
+    exclude("**/AndroidLinkAddress*")
 }
 val coverageExecutionData = layout.buildDirectory.file(
     "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",

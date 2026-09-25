@@ -17,6 +17,7 @@ import co.sorsby.debugtoolkit.data.dns.DnsRecordType
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.http.HttpInspector
 import co.sorsby.debugtoolkit.data.http.HttpMethod
+import co.sorsby.debugtoolkit.data.lan.LanScanner
 import co.sorsby.debugtoolkit.data.network.NetworkMonitor
 import co.sorsby.debugtoolkit.data.ping.PingRunner
 import co.sorsby.debugtoolkit.data.ping.TracerouteRunner
@@ -270,6 +271,21 @@ class PublicIpViewModel(
         journeyTracker = journeyTracker,
         update = { mutableState.value = mutableState.value.copy(result = it) },
         action = { lookup.lookup() },
+    )
+}
+
+class LanScanViewModel(
+    private val scanner: LanScanner,
+    private val journeyTracker: JourneyTracker,
+) : ViewModel() {
+    private val mutableState = MutableStateFlow(LanScanUiState())
+    val state = mutableState.asStateFlow()
+
+    fun scan() = runTool(
+        tool = DiagnosticTool.LAN_SCAN,
+        journeyTracker = journeyTracker,
+        update = { mutableState.value = mutableState.value.copy(result = it) },
+        action = { scanner.scan() },
     )
 }
 

@@ -23,4 +23,5 @@ enum class DiagnosticTool(val eventValue: String) {
     PORT_SCAN("portscan"),
     WHOIS("whois"),
     PUBLIC_IP("publicip"),
+    LAN_SCAN("lanscan"),
 }

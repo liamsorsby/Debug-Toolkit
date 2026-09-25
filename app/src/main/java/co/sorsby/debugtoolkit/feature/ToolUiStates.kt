@@ -2,6 +2,7 @@ package co.sorsby.debugtoolkit.feature
 
 import co.sorsby.debugtoolkit.core.model.DnsResult
 import co.sorsby.debugtoolkit.core.model.HttpInspection
+import co.sorsby.debugtoolkit.core.model.LanScanResult
 import co.sorsby.debugtoolkit.core.model.PingMode
 import co.sorsby.debugtoolkit.core.model.PingResult
 import co.sorsby.debugtoolkit.core.model.PortScanResult
@@ -52,4 +53,8 @@ data class WhoisUiState(
 
 data class PublicIpUiState(
     val result: ToolState<PublicIpResult> = ToolState.Idle,
+)
+
+data class LanScanUiState(
+    val result: ToolState<LanScanResult> = ToolState.Idle,
 )
