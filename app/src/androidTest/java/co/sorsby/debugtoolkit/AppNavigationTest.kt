@@ -6,16 +6,16 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.hasAnyAncestor
-import androidx.compose.ui.test.hasScrollAction
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -121,57 +121,46 @@ class AppNavigationTest {
             "WHOIS lookup",
             "Public IP and location",
             "Local network scanner",
-        ).forEach { label ->
-            composeRule.onNodeWithTag("screenList")
-                .performScrollToNode(hasText(label))
-            composeRule.onNode(hasText(label) and hasAnyAncestor(hasScrollAction()))
-                .assertIsDisplayed()
-        }
+        ).forEach(::assertVisibleInScreenList)
     }
 
     @Test
     fun networkTabShowsContinuousMonitor() {
         composeRule.onNodeWithText("Network").performClick()
-        composeRule.onNodeWithText("MONITORING LIVE").assertIsDisplayed()
-        composeRule.onNodeWithText("Connection details").performScrollTo().assertIsDisplayed()
-        composeRule.onNodeWithText("Signal and link properties update live as they change")
-            .performScrollTo()
-            .assertIsDisplayed()
+        assertVisibleInScreenList("MONITORING LIVE")
+        assertVisibleInScreenList("Connection details")
+        assertVisibleInScreenList("Signal and link properties update live as they change")
     }
 
     @Test
     fun drawerOpensSettings() {
-        composeRule.onNodeWithContentDescription("Open navigation").performClick()
-        composeRule.onNodeWithText("Settings").performClick()
-        composeRule.onNodeWithText("Appearance").assertIsDisplayed()
-        composeRule.onNodeWithText("Optional analytics").assertIsDisplayed()
+        openDrawerDestination("Settings")
+        assertVisibleInScreenList("Appearance")
+        assertVisibleInScreenList("Optional analytics")
     }
 
     @Test
     fun settingsHidesUndecidedConsentOption() {
-        composeRule.onNodeWithContentDescription("Open navigation").performClick()
-        composeRule.onNodeWithText("Settings").performClick()
+        openDrawerDestination("Settings")
         composeRule.onNodeWithText("Not decided").assertDoesNotExist()
-        composeRule.onNodeWithText("Granted").assertIsDisplayed()
-        composeRule.onNodeWithText("Denied").assertIsDisplayed()
+        assertVisibleInScreenList("Granted")
+        assertVisibleInScreenList("Denied")
     }
 
     @Test
     fun drawerOpensEveryDiagnostic() {
         openDrawerDestination("Speed test")
-        composeRule.onNodeWithText(composeRule.activity.getString(R.string.speed_intro))
-            .assertIsDisplayed()
+        assertVisibleInScreenList(composeRule.activity.getString(R.string.speed_intro))
 
         openDrawerDestination("Certificate inspector")
-        composeRule.onNodeWithText("Inspect certificate").assertIsDisplayed()
+        assertVisibleInScreenList("Inspect certificate")
 
         openDrawerDestination("DNS lookup")
-        composeRule.onNodeWithText("Query DNS").assertIsDisplayed()
+        assertVisibleInScreenList("Query DNS")
 
         openDrawerDestination("HTTP inspector")
-        composeRule.onNodeWithText("Inspect response").assertIsDisplayed()
-        composeRule.onNodeWithText("Show response body")
-            .assertIsDisplayed()
+        assertVisibleInScreenList("Inspect response")
+        assertVisibleInScreenList("Show response body")
             .assertIsOff()
             .performClick()
             .assertIsOn()
@@ -180,28 +169,21 @@ class AppNavigationTest {
     @Test
     fun drawerOpensEveryNewDiagnostic() {
         openDrawerDestination("Ping and traceroute")
-        composeRule.onNodeWithText(composeRule.activity.getString(R.string.ping_intro))
-            .assertIsDisplayed()
+        assertVisibleInScreenList(composeRule.activity.getString(R.string.ping_intro))
 
         openDrawerDestination("Port scanner")
-        composeRule.onNodeWithText(composeRule.activity.getString(R.string.portscan_intro))
-            .assertIsDisplayed()
+        assertVisibleInScreenList(composeRule.activity.getString(R.string.portscan_intro))
 
         openDrawerDestination("WHOIS lookup")
-        composeRule.onNodeWithText(composeRule.activity.getString(R.string.whois_intro))
-            .assertIsDisplayed()
+        assertVisibleInScreenList(composeRule.activity.getString(R.string.whois_intro))
 
         openDrawerDestination("Public IP and location")
-        composeRule.onNodeWithText(composeRule.activity.getString(R.string.publicip_intro))
-            .assertIsDisplayed()
-        composeRule.onNodeWithText(composeRule.activity.getString(R.string.publicip_action))
-            .assertIsDisplayed()
+        assertVisibleInScreenList(composeRule.activity.getString(R.string.publicip_intro))
+        assertVisibleInScreenList(composeRule.activity.getString(R.string.publicip_action))
 
         openDrawerDestination("Local network scanner")
-        composeRule.onNodeWithText(composeRule.activity.getString(R.string.lanscan_intro))
-            .assertIsDisplayed()
-        composeRule.onNodeWithText(composeRule.activity.getString(R.string.lanscan_action))
-            .assertIsDisplayed()
+        assertVisibleInScreenList(composeRule.activity.getString(R.string.lanscan_intro))
+        assertVisibleInScreenList(composeRule.activity.getString(R.string.lanscan_action))
     }
 
     @Test
@@ -221,8 +203,26 @@ class AppNavigationTest {
         repository.setAnalyticsConsent(AnalyticsConsent.GRANTED)
     }
 
+    /**
+     * Scrolls the shared screen list until [text] is reachable and asserts it is on screen. CI
+     * emulators use a far smaller display than a typical handset, so content that sits above the
+     * fold locally is below it there. Scrolling first keeps the assertion about the content being
+     * present and reachable rather than about the screen happening to be tall enough.
+     */
+    private fun assertVisibleInScreenList(text: String): SemanticsNodeInteraction {
+        composeRule.onNodeWithTag("screenList").performScrollToNode(hasText(text))
+        return composeRule.onNode(hasText(text) and hasAnyAncestor(hasTestTag("screenList")))
+            .assertIsDisplayed()
+    }
+
+    /**
+     * Opens the drawer and activates [label], scrolling the drawer first so the destination is on
+     * screen before it is clicked. The drawer is taller than a short display, so its trailing
+     * entries are only reachable after scrolling.
+     */
     private fun openDrawerDestination(label: String) {
         composeRule.onNodeWithContentDescription("Open navigation").performClick()
+        composeRule.onNodeWithTag("drawerContent").performScrollToNode(hasText(label))
         composeRule.onAllNodesWithText(label).onLast().performClick()
     }
 }

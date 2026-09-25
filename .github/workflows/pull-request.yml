@@ -104,13 +104,16 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-api29-x86_64-v1
+          key: avd-api29-x86_64-pixel5-v2
       - name: Create AVD snapshot
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 29
           arch: x86_64
+          # Without an explicit profile the emulator boots a 320x640 screen, which is far
+          # shorter than any real handset and pushes most screen content below the fold.
+          profile: pixel_5
           disable-animations: true
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
@@ -119,6 +122,9 @@ jobs:
         with:
           api-level: 29
           arch: x86_64
+          # Without an explicit profile the emulator boots a 320x640 screen, which is far
+          # shorter than any real handset and pushes most screen content below the fold.
+          profile: pixel_5
           disable-animations: true
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
