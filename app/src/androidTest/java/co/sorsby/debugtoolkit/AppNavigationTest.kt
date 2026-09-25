@@ -5,14 +5,19 @@ import android.os.Build
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
-import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasScrollAction
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
@@ -103,14 +108,26 @@ class AppNavigationTest {
     @Test
     fun bottomNavigationOpensToolsCatalog() {
         composeRule.onNodeWithText("Tools").performClick()
-        composeRule.onAllNodesWithText("Certificate inspector").onFirst().assertIsDisplayed()
-        composeRule.onAllNodesWithText("DNS lookup").onFirst().assertIsDisplayed()
-        composeRule.onAllNodesWithText("HTTP inspector").onFirst().assertIsDisplayed()
-        composeRule.onAllNodesWithText("Ping and traceroute").onFirst().assertIsDisplayed()
-        composeRule.onAllNodesWithText("Port scanner").onFirst().assertIsDisplayed()
-        composeRule.onAllNodesWithText("WHOIS lookup").onFirst().assertIsDisplayed()
-        composeRule.onAllNodesWithText("Public IP and location").onFirst().assertIsDisplayed()
-        composeRule.onAllNodesWithText("Local network scanner").onFirst().assertIsDisplayed()
+
+        // The same destination labels also exist, off-screen, inside the navigation drawer's
+        // (always-composed) content, and the tools list itself is a LazyColumn that only
+        // composes on-screen items, so performScrollToNode (which scrolls incrementally until a
+        // match appears) is used, scoped to the list's own test tag to avoid the drawer's copy.
+        listOf(
+            "Certificate inspector",
+            "DNS lookup",
+            "HTTP inspector",
+            "Ping and traceroute",
+            "Port scanner",
+            "WHOIS lookup",
+            "Public IP and location",
+            "Local network scanner",
+        ).forEach { label ->
+            composeRule.onNodeWithTag("screenList")
+                .performScrollToNode(hasText(label))
+            composeRule.onNode(hasText(label) and hasAnyAncestor(hasScrollAction()))
+                .assertIsDisplayed()
+        }
     }
 
     @Test
