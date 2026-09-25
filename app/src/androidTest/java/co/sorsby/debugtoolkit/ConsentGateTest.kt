@@ -44,7 +44,7 @@ class ConsentGateTest {
     fun acceptingConsentGrantsAndShowsMainContent() {
         composeRule.onNodeWithText("Accept").performClick()
 
-        composeRule.onNodeWithText("Before you start").assertDoesNotExist()
+        awaitConsentGateDismissed()
         composeRule.onAllNodesWithText("Overview").onFirst().assertIsDisplayed()
         assertEquals(AnalyticsConsent.GRANTED, awaitPersistedConsent())
     }
@@ -53,9 +53,23 @@ class ConsentGateTest {
     fun decliningConsentDeniesAndShowsMainContent() {
         composeRule.onNodeWithText("Decline").performClick()
 
-        composeRule.onNodeWithText("Before you start").assertDoesNotExist()
+        awaitConsentGateDismissed()
         composeRule.onAllNodesWithText("Overview").onFirst().assertIsDisplayed()
         assertEquals(AnalyticsConsent.DENIED, awaitPersistedConsent())
+    }
+
+    /**
+     * Waits for the consent gate to leave the composition after a choice has been made.
+     *
+     * Answering the gate persists the choice through DataStore on a background dispatcher, and the
+     * gate only disappears once that write is read back by the settings flow. Compose's automatic
+     * synchronisation does not cover that round trip, so asserting the gate's absence straight
+     * after the click races the write instead of waiting for it.
+     */
+    private fun awaitConsentGateDismissed() {
+        composeRule.waitUntil(CONSENT_PERSIST_TIMEOUT_MS) {
+            composeRule.onAllNodesWithText("Before you start").fetchSemanticsNodes().isEmpty()
+        }
     }
 
     /**
@@ -67,5 +81,14 @@ class ConsentGateTest {
     private fun awaitPersistedConsent(): AnalyticsConsent = runBlocking(Dispatchers.IO) {
         val repository = GlobalContext.get().get<SettingsRepository>()
         repository.settings.first { it.analyticsConsent != AnalyticsConsent.UNSET }.analyticsConsent
+    }
+
+    private companion object {
+        /**
+         * Upper bound for a consent choice to be persisted and read back. Generous enough to
+         * absorb a heavily loaded CI emulator without leaving a genuinely stuck write to hang
+         * until the whole test run is cancelled.
+         */
+        const val CONSENT_PERSIST_TIMEOUT_MS = 10_000L
     }
 }
