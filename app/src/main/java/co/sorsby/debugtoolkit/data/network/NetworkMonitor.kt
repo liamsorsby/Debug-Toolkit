@@ -2,7 +2,10 @@ package co.sorsby.debugtoolkit.data.network
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Network
@@ -15,11 +18,8 @@ import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
 import co.sorsby.debugtoolkit.core.model.NetworkTransport
 import co.sorsby.debugtoolkit.domain.SignalQuality
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 
 interface NetworkMonitor {
     val snapshots: Flow<NetworkSnapshot>
@@ -56,14 +56,26 @@ class AndroidNetworkMonitor(
         }
         connectivityManager.registerDefaultNetworkCallback(callback)
         trySend(snapshot())
-        val sampler = launch {
-            while (isActive) {
-                delay(SAMPLE_INTERVAL_MS)
+
+        // Wi-Fi signal strength does not reliably trigger onCapabilitiesChanged on every
+        // OEM skin, so this broadcast receiver provides genuinely event-driven RSSI updates:
+        // it fires only when the system detects an actual signal-strength change, rather than
+        // on a fixed timer.
+        val rssiReceiver = object : BroadcastReceiver() {
+            override fun onReceive(receivedContext: Context, intent: Intent) {
                 trySend(snapshot())
             }
         }
+        val rssiFilter = IntentFilter(WifiManager.RSSI_CHANGED_ACTION)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(rssiReceiver, rssiFilter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("UnspecifiedRegisterReceiverFlag")
+            context.registerReceiver(rssiReceiver, rssiFilter)
+        }
+
         awaitClose {
-            sampler.cancel()
+            context.unregisterReceiver(rssiReceiver)
             connectivityManager.unregisterNetworkCallback(callback)
         }
     }
@@ -136,9 +148,5 @@ class AndroidNetworkMonitor(
         }
         return ContextCompat.checkSelfPermission(context, permission) ==
             PackageManager.PERMISSION_GRANTED
-    }
-
-    private companion object {
-        const val SAMPLE_INTERVAL_MS = 2_000L
     }
 }
