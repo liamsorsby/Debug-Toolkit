@@ -172,6 +172,12 @@
     <string name="portscan_state_filtered">Filtered (no response)</string>
     <string name="portscan_port_label">Port %1$d</string>
 
+    <string name="whois_intro">Look up domain registration details from the authoritative WHOIS registry.</string>
+    <string name="whois_domain_label">Domain name</string>
+    <string name="whois_action">Look up domain</string>
+    <string name="whois_server_label">Server</string>
+    <string name="whois_timing">Timing</string>
+
     <string name="speed_intro">Measure latency, jitter, download, and upload against Cloudflare.</string>
     <string name="speed_disclosure">This test sends and receives up to 7.2 MB through Cloudflare. Cloudflare receives your IP address as part of the connection.</string>
     <string name="speed_disclosure_action">I understand</string>

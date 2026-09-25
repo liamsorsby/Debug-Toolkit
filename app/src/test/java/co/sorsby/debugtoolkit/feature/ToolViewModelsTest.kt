@@ -18,6 +18,7 @@ import co.sorsby.debugtoolkit.core.model.ToolState
 import co.sorsby.debugtoolkit.core.model.ToolError
 import co.sorsby.debugtoolkit.core.model.TracerouteHop
 import co.sorsby.debugtoolkit.core.model.TracerouteResult
+import co.sorsby.debugtoolkit.core.model.WhoisResult
 import co.sorsby.debugtoolkit.data.dns.DnsRecordType
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
 import co.sorsby.debugtoolkit.data.http.HttpInspector
@@ -29,6 +30,7 @@ import co.sorsby.debugtoolkit.data.portscan.PortScanner
 import co.sorsby.debugtoolkit.data.settings.SettingsRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
+import co.sorsby.debugtoolkit.data.whois.WhoisClient
 import co.sorsby.debugtoolkit.telemetry.DiagnosticTool
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import co.sorsby.debugtoolkit.telemetry.ToolJourney
@@ -337,6 +339,50 @@ class ToolViewModelsTest {
             co.sorsby.debugtoolkit.data.portscan.PortListParser.COMMON_PORTS.joinToString(","),
             viewModel.state.value.ports,
         )
+    }
+
+    @Test
+    fun `whois looks up a domain and exposes the result`() = runTest(dispatcher) {
+        val result = WhoisResult(
+            domain = "example.com",
+            server = "whois.verisign-grs.com",
+            rawText = "domain: EXAMPLE.COM",
+            elapsedMs = 90,
+        )
+        val viewModel = WhoisViewModel(
+            client = object : WhoisClient {
+                override suspend fun lookup(domain: String): WhoisResult {
+                    assertEquals("example.com", domain)
+                    return result
+                }
+            },
+            journeyTracker = journeyTracker,
+        )
+        viewModel.setInput("example.com")
+
+        viewModel.lookup()
+        advanceUntilIdle()
+
+        assertEquals(ToolState.Success(result), viewModel.state.value.result)
+        assertEquals(listOf(DiagnosticTool.WHOIS), journeyTracker.startedTools)
+        assertEquals(listOf("success"), journeyTracker.outcomes)
+    }
+
+    @Test
+    fun `whois surfaces an invalid domain as invalid input`() = runTest(dispatcher) {
+        val viewModel = WhoisViewModel(
+            client = object : WhoisClient {
+                override suspend fun lookup(domain: String): WhoisResult =
+                    throw IllegalArgumentException("Enter a valid domain name.")
+            },
+            journeyTracker = journeyTracker,
+        )
+        viewModel.setInput("not a domain")
+
+        viewModel.lookup()
+        advanceUntilIdle()
+
+        assertEquals(ToolState.Error(ToolError.INVALID_INPUT), viewModel.state.value.result)
     }
 }
 

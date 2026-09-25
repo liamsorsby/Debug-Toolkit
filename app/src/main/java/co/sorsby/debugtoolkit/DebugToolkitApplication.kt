@@ -24,6 +24,8 @@ import co.sorsby.debugtoolkit.data.speed.CloudflareSpeedTestRepository
 import co.sorsby.debugtoolkit.data.speed.SpeedTestRepository
 import co.sorsby.debugtoolkit.data.tls.SocketTlsInspector
 import co.sorsby.debugtoolkit.data.tls.TlsInspector
+import co.sorsby.debugtoolkit.data.whois.SocketWhoisClient
+import co.sorsby.debugtoolkit.data.whois.WhoisClient
 import co.sorsby.debugtoolkit.feature.DnsViewModel
 import co.sorsby.debugtoolkit.feature.HttpViewModel
 import co.sorsby.debugtoolkit.feature.NetworkViewModel
@@ -32,6 +34,7 @@ import co.sorsby.debugtoolkit.feature.PortScanViewModel
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.feature.SpeedViewModel
 import co.sorsby.debugtoolkit.feature.TlsViewModel
+import co.sorsby.debugtoolkit.feature.WhoisViewModel
 import co.sorsby.debugtoolkit.telemetry.FirebaseJourneyTracker
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import com.newrelic.agent.android.NewRelic
@@ -112,6 +115,7 @@ val appModule = module {
     single<PingRunner> { ShellPingRunner() }
     single<TracerouteRunner> { ShellTracerouteRunner() }
     single<PortScanner> { SocketPortScanner() }
+    single<WhoisClient> { SocketWhoisClient() }
     single<SpeedTestRepository> {
         CloudflareSpeedTestRepository(
             client = get(),
@@ -126,4 +130,5 @@ val appModule = module {
     viewModel { SpeedViewModel(get(), get()) }
     viewModel { PingViewModel(get(), get(), get()) }
     viewModel { PortScanViewModel(get(), get()) }
+    viewModel { WhoisViewModel(get(), get()) }
 }
