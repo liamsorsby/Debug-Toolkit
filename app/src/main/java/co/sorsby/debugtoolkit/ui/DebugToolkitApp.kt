@@ -24,6 +24,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
@@ -39,6 +41,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -144,40 +147,59 @@ private fun AppDrawer(
     onDestinationSelected: (AppDestination) -> Unit,
 ) {
     ModalDrawerSheet {
+        // The drawer lists every destination, which is taller than a short screen (and any
+        // handset in landscape) can show at once. Without its own scroll the trailing items,
+        // Settings and About included, are simply unreachable.
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(BrandGradient.brush())
-                .padding(horizontal = 24.dp, vertical = 28.dp),
+                .verticalScroll(rememberScrollState())
+                .testTag("drawerContent"),
         ) {
-            Surface(
-                shape = RoundedCornerShape(14.dp),
-                color = Color.White,
-                modifier = Modifier.size(48.dp),
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(BrandGradient.brush())
+                    .padding(horizontal = 24.dp, vertical = 28.dp),
             ) {
-                Icon(
-                    Icons.Default.NetworkCheck,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(12.dp),
+                Surface(
+                    shape = RoundedCornerShape(14.dp),
+                    color = Color.White,
+                    modifier = Modifier.size(48.dp),
+                ) {
+                    Icon(
+                        Icons.Default.NetworkCheck,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(12.dp),
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White,
+                )
+                Text(
+                    stringResource(R.string.app_tagline),
+                    color = Color.White.copy(alpha = 0.82f),
                 )
             }
-            Spacer(Modifier.height(16.dp))
-            Text(
-                stringResource(R.string.app_name),
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.White,
-            )
-            Text(
-                stringResource(R.string.app_tagline),
-                color = Color.White.copy(alpha = 0.82f),
-            )
-        }
-        Spacer(Modifier.height(12.dp))
-        AppDestinations.diagnosticsBySection.forEach { (section, destinations) ->
-            if (destinations.isEmpty()) return@forEach
-            SectionLabel(stringResource(section.label))
-            destinations.forEach { destination ->
+            Spacer(Modifier.height(12.dp))
+            AppDestinations.diagnosticsBySection.forEach { (section, destinations) ->
+                if (destinations.isEmpty()) return@forEach
+                SectionLabel(stringResource(section.label))
+                destinations.forEach { destination ->
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(destination.label)) },
+                        selected = selectedRoute == destination.route,
+                        icon = { Icon(destination.icon, contentDescription = null) },
+                        onClick = { onDestinationSelected(destination) },
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                    )
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+            listOf(AppDestinations.Settings, AppDestinations.About).forEach { destination ->
                 NavigationDrawerItem(
                     label = { Text(stringResource(destination.label)) },
                     selected = selectedRoute == destination.route,
@@ -186,17 +208,7 @@ private fun AppDrawer(
                     modifier = Modifier.padding(horizontal = 12.dp),
                 )
             }
-        }
-        Spacer(Modifier.height(8.dp))
-        listOf(AppDestinations.Settings, AppDestinations.About).forEach { destination ->
-            NavigationDrawerItem(
-                label = { Text(stringResource(destination.label)) },
-                selected = selectedRoute == destination.route,
-                icon = { Icon(destination.icon, contentDescription = null) },
-                onClick = { onDestinationSelected(destination) },
-                modifier = Modifier.padding(horizontal = 12.dp),
-            )
-        }
+            }
     }
 }
 
