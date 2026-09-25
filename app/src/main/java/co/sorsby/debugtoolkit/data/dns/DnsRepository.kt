@@ -15,16 +15,20 @@ import okhttp3.Request
 import kotlin.time.TimeSource
 
 interface DnsRepository {
-    suspend fun query(input: String, type: DnsRecordType): DnsResult
+    suspend fun query(input: String, type: DnsRecordType, nameserver: String? = null): DnsResult
 }
 
 class CloudflareDnsRepository(
     private val client: OkHttpClient,
     private val json: Json,
     private val endpoint: HttpUrl,
+    private val nameserverResolver: DirectNameserverResolver,
 ) : DnsRepository {
-    override suspend fun query(input: String, type: DnsRecordType): DnsResult =
-        withContext(Dispatchers.IO) {
+    override suspend fun query(input: String, type: DnsRecordType, nameserver: String?): DnsResult {
+        if (!nameserver.isNullOrBlank()) {
+            return nameserverResolver.query(nameserver, input, type)
+        }
+        return withContext(Dispatchers.IO) {
             val name = if (type == DnsRecordType.PTR) {
                 InputValidation.ptrName(input)
             } else {
@@ -56,6 +60,7 @@ class CloudflareDnsRepository(
                 )
             }
         }
+    }
 }
 
 @Serializable

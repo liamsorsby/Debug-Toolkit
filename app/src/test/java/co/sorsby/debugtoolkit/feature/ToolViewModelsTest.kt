@@ -131,9 +131,10 @@ class ToolViewModelsTest {
     fun `DNS state captures input type success and fallback error`() = runTest(dispatcher) {
         val result = DnsResult(0, true, true, emptyList(), emptyList(), emptyList(), 1)
         val success = DnsViewModel(object : DnsRepository {
-            override suspend fun query(input: String, type: DnsRecordType): DnsResult {
+            override suspend fun query(input: String, type: DnsRecordType, nameserver: String?): DnsResult {
                 assertEquals("example.com", input)
                 assertEquals(DnsRecordType.MX, type)
+                assertEquals(null, nameserver)
                 return result
             }
         }, journeyTracker)
@@ -144,7 +145,7 @@ class ToolViewModelsTest {
         assertEquals(ToolState.Success(result), success.state.value.result)
 
         val failure = DnsViewModel(object : DnsRepository {
-            override suspend fun query(input: String, type: DnsRecordType): DnsResult =
+            override suspend fun query(input: String, type: DnsRecordType, nameserver: String?): DnsResult =
                 throw Exception()
         }, journeyTracker)
         failure.query()

@@ -55,6 +55,14 @@ object InputValidation {
         }
     }
 
+    /** Validates a nameserver hostname or literal IP address entered for a direct DNS query. */
+    fun nameserver(input: String): String {
+        val value = input.trim()
+        require(value.isNotEmpty()) { "Enter a nameserver hostname or IP address." }
+        require(!value.any(Char::isWhitespace)) { "Enter a valid nameserver hostname or IP address." }
+        return value
+    }
+
     private fun validLabel(label: String): Boolean =
         label.isNotEmpty() &&
             label.length <= 63 &&

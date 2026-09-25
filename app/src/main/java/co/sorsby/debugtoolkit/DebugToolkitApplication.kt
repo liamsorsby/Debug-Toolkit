@@ -5,7 +5,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import co.sorsby.debugtoolkit.data.dns.CloudflareDnsRepository
+import co.sorsby.debugtoolkit.data.dns.DirectNameserverResolver
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
+import co.sorsby.debugtoolkit.data.dns.RawDnsResolver
 import co.sorsby.debugtoolkit.data.http.HttpInspector
 import co.sorsby.debugtoolkit.data.http.OkHttpInspector
 import co.sorsby.debugtoolkit.data.network.AndroidNetworkMonitor
@@ -88,11 +90,13 @@ val appModule = module {
     single<NetworkMonitor> {
         AndroidNetworkMonitor(androidContext(), get(), get())
     }
+    single<DirectNameserverResolver> { RawDnsResolver() }
     single<DnsRepository> {
         CloudflareDnsRepository(
             client = get(),
             json = get(),
             endpoint = "https://cloudflare-dns.com/dns-query".toHttpUrl(),
+            nameserverResolver = get(),
         )
     }
     single<TlsInspector> { SocketTlsInspector() }

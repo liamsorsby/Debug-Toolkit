@@ -15,4 +15,5 @@ data class DnsResult(
     val authority: List<DnsRecord>,
     val additional: List<DnsRecord>,
     val elapsedMs: Long,
+    val authoritative: Boolean = false,
 )
