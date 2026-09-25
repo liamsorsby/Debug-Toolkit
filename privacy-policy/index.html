@@ -159,18 +159,23 @@
 
   <h2>Analytics, crash reporting, and performance monitoring</h2>
   <p>
-    The app uses the following Firebase services, provided by Google, to help diagnose crashes and
+    The app uses the following services to help diagnose crashes, monitor app health, and
     understand feature usage:
   </p>
   <ul>
-    <li><strong>Firebase Crashlytics</strong> — collects crash and error diagnostics automatically,
-      so issues can be fixed. This is not gated behind consent, as it does not include personal
-      data or the content of the tools you run.</li>
-    <li><strong>Firebase Analytics</strong> and <strong>Firebase Performance Monitoring</strong> —
-      collect anonymised usage events (such as which tool was opened) and performance timings.
-      These are only enabled after you grant analytics consent in the app's settings, in line with
-      EU cookie and consent requirements. You can withdraw consent at any time from the same
-      screen, which disables further collection.</li>
+    <li><strong>Firebase Crashlytics</strong> (Google) and <strong>New Relic mobile monitoring</strong>
+      — collect crash diagnostics, and app-health signals such as startup time, network request
+      performance, and stability. These are not gated behind consent, as they do not include
+      personal data or the content of the tools you run; they exist purely to keep the app
+      working correctly.</li>
+    <li><strong>Firebase Performance Monitoring</strong> (Google) — measures app-health timings
+      such as screen render and network durations. Like Crashlytics, this runs unconditionally and
+      is not gated behind consent, for the same app-health reasons.</li>
+    <li><strong>Firebase Analytics</strong> (Google) — collects anonymised usage events, such as
+      which tool was opened. This is the only service gated behind your consent choice; it is only
+      enabled after you grant analytics consent, in line with EU cookie and consent requirements.
+      You can withdraw consent at any time from the app's settings screen, which disables further
+      collection.</li>
   </ul>
   <p>
     None of these services receive the domains, hostnames, or URLs you enter into the app's tools.
@@ -184,9 +189,9 @@
 
   <h2>Data retention</h2>
   <p>
-    Locally stored preferences persist until you clear the app's data or uninstall it. Crash and
-    analytics data collected by Firebase is retained by Google according to Firebase's own
-    retention periods.
+    Locally stored preferences persist until you clear the app's data or uninstall it. Crash,
+    performance, and analytics data collected by Firebase and New Relic is retained by each
+    provider according to its own retention periods.
   </p>
 
   <h2>Your choices</h2>

@@ -16,6 +16,12 @@ if (firebaseConfigured) {
     apply(plugin = "com.google.firebase.crashlytics")
     apply(plugin = "com.google.firebase.firebase-perf")
 }
+val newRelicDebugToken = System.getenv("NEW_RELIC_DEBUG_TOKEN").orEmpty()
+val newRelicReleaseToken = System.getenv("NEW_RELIC_RELEASE_TOKEN").orEmpty()
+val newRelicConfigured = newRelicDebugToken.isNotBlank() || newRelicReleaseToken.isNotBlank()
+if (newRelicConfigured) {
+    apply(plugin = "newrelic")
+}
 val releaseStoreFile = System.getenv("ANDROID_KEYSTORE_PATH")
 val releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
 val releaseKeyAlias = System.getenv("ANDROID_KEY_ALIAS")
@@ -62,6 +68,7 @@ android {
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             isPseudoLocalesEnabled = true
+            buildConfigField("String", "NEW_RELIC_TOKEN", "\"$newRelicDebugToken\"")
             if (firebaseConfigured) {
                 configure<FirebasePerfExtension> {
                     // Local JVM unit tests compile against the debug variant and run on a
@@ -74,6 +81,7 @@ android {
         }
         release {
             signingConfig = signingConfigs.findByName("release")
+            buildConfigField("String", "NEW_RELIC_TOKEN", "\"$newRelicReleaseToken\"")
             optimization {
                 enable = true
             }
@@ -125,6 +133,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
+    implementation(libs.newrelic.android.agent)
     baselineProfile(project(":baselineprofile"))
     testImplementation(libs.junit)
     testImplementation(libs.koin.test.junit4)

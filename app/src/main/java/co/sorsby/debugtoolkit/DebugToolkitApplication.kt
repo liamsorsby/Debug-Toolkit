@@ -24,6 +24,7 @@ import co.sorsby.debugtoolkit.feature.SpeedViewModel
 import co.sorsby.debugtoolkit.feature.TlsViewModel
 import co.sorsby.debugtoolkit.telemetry.FirebaseJourneyTracker
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
+import com.newrelic.agent.android.NewRelic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -39,6 +40,13 @@ import java.util.concurrent.TimeUnit
 class DebugToolkitApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        // New Relic reports app-health metrics (crashes, network, and startup performance), so
+        // it is started unconditionally like Crashlytics/Performance Monitoring, independent of
+        // analytics consent. It only starts when a token has been supplied for this build
+        // variant; local builds without one simply skip it.
+        if (BuildConfig.NEW_RELIC_TOKEN.isNotBlank()) {
+            NewRelic.withApplicationToken(BuildConfig.NEW_RELIC_TOKEN).start(this)
+        }
         startKoin {
             androidContext(this@DebugToolkitApplication)
             modules(appModule)
