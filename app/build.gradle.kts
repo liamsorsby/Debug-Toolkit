@@ -1,6 +1,7 @@
 import com.google.firebase.perf.plugin.FirebasePerfExtension
 import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -10,22 +11,32 @@ plugins {
     jacoco
 }
 
+// Local, gitignored overrides for secrets that are normally supplied as environment variables
+// in CI. Lets a developer set values once on their machine instead of exporting shell env vars.
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
+}
+fun secret(name: String): String = System.getenv(name) ?: localProperties.getProperty(name).orEmpty()
+
 val firebaseConfigured = file("google-services.json").exists()
 if (firebaseConfigured) {
     apply(plugin = "com.google.gms.google-services")
     apply(plugin = "com.google.firebase.crashlytics")
     apply(plugin = "com.google.firebase.firebase-perf")
 }
-val newRelicDebugToken = System.getenv("NEW_RELIC_DEBUG_TOKEN").orEmpty()
-val newRelicReleaseToken = System.getenv("NEW_RELIC_RELEASE_TOKEN").orEmpty()
+val newRelicDebugToken = secret("NEW_RELIC_DEBUG_TOKEN")
+val newRelicReleaseToken = secret("NEW_RELIC_RELEASE_TOKEN")
 val newRelicConfigured = newRelicDebugToken.isNotBlank() || newRelicReleaseToken.isNotBlank()
 if (newRelicConfigured) {
     apply(plugin = "newrelic")
 }
-val releaseStoreFile = System.getenv("ANDROID_KEYSTORE_PATH")
-val releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
-val releaseKeyAlias = System.getenv("ANDROID_KEY_ALIAS")
-val releaseKeyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+val releaseStoreFile = secret("ANDROID_KEYSTORE_PATH").ifBlank { null }
+val releaseStorePassword = secret("ANDROID_KEYSTORE_PASSWORD").ifBlank { null }
+val releaseKeyAlias = secret("ANDROID_KEY_ALIAS").ifBlank { null }
+val releaseKeyPassword = secret("ANDROID_KEY_PASSWORD").ifBlank { null }
 val releaseSigningConfigured = listOf(
     releaseStoreFile,
     releaseStorePassword,
