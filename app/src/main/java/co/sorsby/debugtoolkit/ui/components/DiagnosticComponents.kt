@@ -208,7 +208,7 @@ fun SectionLabel(text: String) {
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
-            .padding(top = 8.dp)
+            .padding(start = 8.dp, top = 8.dp)
             .semantics { heading() },
     )
 }
