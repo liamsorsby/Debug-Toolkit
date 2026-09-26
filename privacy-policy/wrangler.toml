@@ -5,3 +5,9 @@ compatibility_date = "2026-09-24"
 rules = [
   { type = "Text", globs = ["**/*.html"], fallthrough = true }
 ]
+
+[vars]
+SKIP_DEPENDENCY_INSTALL = "true"
+
+[previews.vars]
+SKIP_DEPENDENCY_INSTALL = "true"
