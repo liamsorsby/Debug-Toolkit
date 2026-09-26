@@ -122,8 +122,6 @@ jobs:
             -gpu swiftshader_indirect
             -noaudio
             -no-boot-anim
-            -no-snapshot
-            -no-snapshot-save
             -camera-back none
           script: bash .github/scripts/run-instrumentation-tests.sh
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

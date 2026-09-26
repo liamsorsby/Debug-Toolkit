@@ -20,13 +20,7 @@ until [[ "$(adb -s "$serial" shell getprop sys.boot_completed 2>/dev/null | tr -
     sleep 5
 done
 
-# Restarting the adb server forces Gradle's own ddmlib connection to read the
-# device's properties fresh, rather than reusing a stale pre-boot snapshot.
-# Without this, AGP can intermittently see an empty API level for an
-# otherwise fully booted device and skip it with "Unknown API Level".
-adb kill-server
-adb start-server
-adb -s "$serial" wait-for-device
+adb -s "$serial" get-state | grep -q '^device$'
 
 # Espresso refuses to interact with a view hierarchy whose window lacks focus, which is how a
 # headless emulator sits once the display sleeps or the keyguard is showing. Waking the device,
