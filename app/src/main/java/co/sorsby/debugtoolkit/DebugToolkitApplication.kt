@@ -65,7 +65,10 @@ class DebugToolkitApplication : Application() {
         // analytics consent. It only starts when a token has been supplied for this build
         // variant; local builds without one simply skip it.
         if (BuildConfig.NEW_RELIC_TOKEN.isNotBlank()) {
-            NewRelic.withApplicationToken(BuildConfig.NEW_RELIC_TOKEN).start(this)
+            NewRelic
+                .withApplicationToken(BuildConfig.NEW_RELIC_TOKEN)
+                .withCrashReportingEnabled(true)
+                .start(this)
         }
         startKoin {
             androidContext(this@DebugToolkitApplication)

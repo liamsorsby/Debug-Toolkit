@@ -1,0 +1,305 @@
+[en-US]
+
+App Name
+Debug Toolkit
+
+Short description
+Network diagnostics: Wi-Fi signal, speed tests, DNS lookups, TLS certs, HTTP.
+
+Full description
+Debug Toolkit is a straightforward set of network diagnostics for anyone who needs to understand what's happening on their connection — whether you're a developer, an IT professional, or just someone trying to figure out why the Wi-Fi feels slow.
+
+Wi-Fi signal monitoring
+See your live Wi-Fi signal strength in dBm, along with link speed and connection details, so you know exactly how strong your connection really is rather than guessing from a handful of bars.
+
+Speed testing
+Run download, upload, and latency tests to get a clear picture of your real-world network performance, powered by Cloudflare's speed test infrastructure.
+
+TLS certificate inspection
+Enter any hostname to view its certificate details — issuer, validity dates, and chain information — useful for verifying a site's security setup or troubleshooting certificate issues.
+
+DNS lookups
+Query any domain for its DNS records, with the option to choose which record type you need and which resolver to query. Fast, direct answers without needing a terminal.
+
+HTTP header and response inspector
+Enter any endpoint to see its response headers, status code, and timing — handy for debugging APIs, checking redirects, or understanding how a server responds.
+
+Designed to feel native
+Built entirely with Material Design 3, with full support for light and dark mode, so it fits naturally alongside the rest of your device.
+
+Privacy by design
+There's no account or login. Analytics and performance monitoring are strictly opt-in, and you can withdraw consent at any time from settings. Full details are available in the app's privacy policy.
+
+Debug Toolkit doesn't try to do everything — it focuses on the handful of diagnostics people actually reach for, and does them cleanly, quickly, and without clutter.
+
+[en-GB]
+
+App Name
+Debug Toolkit
+
+Short description
+Network diagnostics: Wi-Fi signal, speed tests, DNS lookups, TLS certs, HTTP.
+
+Full description
+Debug Toolkit is a straightforward set of network diagnostics for anyone who needs to understand what's happening on their connection — whether you're a developer, an IT professional, or just someone trying to figure out why the Wi-Fi feels slow.
+
+Wi-Fi signal monitoring
+See your live Wi-Fi signal strength in dBm, along with link speed and connection details, so you know exactly how strong your connection really is rather than guessing from a handful of bars.
+
+Speed testing
+Run download, upload, and latency tests to get a clear picture of your real-world network performance, powered by Cloudflare's speed test infrastructure.
+
+TLS certificate inspection
+Enter any hostname to view its certificate details — issuer, validity dates, and chain information — useful for verifying a site's security setup or troubleshooting certificate issues.
+
+DNS lookups
+Query any domain for its DNS records, with the option to choose which record type you need and which resolver to query. Fast, direct answers without needing a terminal.
+
+HTTP header and response inspector
+Enter any endpoint to see its response headers, status code, and timing — handy for debugging APIs, checking redirects, or understanding how a server responds.
+
+Designed to feel native
+Built entirely with Material Design 3, with full support for light and dark mode, so it fits naturally alongside the rest of your device.
+
+Privacy by design
+There's no account or login. Analytics and performance monitoring are strictly opt-in, and you can withdraw consent at any time from settings. Full details are available in the app's privacy policy.
+
+Debug Toolkit doesn't try to do everything — it focuses on the handful of diagnostics people actually reach for, and does them cleanly, quickly, and without clutter.
+
+[fr-FR]
+
+App Name
+Debug Toolkit
+
+Short description
+Diagnostics réseau : Wi-Fi, débit, DNS, certificats TLS et HTTP.
+
+Full description
+Debug Toolkit est un ensemble simple de diagnostics réseau pour tous ceux qui souhaitent comprendre ce qui se passe sur leur connexion, que vous soyez développeur, professionnel de l'informatique ou simplement à la recherche de la raison pour laquelle votre Wi-Fi semble lent.
+
+Surveillance du signal Wi-Fi
+Consultez en temps réel la puissance de votre signal Wi-Fi en dBm, ainsi que le débit de liaison et les informations de connexion. Vous pouvez ainsi connaître précisément la qualité de votre connexion au lieu de vous fier à quelques barres.
+
+Test de débit
+Effectuez des tests de téléchargement, d'envoi et de latence pour obtenir une vision claire des performances réelles de votre réseau, grâce à l'infrastructure de test de débit de Cloudflare.
+
+Inspection des certificats TLS
+Saisissez n'importe quel nom d'hôte pour consulter les détails de son certificat : émetteur, dates de validité et informations sur la chaîne. Idéal pour vérifier la configuration de sécurité d'un site ou résoudre des problèmes de certificat.
+
+Requêtes DNS
+Interrogez n'importe quel domaine pour consulter ses enregistrements DNS, avec la possibilité de choisir le type d'enregistrement et le résolveur à utiliser. Des réponses rapides et directes, sans avoir besoin d'un terminal.
+
+Inspection des en-têtes et réponses HTTP
+Saisissez n'importe quel point de terminaison pour afficher ses en-têtes de réponse, son code d'état et les temps de réponse. Pratique pour déboguer des API, vérifier les redirections ou comprendre comment un serveur répond.
+
+Une expérience native
+Entièrement conçu avec Material Design 3, avec une prise en charge complète des modes clair et sombre, pour s'intégrer naturellement au reste de votre appareil.
+
+La confidentialité avant tout
+Aucun compte ni aucune connexion ne sont nécessaires. Les analyses et la surveillance des performances sont strictement facultatives, et vous pouvez retirer votre consentement à tout moment depuis les paramètres. Tous les détails sont disponibles dans la politique de confidentialité de l'application.
+
+Debug Toolkit n'essaie pas de tout faire. L'application se concentre sur les quelques outils de diagnostic dont on a réellement besoin et les propose de manière claire, rapide et sans encombrement.
+
+[es-ES]
+
+App Name
+Debug Toolkit
+
+Short description
+Diagnóstico de red: Wi-Fi, velocidad, DNS, certificados TLS y HTTP.
+
+Full description
+Debug Toolkit es un conjunto sencillo de herramientas de diagnóstico de red para quienes necesitan entender qué ocurre con su conexión, ya seas desarrollador, profesional de TI o simplemente alguien que intenta averiguar por qué el Wi-Fi parece lento.
+
+Supervisión de la señal Wi-Fi
+Consulta en tiempo real la intensidad de la señal Wi-Fi en dBm, junto con la velocidad del enlace y los detalles de la conexión. Así sabrás exactamente qué tan buena es tu conexión en lugar de tener que fiarte de unas pocas barras.
+
+Pruebas de velocidad
+Realiza pruebas de descarga, subida y latencia para obtener una visión clara del rendimiento real de tu red, utilizando la infraestructura de pruebas de velocidad de Cloudflare.
+
+Inspección de certificados TLS
+Introduce cualquier nombre de host para consultar los detalles de su certificado: emisor, fechas de validez e información de la cadena. Resulta útil para verificar la configuración de seguridad de un sitio o solucionar problemas con certificados.
+
+Consultas DNS
+Consulta cualquier dominio para ver sus registros DNS y elige el tipo de registro que necesitas y el resolvedor que quieres utilizar. Respuestas rápidas y directas sin necesidad de usar un terminal.
+
+Inspector de cabeceras y respuestas HTTP
+Introduce cualquier endpoint para ver sus cabeceras de respuesta, código de estado y tiempos de respuesta. Es práctico para depurar API, comprobar redirecciones o entender cómo responde un servidor.
+
+Diseñado para sentirse nativo
+Creado íntegramente con Material Design 3 y compatible con los modos claro y oscuro, para integrarse de forma natural con el resto de tu dispositivo.
+
+Privacidad desde el diseño
+No necesitas crear una cuenta ni iniciar sesión. Los análisis y la monitorización del rendimiento son estrictamente opcionales, y puedes retirar tu consentimiento en cualquier momento desde los ajustes. Todos los detalles están disponibles en la política de privacidad de la aplicación.
+
+Debug Toolkit no intenta hacerlo todo. Se centra en las herramientas de diagnóstico que realmente necesitas y las ofrece de forma limpia, rápida y sin elementos innecesarios.
+
+[zh-CN]
+
+App Name
+Debug Toolkit
+
+Short description
+网络诊断：Wi-Fi 信号、测速、DNS、TLS 证书和 HTTP。
+
+Full description
+Debug Toolkit 是一套简单易用的网络诊断工具，帮助你了解网络连接的实际情况。无论你是开发者、IT 专业人员，还是只是想弄清楚 Wi-Fi 为什么感觉很慢，都可以使用它。
+
+Wi-Fi 信号监测
+实时查看 Wi-Fi 信号强度（dBm）、连接速率和连接详情，让你准确了解网络连接的实际质量，而不是仅凭几格信号条来判断。
+
+速度测试
+运行下载、上传和延迟测试，全面了解网络的实际性能。测试由 Cloudflare 的测速基础设施提供支持。
+
+TLS 证书检查
+输入任意主机名即可查看证书详情，包括颁发者、有效期和证书链信息。适合验证网站的安全配置或排查证书问题。
+
+DNS 查询
+查询任意域名的 DNS 记录，并选择所需的记录类型以及要使用的 DNS 解析器。无需使用终端即可快速获得直接的查询结果。
+
+HTTP 标头和响应检查
+输入任意端点即可查看响应标头、状态码和响应时间。适合调试 API、检查重定向或了解服务器的响应方式。
+
+原生体验设计
+完全采用 Material Design 3 构建，支持浅色和深色模式，可以自然地融入你的设备使用体验。
+
+以隐私为设计核心
+无需注册账户或登录。分析和性能监控完全采用自愿选择的方式，你可以随时在设置中撤回同意。完整信息请参阅应用的隐私政策。
+
+Debug Toolkit 不追求面面俱到，而是专注于人们真正需要使用的几项网络诊断功能，并以简洁、快速、无干扰的方式提供这些功能。
+
+[zh-TW]
+
+App Name
+Debug Toolkit
+
+Short description
+網路診斷：Wi-Fi 訊號、速度測試、DNS、TLS 憑證和 HTTP
+
+Full description
+Debug Toolkit 是一套簡單易用的網路診斷工具，協助你了解網路連線的實際狀況。無論你是開發人員、IT 專業人士，還是只是想弄清楚 Wi-Fi 為什麼感覺很慢，都可以使用它。
+
+Wi-Fi 訊號監測
+即時查看 Wi-Fi 訊號強度（dBm）、連線速度和連線詳細資訊，讓你準確了解網路連線的實際品質，而不是只憑幾格訊號來判斷。
+
+速度測試
+執行下載、上傳和延遲測試，全面了解網路的實際效能。測試由 Cloudflare 的速度測試基礎設施提供支援。
+
+TLS 憑證檢查
+輸入任何主機名稱即可查看憑證詳細資訊，包括簽發者、有效期限和憑證鏈資訊。適合驗證網站的安全設定或排查憑證問題。
+
+DNS 查詢
+查詢任何網域的 DNS 記錄，並選擇需要的記錄類型以及要使用的 DNS 解析器。無需使用終端機即可快速取得直接的查詢結果。
+
+HTTP 標頭和回應檢查
+輸入任何端點即可查看回應標頭、狀態碼和回應時間。適合偵錯 API、檢查重新導向或了解伺服器的回應方式。
+
+原生體驗設計
+完全採用 Material Design 3 建構，支援淺色和深色模式，可以自然地融入你的裝置使用體驗。
+
+以隱私為設計核心
+無需註冊帳戶或登入。分析和效能監控完全採自願選擇的方式，你可以隨時在設定中撤回同意。完整資訊請參閱應用程式的隱私權政策。
+
+Debug Toolkit 不追求面面俱到，而是專注於人們真正需要使用的幾項網路診斷功能，並以簡潔、快速、無干擾的方式提供這些功能。
+
+[nl-NL]
+
+App Name
+Debug Toolkit
+
+Short description
+Netwerkdiagnose: Wi-Fi, snelheid, DNS, TLS-certificaten en HTTP.
+
+Full description
+Debug Toolkit is een eenvoudige verzameling netwerkdiagnostische hulpmiddelen voor iedereen die wil begrijpen wat er met zijn verbinding gebeurt. Of je nu ontwikkelaar, IT-professional of gewoon iemand bent die probeert te achterhalen waarom de wifi traag aanvoelt.
+
+Wi-Fi-signaal controleren
+Bekijk de actuele sterkte van je Wi-Fi-signaal in dBm, samen met de verbindingssnelheid en verbindingsgegevens. Zo weet je precies hoe sterk je verbinding werkelijk is, in plaats van af te gaan op een paar signaalbalkjes.
+
+Snelheid testen
+Voer tests uit voor downloadsnelheid, uploadsnelheid en latentie om een duidelijk beeld te krijgen van de werkelijke prestaties van je netwerk. De tests worden mogelijk gemaakt door de snelheidstestinfrastructuur van Cloudflare.
+
+TLS-certificaten controleren
+Voer een hostnaam in om de gegevens van het certificaat te bekijken, waaronder uitgever, geldigheidsdata en informatie over de certificaatketen. Handig om de beveiligingsconfiguratie van een website te controleren of certificaatproblemen op te lossen.
+
+DNS-query's
+Zoek DNS-records van elk domein op en kies welk recordtype en welke resolver je wilt gebruiken. Snel en rechtstreeks, zonder dat je een terminal nodig hebt.
+
+HTTP-headers en antwoorden controleren
+Voer een endpoint in om de responseheaders, statuscode en timing te bekijken. Handig voor het debuggen van API's, het controleren van redirects of het begrijpen van serverreacties.
+
+Ontworpen om vertrouwd aan te voelen
+Volledig gebouwd met Material Design 3, met volledige ondersteuning voor de lichte en donkere modus. Daardoor past de app natuurlijk bij de rest van je apparaat.
+
+Privacy als uitgangspunt
+Er is geen account of login nodig. Analytics en prestatiemonitoring zijn volledig optioneel en je kunt je toestemming op elk moment intrekken via de instellingen. Alle details vind je in het privacybeleid van de app.
+
+Debug Toolkit probeert niet alles te doen. De app richt zich op de paar diagnostische hulpmiddelen die mensen daadwerkelijk nodig hebben en voert die schoon, snel en zonder overbodige elementen uit.
+
+[pl-PL]
+
+App Name
+Debug Toolkit
+
+Short description
+Diagnostyka sieci: Wi-Fi, szybkość, DNS, TLS i HTTP.
+
+Full description
+Debug Toolkit to prosty zestaw narzędzi diagnostyki sieci dla każdego, kto chce zrozumieć, co dzieje się z jego połączeniem. Niezależnie od tego, czy jesteś programistą, specjalistą IT, czy po prostu próbujesz ustalić, dlaczego Wi-Fi działa wolno.
+
+Monitorowanie sygnału Wi-Fi
+Sprawdzaj na żywo siłę sygnału Wi-Fi w dBm, szybkość połączenia i szczegóły połączenia. Dzięki temu dokładnie wiesz, jak dobra jest Twoja rzeczywista jakość połączenia, zamiast zgadywać na podstawie kilku kresek zasięgu.
+
+Testowanie szybkości
+Wykonuj testy pobierania, wysyłania i opóźnienia, aby uzyskać dokładny obraz rzeczywistej wydajności sieci. Testy korzystają z infrastruktury testów szybkości Cloudflare.
+
+Sprawdzanie certyfikatów TLS
+Wpisz dowolną nazwę hosta, aby wyświetlić szczegóły jego certyfikatu, w tym wystawcę, daty ważności i informacje o łańcuchu certyfikatów. Przydatne podczas weryfikowania zabezpieczeń witryny lub rozwiązywania problemów z certyfikatami.
+
+Zapytania DNS
+Sprawdzaj rekordy DNS dowolnej domeny, wybierając typ rekordu oraz resolver, którego chcesz użyć. Szybkie i bezpośrednie wyniki bez konieczności korzystania z terminala.
+
+Sprawdzanie nagłówków i odpowiedzi HTTP
+Wpisz dowolny endpoint, aby zobaczyć nagłówki odpowiedzi, kod statusu i czasy odpowiedzi. Przydatne podczas debugowania API, sprawdzania przekierowań lub analizowania sposobu odpowiedzi serwera.
+
+Zaprojektowane jak natywna aplikacja
+Aplikacja została w całości zbudowana z wykorzystaniem Material Design 3 i obsługuje tryb jasny oraz ciemny, dzięki czemu naturalnie pasuje do reszty urządzenia.
+
+Prywatność w centrum uwagi
+Nie potrzebujesz konta ani logowania. Analityka i monitorowanie wydajności są całkowicie opcjonalne, a zgodę możesz wycofać w dowolnym momencie w ustawieniach. Pełne informacje znajdziesz w polityce prywatności aplikacji.
+
+Debug Toolkit nie próbuje robić wszystkiego. Skupia się na kilku narzędziach diagnostycznych, z których użytkownicy naprawdę korzystają, i udostępnia je w prosty, szybki i uporządkowany sposób.
+
+[tr-TR]
+
+App Name
+Debug Toolkit
+
+Short description
+Ağ tanılama: Wi-Fi, hız, DNS, TLS sertifikaları ve HTTP.
+
+Full description
+Debug Toolkit, bağlantısında neler olduğunu anlamak isteyen herkes için hazırlanmış, kullanımı kolay bir ağ tanılama araçları setidir. İster geliştirici, ister BT uzmanı olun, ister Wi-Fi bağlantınızın neden yavaş olduğunu anlamaya çalışıyor olun, ihtiyacınız olan bilgileri kolayca edinebilirsiniz.
+
+Wi-Fi sinyali izleme
+Wi-Fi sinyal gücünüzü dBm cinsinden canlı olarak, bağlantı hızı ve bağlantı ayrıntılarıyla birlikte görüntüleyin. Böylece birkaç sinyal çubuğuna bakarak tahmin etmek yerine bağlantınızın gerçekte ne kadar güçlü olduğunu görebilirsiniz.
+
+Hız testi
+Cloudflare'ın hız testi altyapısıyla desteklenen indirme, yükleme ve gecikme testlerini çalıştırarak ağınızın gerçek performansı hakkında net bir fikir edinin.
+
+TLS sertifikası inceleme
+Herhangi bir ana bilgisayar adını girerek sertifika ayrıntılarını görüntüleyin. Sertifika yetkilisi, geçerlilik tarihleri ve sertifika zinciri bilgilerini inceleyerek bir sitenin güvenlik yapılandırmasını doğrulayabilir veya sertifika sorunlarını giderebilirsiniz.
+
+DNS sorguları
+Herhangi bir alan adının DNS kayıtlarını sorgulayın. İhtiyacınız olan kayıt türünü ve kullanılacak DNS çözümleyiciyi seçebilirsiniz. Terminal kullanmadan hızlı ve doğrudan sonuçlar alın.
+
+HTTP başlık ve yanıt inceleyici
+Herhangi bir endpoint girerek yanıt başlıklarını, durum kodunu ve yanıt süresini görüntüleyin. API'lerde hata ayıklamak, yönlendirmeleri kontrol etmek veya bir sunucunun nasıl yanıt verdiğini anlamak için kullanışlıdır.
+
+Yerel hissettirecek şekilde tasarlandı
+Tamamen Material Design 3 kullanılarak geliştirildi ve açık ve koyu modları destekler. Böylece cihazınızdaki diğer uygulamalarla doğal bir uyum sağlar.
+
+Gizlilik tasarımın merkezinde
+Hesap veya giriş gerekmez. Analiz ve performans izleme tamamen isteğe bağlıdır ve izninizi istediğiniz zaman ayarlardan geri çekebilirsiniz. Tüm ayrıntılar uygulamanın gizlilik politikasında yer almaktadır.
+
+Debug Toolkit her şeyi yapmaya çalışmaz. İnsanların gerçekten ihtiyaç duyduğu birkaç tanılama aracına odaklanır ve bunları temiz, hızlı ve gereksiz karmaşa olmadan sunar.
