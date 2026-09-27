@@ -114,6 +114,9 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 dependencies {
