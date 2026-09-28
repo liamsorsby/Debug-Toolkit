@@ -19,8 +19,8 @@ object AnalyticsConsentPolicy {
 
     /**
      * The consent signals sent to Firebase. Analytics storage follows the user's choice; the
-     * advertising signals are always denied because the app never runs ads or shares data for
-     * advertising, and that must not change silently with a consent change.
+     * advertising signals remain denied because analytics consent is not advertising consent.
+     * AdMob's own consent and data handling must be configured separately.
      */
     fun consentSettings(analyticsGranted: Boolean): Map<ConsentType, ConsentStatus> = mapOf(
         ConsentType.ANALYTICS_STORAGE to analyticsGranted.toConsentStatus(),

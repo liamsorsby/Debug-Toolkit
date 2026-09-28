@@ -207,6 +207,9 @@
     <string name="settings_appearance">Apparence</string>
     <string name="settings_appearance_supporting">Choisissez comment l’application suit le thème de votre appareil.</string>
     <string name="settings_analytics">Analyses facultatives</string>
+    <string name="settings_ads">Publicité</string>
+    <string name="settings_ads_supporting">Affiche des annonces dans l’application. Les laisser activées contribue au développement de cette application. Les désactiver arrête les demandes d’annonces. Ce réglage est indépendant du consentement aux analyses.</string>
+    <string name="settings_ads_switch">Afficher les annonces</string>
     <string name="settings_analytics_supporting">Autorisez les parcours d’écran et les résultats de diagnostic respectueux de la vie privée à contribuer à l’amélioration de l’application. Les points de terminaison saisis et les résultats des diagnostics ne sont jamais inclus. La surveillance des plantages et des performances fonctionne séparément afin de maintenir la fiabilité de l’application, quel que soit votre choix.</string>
     <string name="theme_system">Par défaut du système</string>
     <string name="theme_light">Clair</string>

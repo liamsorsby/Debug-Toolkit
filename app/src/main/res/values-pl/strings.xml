@@ -206,6 +206,9 @@
     <string name="settings_appearance">Wygląd</string>
     <string name="settings_appearance_supporting">Wybierz, jak aplikacja ma korzystać z motywu urządzenia.</string>
     <string name="settings_analytics">Opcjonalna analityka</string>
+    <string name="settings_ads">Reklamy</string>
+    <string name="settings_ads_supporting">Wyświetlaj reklamy w aplikacji. Pozostawienie ich włączonych pomaga wspierać rozwój tej aplikacji. Wyłączenie zatrzymuje żądania reklam. To ustawienie jest niezależne od zgody na analitykę.</string>
+    <string name="settings_ads_switch">Wyświetlaj reklamy</string>
     <string name="settings_analytics_supporting">Zezwól na zbieranie bezpiecznych dla prywatności informacji o nawigacji po ekranach i wynikach diagnostycznych, aby pomóc ulepszać aplikację. Wprowadzone punkty końcowe i wyniki diagnostyki nigdy nie są uwzględniane. Monitorowanie awarii i wydajności działa niezależnie, aby zapewnić niezawodność aplikacji bez względu na ten wybór.</string>
     <string name="theme_system">Domyślne systemowe</string>
     <string name="theme_light">Jasny</string>

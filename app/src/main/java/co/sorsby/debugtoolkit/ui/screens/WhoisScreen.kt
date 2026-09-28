@@ -48,7 +48,7 @@ fun WhoisScreen(
     onInputChanged: (String) -> Unit,
     onLookup: () -> Unit,
 ) {
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             ToolIntroCard(
                 icon = Icons.Default.Domain,

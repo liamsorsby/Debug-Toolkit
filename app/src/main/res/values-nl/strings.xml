@@ -206,6 +206,9 @@
     <string name="settings_appearance">Weergave</string>
     <string name="settings_appearance_supporting">Kies hoe de app het thema van je apparaat volgt.</string>
     <string name="settings_analytics">Optionele analytics</string>
+    <string name="settings_ads">Advertenties</string>
+    <string name="settings_ads_supporting">Toon advertenties in de app. Door ze aan te laten, steun je de ontwikkeling van deze app. Uitschakelen stopt advertentieverzoeken. Dit staat los van toestemming voor analytics.</string>
+    <string name="settings_ads_switch">Advertenties tonen</string>
     <string name="settings_analytics_supporting">Sta privacyvriendelijke schermnavigatie en diagnostische resultaten toe om de app te helpen verbeteren. Ingevoerde eindpunten en diagnostische resultaten worden nooit opgenomen. Crash- en prestatiemonitoring werkt afzonderlijk om de app betrouwbaar te houden, ongeacht deze keuze.</string>
     <string name="theme_system">Systeemstandaard</string>
     <string name="theme_light">Licht</string>

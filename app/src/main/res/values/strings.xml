@@ -206,6 +206,9 @@
     <string name="settings_appearance">Appearance</string>
     <string name="settings_appearance_supporting">Choose how the app follows your device theme.</string>
     <string name="settings_analytics">Optional analytics</string>
+    <string name="settings_ads">Advertising</string>
+    <string name="settings_ads_supporting">Show ads in the app. Leaving ads on helps support the development of this app. Turning them off stops ad requests. This is separate from analytics consent.</string>
+    <string name="settings_ads_switch">Show ads</string>
     <string name="settings_analytics_supporting">Allow privacy-safe screen journeys and diagnostic outcomes to help improve the app. Entered endpoints and diagnostic results are never included. Crash and performance monitoring run separately to keep the app reliable, regardless of this choice.</string>
     <string name="theme_system">System default</string>
     <string name="theme_light">Light</string>

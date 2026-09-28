@@ -33,7 +33,7 @@ fun PublicIpRoute(viewModel: PublicIpViewModel = koinViewModel()) {
 
 @Composable
 fun PublicIpScreen(state: PublicIpUiState, onLookup: () -> Unit) {
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             ToolIntroCard(
                 icon = Icons.Default.Public,

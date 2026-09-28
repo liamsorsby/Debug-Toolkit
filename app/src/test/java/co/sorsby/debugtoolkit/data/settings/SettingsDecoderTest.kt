@@ -15,6 +15,7 @@ class SettingsDecoderTest {
         assertEquals(ThemeMode.SYSTEM, settings.themeMode)
         assertEquals(AnalyticsConsent.UNSET, settings.analyticsConsent)
         assertEquals(false, settings.cloudflareDisclosureAccepted)
+        assertEquals(true, settings.adsEnabled)
     }
 
     @Test
@@ -55,6 +56,13 @@ class SettingsDecoderTest {
 
         assertEquals(ThemeMode.SYSTEM, settings.themeMode)
         assertEquals(AnalyticsConsent.UNSET, settings.analyticsConsent)
+    }
+
+    @Test
+    fun `ads preference round trips while missing values stay enabled`() {
+        assertEquals(true, SettingsDecoder.decode(null, null, null).adsEnabled)
+        assertEquals(false, SettingsDecoder.decode(null, null, null, adsEnabled = false).adsEnabled)
+        assertEquals(true, SettingsDecoder.decode(null, null, null, adsEnabled = true).adsEnabled)
     }
 
     @Test

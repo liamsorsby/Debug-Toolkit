@@ -55,7 +55,7 @@ fun OverviewScreen(onDestinationSelected: (String) -> Unit) {
 
 @Composable
 fun ToolsScreen(onDestinationSelected: (String) -> Unit) {
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             SectionHeader(
                 stringResource(R.string.tools_title),

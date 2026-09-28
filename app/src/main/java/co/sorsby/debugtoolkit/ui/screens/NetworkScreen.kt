@@ -97,7 +97,7 @@ fun NetworkScreen(
     permissionGranted: Boolean,
     onRequestPermission: () -> Unit,
 ) {
-    ScreenList {
+    ScreenList(showAds = true) {
         item { LiveNetworkHero(snapshot) }
         if (!permissionGranted) {
             item { PermissionCard(onRequestPermission) }

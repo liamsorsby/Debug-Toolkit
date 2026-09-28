@@ -26,6 +26,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -45,8 +46,11 @@ import co.sorsby.debugtoolkit.core.model.ToolError
 import co.sorsby.debugtoolkit.core.model.ToolState
 import co.sorsby.debugtoolkit.ui.theme.DebugToolkitTheme
 
+val LocalAdsEnabled = compositionLocalOf { false }
+
 @Composable
-fun ScreenList(content: LazyListScope.() -> Unit) {
+fun ScreenList(showAds: Boolean = false, content: LazyListScope.() -> Unit) {
+    val adsEnabled = showAds && LocalAdsEnabled.current
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -54,8 +58,10 @@ fun ScreenList(content: LazyListScope.() -> Unit) {
             .testTag("screenList"),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        content = content,
-    )
+    ) {
+        content()
+        if (adsEnabled) item(key = "adBanner") { AdsComponent() }
+    }
 }
 
 @Composable

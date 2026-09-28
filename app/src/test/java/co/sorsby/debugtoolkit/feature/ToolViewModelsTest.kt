@@ -85,11 +85,12 @@ class ToolViewModelsTest {
 
         viewModel.setThemeMode(ThemeMode.DARK)
         viewModel.setConsent(AnalyticsConsent.GRANTED)
+        viewModel.setAdsEnabled(false)
         viewModel.acceptCloudflareDisclosure()
         advanceUntilIdle()
 
         assertEquals(
-            AppSettings(ThemeMode.DARK, AnalyticsConsent.GRANTED, true),
+            AppSettings(ThemeMode.DARK, AnalyticsConsent.GRANTED, true, adsEnabled = false),
             viewModel.settings.value,
         )
         collection.cancel()
@@ -577,6 +578,10 @@ private class FakeSettingsRepository : SettingsRepository {
 
     override suspend fun setAnalyticsConsent(consent: AnalyticsConsent) {
         mutableSettings.value = mutableSettings.value.copy(analyticsConsent = consent)
+    }
+
+    override suspend fun setAdsEnabled(enabled: Boolean) {
+        mutableSettings.value = mutableSettings.value.copy(adsEnabled = enabled)
     }
 
     override suspend fun acceptCloudflareDisclosure() {

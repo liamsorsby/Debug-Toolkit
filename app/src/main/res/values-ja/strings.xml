@@ -206,6 +206,9 @@
     <string name="settings_appearance">外観</string>
     <string name="settings_appearance_supporting">アプリがデバイスのテーマに従う方法を選択します。</string>
     <string name="settings_analytics">任意の分析</string>
+    <string name="settings_ads">広告</string>
+    <string name="settings_ads_supporting">アプリに広告を表示します。広告をオンのままにすると、このアプリの開発を支援できます。オフにすると広告リクエストが停止します。分析への同意とは別の設定です。</string>
+    <string name="settings_ads_switch">広告を表示</string>
     <string name="settings_analytics_supporting">プライバシーに配慮した画面遷移と診断結果の分析を許可して、アプリの改善に役立てます。入力したエンドポイントや診断結果は一切含まれません。クラッシュとパフォーマンスの監視はこの選択とは別に実行され、アプリの信頼性を維持します。</string>
     <string name="theme_system">システムのデフォルト</string>
     <string name="theme_light">ライト</string>

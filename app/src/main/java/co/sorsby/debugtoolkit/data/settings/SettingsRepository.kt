@@ -15,6 +15,7 @@ interface SettingsRepository {
     val settings: Flow<AppSettings>
     suspend fun setThemeMode(mode: ThemeMode)
     suspend fun setAnalyticsConsent(consent: AnalyticsConsent)
+    suspend fun setAdsEnabled(enabled: Boolean)
     suspend fun acceptCloudflareDisclosure()
 }
 
@@ -26,6 +27,7 @@ class DataStoreSettingsRepository(private val context: Context) : SettingsReposi
             themeMode = values[THEME],
             analyticsConsent = values[CONSENT],
             cloudflareDisclosureAccepted = values[CLOUDFLARE_DISCLOSURE],
+            adsEnabled = values[ADS_ENABLED],
         )
     }
 
@@ -37,6 +39,10 @@ class DataStoreSettingsRepository(private val context: Context) : SettingsReposi
         context.dataStore.edit { it[CONSENT] = consent.name }
     }
 
+    override suspend fun setAdsEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[ADS_ENABLED] = enabled }
+    }
+
     override suspend fun acceptCloudflareDisclosure() {
         context.dataStore.edit { it[CLOUDFLARE_DISCLOSURE] = true }
     }
@@ -45,5 +51,6 @@ class DataStoreSettingsRepository(private val context: Context) : SettingsReposi
         val THEME = stringPreferencesKey("theme")
         val CONSENT = stringPreferencesKey("analytics_consent")
         val CLOUDFLARE_DISCLOSURE = booleanPreferencesKey("cloudflare_disclosure")
+        val ADS_ENABLED = booleanPreferencesKey("ads_enabled")
     }
 }

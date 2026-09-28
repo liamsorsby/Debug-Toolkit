@@ -206,6 +206,9 @@
     <string name="settings_appearance">外觀</string>
     <string name="settings_appearance_supporting">選擇應用程式如何跟隨裝置主題。</string>
     <string name="settings_analytics">選用分析</string>
+    <string name="settings_ads">廣告</string>
+    <string name="settings_ads_supporting">在應用程式中顯示廣告。保持開啟有助於支持本應用程式的開發。關閉後將停止請求廣告。此設定與分析同意選項無關。</string>
+    <string name="settings_ads_switch">顯示廣告</string>
     <string name="settings_analytics_supporting">允許收集注重隱私的畫面瀏覽路徑和診斷結果，以協助改善應用程式。輸入的端點和診斷結果絕不會被包含。當機與效能監控會獨立執行，以維持應用程式的可靠性，不受此選擇影響。</string>
     <string name="theme_system">跟隨系統</string>
     <string name="theme_light">淺色</string>

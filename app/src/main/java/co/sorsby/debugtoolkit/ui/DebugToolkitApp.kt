@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -59,6 +61,7 @@ import co.sorsby.debugtoolkit.ui.navigation.AppDestinations
 import co.sorsby.debugtoolkit.ui.screens.AboutScreen
 import co.sorsby.debugtoolkit.ui.screens.DnsRoute
 import co.sorsby.debugtoolkit.ui.components.SectionLabel
+import co.sorsby.debugtoolkit.ui.components.LocalAdsEnabled
 import co.sorsby.debugtoolkit.ui.screens.HttpRoute
 import co.sorsby.debugtoolkit.ui.screens.LanScanRoute
 import co.sorsby.debugtoolkit.ui.screens.NetworkRoute
@@ -82,6 +85,8 @@ fun DebugToolkitApp(
     settingsViewModel: SettingsViewModel,
     journeyTracker: JourneyTracker = koinInject(),
 ) {
+    val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
+    val settingsReady by settingsViewModel.isReady.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -136,7 +141,9 @@ fun DebugToolkitApp(
                 )
             },
         ) { padding ->
-            AppNavHost(navController, padding, settingsViewModel)
+            CompositionLocalProvider(LocalAdsEnabled provides (settingsReady && settings.adsEnabled)) {
+                AppNavHost(navController, padding, settingsViewModel)
+            }
         }
     }
 }

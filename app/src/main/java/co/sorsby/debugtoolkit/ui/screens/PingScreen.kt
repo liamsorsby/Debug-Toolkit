@@ -58,7 +58,7 @@ fun PingScreen(
         PingMode.PING -> state.pingResult
         PingMode.TRACEROUTE -> state.tracerouteResult
     }
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             ToolIntroCard(
                 icon = Icons.Default.NetworkPing,

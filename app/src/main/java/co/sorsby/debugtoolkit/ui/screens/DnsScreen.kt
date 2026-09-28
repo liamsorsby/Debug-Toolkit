@@ -64,7 +64,7 @@ fun DnsScreen(
     onQuery: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             ToolIntroCard(
                 icon = Icons.Default.Dns,

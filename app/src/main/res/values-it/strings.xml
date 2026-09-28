@@ -206,6 +206,9 @@
     <string name="settings_appearance">Aspetto</string>
     <string name="settings_appearance_supporting">Scegli come l\'app segue il tema del dispositivo.</string>
     <string name="settings_analytics">Analisi facoltative</string>
+    <string name="settings_ads">Pubblicità</string>
+    <string name="settings_ads_supporting">Mostra annunci nell\'app. Lasciarli attivi aiuta a sostenere lo sviluppo di questa app. Disattivarli interrompe le richieste di annunci. Questa scelta è separata dal consenso alle analisi.</string>
+    <string name="settings_ads_switch">Mostra annunci</string>
     <string name="settings_analytics_supporting">Consenti analisi rispettose della privacy sui percorsi tra schermate e sugli esiti diagnostici per contribuire a migliorare l\'app. Gli endpoint inseriti e i risultati diagnostici non vengono mai inclusi. Il monitoraggio di arresti anomali e prestazioni funziona separatamente per mantenere l\'app affidabile, indipendentemente da questa scelta.</string>
     <string name="theme_system">Predefinito del sistema</string>
     <string name="theme_light">Chiaro</string>

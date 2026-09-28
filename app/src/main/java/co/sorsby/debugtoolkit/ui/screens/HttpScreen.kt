@@ -66,7 +66,7 @@ fun HttpScreen(
     onShowResponseBodyChanged: (Boolean) -> Unit,
     onInspect: () -> Unit,
 ) {
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             ToolIntroCard(
                 icon = Icons.Default.Language,
