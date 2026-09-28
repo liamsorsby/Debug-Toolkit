@@ -17,6 +17,8 @@ import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.state.ToggleableState
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
@@ -214,19 +216,34 @@ class AppNavigationTest {
             runBlocking { repository.setAdsEnabled(true) }
             openDrawerDestination("Settings")
             val switch = assertVisibleInScreenList("Show ads")
-            switch.assertIsOn().performClick().assertIsOff()
+            composeRule.waitUntil(5_000) {
+                switch.fetchSemanticsNode().config[SemanticsProperties.ToggleableState] ==
+                    ToggleableState.On
+            }
+            switch.assertIsOn().performClick()
             composeRule.waitUntil(5_000) {
                 runBlocking { !repository.settings.first().adsEnabled }
             }
+            composeRule.waitUntil(5_000) {
+                switch.fetchSemanticsNode().config[SemanticsProperties.ToggleableState] ==
+                    ToggleableState.Off
+            }
+            switch.assertIsOff()
 
             openDrawerDestination("DNS lookup")
             composeRule.onNodeWithTag("dnsAdBanner").assertDoesNotExist()
 
             openDrawerDestination("Settings")
-            assertVisibleInScreenList("Show ads").assertIsOff().performClick().assertIsOn()
+            val restoredSwitch = assertVisibleInScreenList("Show ads").assertIsOff()
+            restoredSwitch.performClick()
             composeRule.waitUntil(5_000) {
                 runBlocking { repository.settings.first().adsEnabled }
             }
+            composeRule.waitUntil(5_000) {
+                restoredSwitch.fetchSemanticsNode().config[SemanticsProperties.ToggleableState] ==
+                    ToggleableState.On
+            }
+            restoredSwitch.assertIsOn()
             openDrawerDestination("DNS lookup")
             composeRule.onNodeWithTag("screenList").performScrollToNode(hasTestTag("dnsAdBanner"))
             composeRule.onNodeWithTag("dnsAdBanner").assertExists()
