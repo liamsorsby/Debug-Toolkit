@@ -29,6 +29,8 @@ if (firebaseConfigured) {
 }
 val newRelicDebugToken = secret("NEW_RELIC_DEBUG_TOKEN")
 val newRelicReleaseToken = secret("NEW_RELIC_RELEASE_TOKEN")
+val debugAdsAppId = "ca-app-pub-3940256099942544~3347511713"
+val releaseAdsAppId = "ca-app-pub-3878997439927669~2622134723"
 val newRelicConfigured = newRelicDebugToken.isNotBlank() || newRelicReleaseToken.isNotBlank()
 if (newRelicConfigured) {
     apply(plugin = "newrelic")
@@ -80,8 +82,8 @@ android {
             enableAndroidTestCoverage = true
             isPseudoLocalesEnabled = true
             buildConfigField("String", "NEW_RELIC_TOKEN", "\"$newRelicDebugToken\"")
-            buildConfigField("String", "ADS_ID", "\"ca-app-pub-3940256099942544~3347511713\"")
-            buildConfigField("String", "AD_UNIT_ID", "\"/21775744923/example/adaptive-banner\"")
+            manifestPlaceholders["adsAppId"] = debugAdsAppId
+            buildConfigField("String", "AD_UNIT_ID", "\"ca-app-pub-3940256099942544/9214589741\"")
             if (firebaseConfigured) {
                 configure<FirebasePerfExtension> {
                     // Local JVM unit tests compile against the debug variant and run on a
@@ -95,7 +97,7 @@ android {
         release {
             signingConfig = signingConfigs.findByName("release")
             buildConfigField("String", "NEW_RELIC_TOKEN", "\"$newRelicReleaseToken\"")
-            buildConfigField("String", "ADS_ID", "\"ca-app-pub-3878997439927669~2622134723\"")
+            manifestPlaceholders["adsAppId"] = releaseAdsAppId
             buildConfigField("String", "AD_UNIT_ID", "\"ca-app-pub-3878997439927669/6369808047\"")
             optimization {
                 enable = true

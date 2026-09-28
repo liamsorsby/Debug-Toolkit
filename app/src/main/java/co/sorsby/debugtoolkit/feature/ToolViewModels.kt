@@ -63,6 +63,10 @@ class SettingsViewModel(private val repository: SettingsRepository) : ViewModel(
         viewModelScope.launch { repository.setAnalyticsConsent(consent) }
     }
 
+    fun setAdsEnabled(enabled: Boolean) {
+        viewModelScope.launch { repository.setAdsEnabled(enabled) }
+    }
+
     fun acceptCloudflareDisclosure() {
         viewModelScope.launch { repository.acceptCloudflareDisclosure() }
     }

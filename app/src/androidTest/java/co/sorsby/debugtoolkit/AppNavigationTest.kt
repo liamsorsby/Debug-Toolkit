@@ -137,6 +137,7 @@ class AppNavigationTest {
         openDrawerDestination("Settings")
         assertVisibleInScreenList("Appearance")
         assertVisibleInScreenList("Optional analytics")
+        assertVisibleInScreenList("Advertising")
     }
 
     @Test
@@ -191,16 +192,47 @@ class AppNavigationTest {
         val repository = GlobalContext.get().get<SettingsRepository>()
         repository.setThemeMode(ThemeMode.DARK)
         repository.setAnalyticsConsent(AnalyticsConsent.DENIED)
+        repository.setAdsEnabled(false)
 
         val settings = repository.settings.first {
             it.themeMode == ThemeMode.DARK &&
-                it.analyticsConsent == AnalyticsConsent.DENIED
+                it.analyticsConsent == AnalyticsConsent.DENIED && !it.adsEnabled
         }
 
         assertEquals(ThemeMode.DARK, settings.themeMode)
         assertEquals(AnalyticsConsent.DENIED, settings.analyticsConsent)
+        assertEquals(false, settings.adsEnabled)
         repository.setThemeMode(ThemeMode.SYSTEM)
         repository.setAnalyticsConsent(AnalyticsConsent.GRANTED)
+        repository.setAdsEnabled(true)
+    }
+
+    @Test
+    fun adsSwitchHidesBannerAndPersistsAcrossNavigation() {
+        val repository = GlobalContext.get().get<SettingsRepository>()
+        try {
+            runBlocking { repository.setAdsEnabled(true) }
+            openDrawerDestination("Settings")
+            val switch = assertVisibleInScreenList("Show ads")
+            switch.assertIsOn().performClick().assertIsOff()
+            composeRule.waitUntil(5_000) {
+                runBlocking { !repository.settings.first().adsEnabled }
+            }
+
+            openDrawerDestination("DNS lookup")
+            composeRule.onNodeWithTag("dnsAdBanner").assertDoesNotExist()
+
+            openDrawerDestination("Settings")
+            assertVisibleInScreenList("Show ads").assertIsOff().performClick().assertIsOn()
+            composeRule.waitUntil(5_000) {
+                runBlocking { repository.settings.first().adsEnabled }
+            }
+            openDrawerDestination("DNS lookup")
+            composeRule.onNodeWithTag("screenList").performScrollToNode(hasTestTag("dnsAdBanner"))
+            composeRule.onNodeWithTag("dnsAdBanner").assertExists()
+        } finally {
+            runBlocking { repository.setAdsEnabled(true) }
+        }
     }
 
     /**

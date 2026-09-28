@@ -207,6 +207,9 @@
     <string name="settings_appearance">Apariencia</string>
     <string name="settings_appearance_supporting">Elige cómo sigue la aplicación el tema de tu dispositivo.</string>
     <string name="settings_analytics">Analítica opcional</string>
+    <string name="settings_ads">Publicidad</string>
+    <string name="settings_ads_supporting">Muestra anuncios en la aplicación. Mantenerlos activados ayuda a apoyar el desarrollo de esta aplicación. Al desactivarlos, se dejan de solicitar anuncios. Es independiente del consentimiento para analítica.</string>
+    <string name="settings_ads_switch">Mostrar anuncios</string>
     <string name="settings_analytics_supporting">Permite recopilar de forma respetuosa con la privacidad los recorridos por las pantallas y los resultados de diagnóstico para ayudar a mejorar la aplicación. Los puntos de conexión introducidos y los resultados de diagnóstico nunca se incluyen. La supervisión de errores y rendimiento funciona por separado para mantener la aplicación fiable, independientemente de esta opción.</string>
     <string name="theme_system">Predeterminado del sistema</string>
     <string name="theme_light">Claro</string>

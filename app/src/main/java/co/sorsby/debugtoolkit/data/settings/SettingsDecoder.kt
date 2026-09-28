@@ -15,10 +15,12 @@ object SettingsDecoder {
         themeMode: String?,
         analyticsConsent: String?,
         cloudflareDisclosureAccepted: Boolean?,
+        adsEnabled: Boolean? = null,
     ): AppSettings = AppSettings(
         themeMode = themeMode?.toEnumOrNull() ?: ThemeMode.SYSTEM,
         analyticsConsent = analyticsConsent?.toEnumOrNull() ?: AnalyticsConsent.UNSET,
         cloudflareDisclosureAccepted = cloudflareDisclosureAccepted ?: false,
+        adsEnabled = adsEnabled ?: true,
     )
 
     private inline fun <reified T : Enum<T>> String.toEnumOrNull(): T? =

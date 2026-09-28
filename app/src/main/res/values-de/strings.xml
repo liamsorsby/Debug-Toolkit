@@ -206,6 +206,9 @@
     <string name="settings_appearance">Darstellung</string>
     <string name="settings_appearance_supporting">Wählen Sie, wie die App dem Design Ihres Geräts folgt.</string>
     <string name="settings_analytics">Optionale Analysen</string>
+    <string name="settings_ads">Werbung</string>
+    <string name="settings_ads_supporting">Werbung in der App anzeigen. Wenn sie aktiviert bleibt, unterstützt sie die Weiterentwicklung dieser App. Wenn deaktiviert, werden keine Anzeigen mehr angefordert. Unabhängig von der Einwilligung in Analysen.</string>
+    <string name="settings_ads_switch">Werbung anzeigen</string>
     <string name="settings_analytics_supporting">Erlauben Sie datenschutzfreundliche Bildschirmabläufe und Diagnoseergebnisse, um die App zu verbessern. Eingegebene Endpunkte und Diagnoseergebnisse werden niemals erfasst. Absturz- und Leistungsüberwachung laufen unabhängig davon, um die Zuverlässigkeit der App zu gewährleisten.</string>
     <string name="theme_system">Systemstandard</string>
     <string name="theme_light">Hell</string>

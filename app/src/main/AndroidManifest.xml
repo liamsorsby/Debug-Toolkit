@@ -27,6 +27,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DebugToolkit">
         <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${adsAppId}" />
+        <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
         <meta-data

@@ -206,6 +206,9 @@
     <string name="settings_appearance">Görünüm</string>
     <string name="settings_appearance_supporting">Uygulamanın cihaz temanı nasıl takip edeceğini seç.</string>
     <string name="settings_analytics">İsteğe bağlı analiz</string>
+    <string name="settings_ads">Reklamlar</string>
+    <string name="settings_ads_supporting">Uygulamada reklam gösterir. Reklamları açık bırakmak bu uygulamanın geliştirilmesini desteklemeye yardımcı olur. Kapatıldığında reklam istekleri durur. Bu ayar analiz izninden bağımsızdır.</string>
+    <string name="settings_ads_switch">Reklamları göster</string>
     <string name="settings_analytics_supporting">Uygulamanın geliştirilmesine yardımcı olmak için gizliliğe duyarlı ekran gezintilerine ve tanılama sonuçlarına izin ver. Girilen uç noktalar ve tanılama sonuçları hiçbir zaman dahil edilmez. Bu seçimden bağımsız olarak uygulamanın güvenilirliğini korumak için kilitlenme ve performans izleme ayrı olarak çalışır.</string>
     <string name="theme_system">Sistem varsayılanı</string>
     <string name="theme_light">Açık</string>

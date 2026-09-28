@@ -28,6 +28,7 @@ import co.sorsby.debugtoolkit.core.model.ToolState
 import co.sorsby.debugtoolkit.data.dns.DnsRecordType
 import co.sorsby.debugtoolkit.feature.DnsUiState
 import co.sorsby.debugtoolkit.feature.DnsViewModel
+import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.ui.components.InfoCard
 import co.sorsby.debugtoolkit.ui.components.Metric
 import co.sorsby.debugtoolkit.ui.components.ResultCard
@@ -45,10 +46,16 @@ import co.sorsby.debugtoolkit.ui.components.AdsComponent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DnsRoute(viewModel: DnsViewModel = koinViewModel()) {
+fun DnsRoute(
+    viewModel: DnsViewModel = koinViewModel(),
+    settingsViewModel: SettingsViewModel = koinViewModel(),
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
+    val settingsReady by settingsViewModel.isReady.collectAsStateWithLifecycle()
     DnsScreen(
         state = state,
+        adsEnabled = settingsReady && settings.adsEnabled,
         onInputChanged = viewModel::setInput,
         onTypeChanged = viewModel::setType,
         onNameserverChanged = viewModel::setNameserver,
@@ -59,6 +66,7 @@ fun DnsRoute(viewModel: DnsViewModel = koinViewModel()) {
 @Composable
 fun DnsScreen(
     state: DnsUiState,
+    adsEnabled: Boolean,
     onInputChanged: (String) -> Unit,
     onTypeChanged: (DnsRecordType) -> Unit,
     onNameserverChanged: (String) -> Unit,
@@ -144,7 +152,7 @@ fun DnsScreen(
             }
         }
         item { ToolResult(state.result) { DnsResultView(it) } }
-        item { AdsComponent() }
+        if (adsEnabled) item { AdsComponent() }
     }
 }
 
@@ -190,6 +198,7 @@ private fun DnsScreenPreview() {
                     ),
                 ),
             ),
+            adsEnabled = false,
             onInputChanged = {},
             onTypeChanged = {},
             onNameserverChanged = {},

@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +40,7 @@ fun SettingsRoute(viewModel: SettingsViewModel) {
         settings = settings,
         onThemeModeSelected = viewModel::setThemeMode,
         onConsentSelected = viewModel::setConsent,
+        onAdsEnabledChanged = viewModel::setAdsEnabled,
     )
 }
 
@@ -46,6 +49,7 @@ fun SettingsScreen(
     settings: AppSettings,
     onThemeModeSelected: (ThemeMode) -> Unit,
     onConsentSelected: (AnalyticsConsent) -> Unit,
+    onAdsEnabledChanged: (Boolean) -> Unit,
 ) {
     ScreenList {
         item {
@@ -73,6 +77,28 @@ fun SettingsScreen(
                         selected = settings.analyticsConsent == consent,
                         onClick = { onConsentSelected(consent) },
                     )
+                }
+            }
+        }
+        item {
+            SettingsCard(
+                title = stringResource(R.string.settings_ads),
+                supportingText = stringResource(R.string.settings_ads_supporting),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp)
+                        .toggleable(
+                            value = settings.adsEnabled,
+                            onValueChange = onAdsEnabledChanged,
+                            role = Role.Switch,
+                        ),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(stringResource(R.string.settings_ads_switch))
+                    Switch(checked = settings.adsEnabled, onCheckedChange = null)
                 }
             }
         }
@@ -152,6 +178,7 @@ private fun SettingsScreenPreview() {
             ),
             onThemeModeSelected = {},
             onConsentSelected = {},
+            onAdsEnabledChanged = {},
         )
     }
 }
