@@ -54,7 +54,7 @@ fun PortScanScreen(
     onUseCommonPorts: () -> Unit,
     onScan: () -> Unit,
 ) {
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             ToolIntroCard(
                 icon = Icons.Default.Radar,

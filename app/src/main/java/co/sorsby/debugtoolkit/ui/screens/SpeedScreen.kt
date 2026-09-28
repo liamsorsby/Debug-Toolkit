@@ -54,7 +54,7 @@ fun SpeedScreen(
     onAcceptDisclosure: () -> Unit,
     onRunTest: () -> Unit,
 ) {
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             ToolIntroCard(
                 icon = Icons.Default.Speed,

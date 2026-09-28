@@ -252,6 +252,53 @@ class AppNavigationTest {
         }
     }
 
+    @Test
+    fun bannersAppearAtTheEndOfEligibleScreensOnly() {
+        val repository = GlobalContext.get().get<SettingsRepository>()
+        try {
+            runBlocking { repository.setAdsEnabled(true) }
+            composeRule.onNodeWithText("Network").performClick()
+            composeRule.onNodeWithTag("screenList")
+                .performScrollToNode(hasTestTag("dnsAdBanner"))
+            composeRule.onNodeWithTag("dnsAdBanner").assertExists()
+
+            composeRule.onNodeWithText("Tools").performClick()
+            composeRule.onNodeWithTag("screenList")
+                .performScrollToNode(hasTestTag("dnsAdBanner"))
+            composeRule.onNodeWithTag("dnsAdBanner").assertExists()
+
+            listOf(
+                "Speed test",
+                "Ping and traceroute",
+                "Public IP and location",
+                "Certificate inspector",
+                "Port scanner",
+                "DNS lookup",
+                "WHOIS lookup",
+                "HTTP inspector",
+                "Local network scanner",
+            ).forEach { destination ->
+                openDrawerDestination(destination)
+                composeRule.onNodeWithTag("screenList")
+                    .performScrollToNode(hasTestTag("dnsAdBanner"))
+                composeRule.onNodeWithTag("dnsAdBanner").assertExists()
+            }
+
+            listOf("About", "Settings").forEach { destination ->
+                openDrawerDestination(destination)
+                composeRule.onNodeWithTag("dnsAdBanner").assertDoesNotExist()
+            }
+            composeRule.onNodeWithText("Overview").performClick()
+            composeRule.onNodeWithTag("dnsAdBanner").assertDoesNotExist()
+
+            runBlocking { repository.setAdsEnabled(false) }
+            openDrawerDestination("HTTP inspector")
+            composeRule.onNodeWithTag("dnsAdBanner").assertDoesNotExist()
+        } finally {
+            runBlocking { repository.setAdsEnabled(true) }
+        }
+    }
+
     /**
      * Scrolls the shared screen list until [text] is reachable and asserts it is on screen. CI
      * emulators use a far smaller display than a typical handset, so content that sits above the

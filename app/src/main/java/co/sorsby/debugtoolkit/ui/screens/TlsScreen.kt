@@ -48,7 +48,7 @@ fun TlsScreen(
     onInputChanged: (String) -> Unit,
     onInspect: () -> Unit,
 ) {
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             ToolIntroCard(
                 icon = Icons.Default.Security,

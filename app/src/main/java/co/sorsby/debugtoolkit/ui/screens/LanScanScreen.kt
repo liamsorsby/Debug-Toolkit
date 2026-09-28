@@ -35,7 +35,7 @@ fun LanScanRoute(viewModel: LanScanViewModel = koinViewModel()) {
 
 @Composable
 fun LanScanScreen(state: LanScanUiState, onScan: () -> Unit) {
-    ScreenList {
+    ScreenList(showAds = true) {
         item {
             ToolIntroCard(
                 icon = Icons.Default.DeviceHub,
