@@ -41,6 +41,7 @@ import co.sorsby.debugtoolkit.ui.components.ToolResult
 import co.sorsby.debugtoolkit.ui.components.yesNo
 import co.sorsby.debugtoolkit.ui.theme.DebugToolkitTheme
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.sorsby.debugtoolkit.ui.components.AdsComponent
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -143,6 +144,7 @@ fun DnsScreen(
             }
         }
         item { ToolResult(state.result) { DnsResultView(it) } }
+        item { AdsComponent() }
     }
 }
 

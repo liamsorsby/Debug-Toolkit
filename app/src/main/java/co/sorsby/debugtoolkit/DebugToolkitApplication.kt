@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.util.Log
 import co.sorsby.debugtoolkit.data.dns.CloudflareDnsRepository
 import co.sorsby.debugtoolkit.data.dns.DirectNameserverResolver
 import co.sorsby.debugtoolkit.data.dns.DnsRepository
@@ -44,6 +45,8 @@ import co.sorsby.debugtoolkit.feature.TlsViewModel
 import co.sorsby.debugtoolkit.feature.WhoisViewModel
 import co.sorsby.debugtoolkit.telemetry.FirebaseJourneyTracker
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
+import com.google.android.libraries.ads.mobile.sdk.MobileAds
+import com.google.android.libraries.ads.mobile.sdk.initialization.InitializationConfig
 import com.newrelic.agent.android.NewRelic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -119,6 +122,15 @@ val appModule = module {
             endpoint = "https://cloudflare-dns.com/dns-query".toHttpUrl(),
             nameserverResolver = get(),
         )
+    }
+    single(createdAtStart = true) {
+        MobileAds.initialize(
+            androidContext(),
+            InitializationConfig.Builder(BuildConfig.ADS_ID).build()
+        ) {
+            Log.d("Ads", "Mobile Ads initialized")
+        }
+        true
     }
     single<TlsInspector> { SocketTlsInspector() }
     single<HttpInspector> { OkHttpInspector(get()) }

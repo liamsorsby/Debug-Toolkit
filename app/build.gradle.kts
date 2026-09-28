@@ -80,6 +80,8 @@ android {
             enableAndroidTestCoverage = true
             isPseudoLocalesEnabled = true
             buildConfigField("String", "NEW_RELIC_TOKEN", "\"$newRelicDebugToken\"")
+            buildConfigField("String", "ADS_ID", "\"ca-app-pub-3940256099942544~3347511713\"")
+            buildConfigField("String", "AD_UNIT_ID", "\"/21775744923/example/adaptive-banner\"")
             if (firebaseConfigured) {
                 configure<FirebasePerfExtension> {
                     // Local JVM unit tests compile against the debug variant and run on a
@@ -93,6 +95,8 @@ android {
         release {
             signingConfig = signingConfigs.findByName("release")
             buildConfigField("String", "NEW_RELIC_TOKEN", "\"$newRelicReleaseToken\"")
+            buildConfigField("String", "ADS_ID", "\"ca-app-pub-3878997439927669~2622134723\"")
+            buildConfigField("String", "AD_UNIT_ID", "\"ca-app-pub-3878997439927669/6369808047\"")
             optimization {
                 enable = true
             }
@@ -149,12 +153,16 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.performance)
     implementation(libs.newrelic.android.agent)
+    implementation(libs.gms.play.services.ads)
+
     baselineProfile(project(":baselineprofile"))
+
     testImplementation(libs.junit)
     testImplementation(libs.koin.test.junit4)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.okhttp.mockwebserver)
     testImplementation(libs.okhttp.tls)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -167,6 +175,7 @@ dependencies {
     }
     androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.junit)
+
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
