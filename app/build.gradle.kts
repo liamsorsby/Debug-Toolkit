@@ -96,6 +96,7 @@ android {
         }
         release {
             signingConfig = signingConfigs.findByName("release")
+            proguardFiles("proguard-rules.pro")
             buildConfigField("String", "NEW_RELIC_TOKEN", "\"$newRelicReleaseToken\"")
             manifestPlaceholders["adsAppId"] = releaseAdsAppId
             buildConfigField("String", "AD_UNIT_ID", "\"ca-app-pub-3878997439927669/6369808047\"")
