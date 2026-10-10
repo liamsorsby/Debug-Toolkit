@@ -132,7 +132,7 @@ Configure these GitHub Actions secrets:
 ### App version sunset
 
 The app checks a public JSON policy endpoint before showing the normal app. The
-separate Cloudflare Worker in `app-assets/` serves `GET /version-policy?channel=play`
+`privacy-policy/` Cloudflare Worker serves `GET /version-policy?channel=play`
 or `?channel=other` with this shape:
 
 ```json
@@ -142,9 +142,9 @@ or `?channel=other` with this shape:
 }
 ```
 
-Deploy it with `npx wrangler deploy --config app-assets/wrangler.toml`. Set the
+Deploy it with `npx wrangler deploy --config privacy-policy/wrangler.toml`. Set the
 Worker variables `MIN_SUPPORTED_VERSION_CODE`, `PLAY_UPDATE_URL`, and
-`OTHER_UPDATE_URL` in the Cloudflare dashboard or `app-assets/wrangler.toml`. Start
+`OTHER_UPDATE_URL` in the Cloudflare dashboard or `privacy-policy/wrangler.toml`. Start
 with a minimum of `0`; only raise it after a release with that version code and an
 accessible update destination are available. The app selects `play` for Play Store
 installs and `other` otherwise. Set the Play URL to the listing and the other URL to
@@ -162,14 +162,13 @@ flow when available, otherwise the app opens the policy's update URL.
 
 To roll back a sunset, lower `MIN_SUPPORTED_VERSION_CODE` in Worker configuration.
 This is a client-side compatibility gate, not a tamper-proof security boundary or a
-way to disable code already installed. Run Worker tests with
-`npm test --prefix app-assets`.
+way to disable code already installed.
 
 Configure these repository or environment variables:
 
 - `SONAR_PROJECT_KEY` and `SONAR_ORGANIZATION`.
 - `FIREBASE_TESTER_GROUPS`, containing comma-separated App Distribution groups.
-- `APP_UPDATE_POLICY_URL`, the HTTPS `app-assets` endpoint ending in
+- `APP_UPDATE_POLICY_URL`, the HTTPS `privacy-policy` Worker endpoint ending in
   `/version-policy`; it can be scoped at the repository or deployment environment.
 - `VERSION_CODE_OFFSET`, if the Play listing already has a version code greater than
   the `main` workflow run number. The published version code is this offset plus the

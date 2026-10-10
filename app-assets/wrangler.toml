@@ -1,8 +1,0 @@
-name = "app-assets"
-main = "worker.js"
-compatibility_date = "2026-09-24"
-
-[vars]
-MIN_SUPPORTED_VERSION_CODE = "0"
-PLAY_UPDATE_URL = "https://play.google.com/store/apps/details?id=co.sorsby.debugtoolkit"
-OTHER_UPDATE_URL = "https://play.google.com/store/apps/details?id=co.sorsby.debugtoolkit"
