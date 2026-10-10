@@ -20,6 +20,10 @@ val localProperties = Properties().apply {
     }
 }
 fun secret(name: String): String = System.getenv(name) ?: localProperties.getProperty(name).orEmpty()
+fun buildConfigString(value: String): String =
+    "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\""
+
+val appUpdatePolicyUrl = secret("APP_UPDATE_POLICY_URL")
 
 val firebaseConfigured = file("google-services.json").exists()
 if (firebaseConfigured) {
@@ -62,6 +66,7 @@ android {
         targetSdk = 37
         versionCode = System.getenv("VERSION_CODE")?.toIntOrNull() ?: 1
         versionName = System.getenv("VERSION_NAME") ?: "0.1.0-local"
+        buildConfigField("String", "APP_UPDATE_POLICY_URL", buildConfigString(appUpdatePolicyUrl))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -157,6 +162,7 @@ dependencies {
     implementation(libs.firebase.performance)
     implementation(libs.newrelic.android.agent)
     implementation(libs.gms.play.services.ads)
+    implementation(libs.play.app.update.ktx)
 
     baselineProfile(project(":baselineprofile"))
 

@@ -1,0 +1,8 @@
+{
+  "name": "debug-toolkit-app-assets",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

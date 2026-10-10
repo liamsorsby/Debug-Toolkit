@@ -229,4 +229,8 @@
     <string name="about_measurements_body">WLAN-dBm geben die Signalstärke und nicht die physische Entfernung an. Geschwindigkeitsergebnisse sind Momentaufnahmen, die von den Geräte- und Netzwerkbedingungen beeinflusst werden.</string>
     <string name="about_terms">Nutzungsbedingungen</string>
     <string name="about_terms_body">Der Portscanner, Ping/Traceroute, die WHOIS-Abfrage und der lokale Netzwerk-Scanner senden Datenverkehr an die von Ihnen angegebenen Hosts und Geräte. Verwenden Sie diese Tools nur für Systeme und Netzwerke, die Ihnen gehören oder für deren Prüfung Sie eine Genehmigung haben. Sie sind allein für die Einhaltung geltender Gesetze und Bedingungen Dritter verantwortlich; der Entwickler übernimmt keine Haftung für Missbrauch.</string>
+    <string name="update_required_title">Update erforderlich</string>
+    <string name="update_required_body">Diese Version von Debug Toolkit wird nicht mehr unterstützt. Aktualisieren Sie die App, um fortzufahren.</string>
+    <string name="update_required_action">Jetzt aktualisieren</string>
+    <string name="update_open_store_failed">Das Update-Ziel konnte nicht geöffnet werden. Installieren Sie die aktuelle Version über Ihren App-Store.</string>
 </resources>

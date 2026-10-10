@@ -129,10 +129,48 @@ Configure these GitHub Actions secrets:
 - `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, and `ANDROID_KEY_PASSWORD`.
 - `SONAR_TOKEN`: SonarCloud analysis token.
 
+### App version sunset
+
+The app checks a public JSON policy endpoint before showing the normal app. The
+separate Cloudflare Worker in `app-assets/` serves `GET /version-policy?channel=play`
+or `?channel=other` with this shape:
+
+```json
+{
+  "minimumVersionCode": 123,
+  "updateUrl": "https://play.google.com/store/apps/details?id=co.sorsby.debugtoolkit"
+}
+```
+
+Deploy it with `npx wrangler deploy --config app-assets/wrangler.toml`. Set the
+Worker variables `MIN_SUPPORTED_VERSION_CODE`, `PLAY_UPDATE_URL`, and
+`OTHER_UPDATE_URL` in the Cloudflare dashboard or `app-assets/wrangler.toml`. Start
+with a minimum of `0`; only raise it after a release with that version code and an
+accessible update destination are available. The app selects `play` for Play Store
+installs and `other` otherwise. Set the Play URL to the listing and the other URL to
+a Firebase App Distribution or other HTTPS install link. Both default to the Play
+listing until changed. The endpoint is public and must not contain secrets. It
+returns `Cache-Control: no-store`.
+
+Set `APP_UPDATE_POLICY_URL` to the full HTTPS endpoint URL ending in
+`/version-policy` for Android builds. Locally, set it in `local.properties`; in
+GitHub Actions, define it as a repository or environment variable. If it is unset,
+the update gate is disabled. The app persists the last valid policy and uses it if
+the endpoint is temporarily unavailable; if no valid policy has ever been received,
+the app continues normally. An outdated Play install starts the immediate Play update
+flow when available, otherwise the app opens the policy's update URL.
+
+To roll back a sunset, lower `MIN_SUPPORTED_VERSION_CODE` in Worker configuration.
+This is a client-side compatibility gate, not a tamper-proof security boundary or a
+way to disable code already installed. Run Worker tests with
+`npm test --prefix app-assets`.
+
 Configure these repository or environment variables:
 
 - `SONAR_PROJECT_KEY` and `SONAR_ORGANIZATION`.
 - `FIREBASE_TESTER_GROUPS`, containing comma-separated App Distribution groups.
+- `APP_UPDATE_POLICY_URL`, the HTTPS `app-assets` endpoint ending in
+  `/version-policy`; it can be scoped at the repository or deployment environment.
 - `VERSION_CODE_OFFSET`, if the Play listing already has a version code greater than
   the `main` workflow run number. The published version code is this offset plus the
   run number.

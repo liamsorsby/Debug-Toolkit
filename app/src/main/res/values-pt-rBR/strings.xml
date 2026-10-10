@@ -229,4 +229,8 @@
     <string name="about_measurements_body">O dBm do Wi-Fi indica a intensidade do sinal, não a distância física. Os resultados de velocidade são estimativas pontuais afetadas pelas condições do dispositivo e da rede.</string>
     <string name="about_terms">Termos de uso</string>
     <string name="about_terms_body">O scanner de portas, ping/traceroute, a consulta WHOIS e o scanner de rede local enviam tráfego para os hosts e dispositivos especificados por você. Use essas ferramentas somente em sistemas e redes que pertencem a você ou que você tenha permissão para testar. Você é o único responsável por cumprir as leis aplicáveis e os termos de terceiros; o desenvolvedor não aceita qualquer responsabilidade pelo uso indevido.</string>
+    <string name="update_required_title">Atualização necessária</string>
+    <string name="update_required_body">Esta versão do Debug Toolkit não é mais compatível. Atualize o app para continuar.</string>
+    <string name="update_required_action">Atualizar agora</string>
+    <string name="update_open_store_failed">Não foi possível abrir a página de atualização. Instale a versão mais recente pela loja de aplicativos.</string>
 </resources>
