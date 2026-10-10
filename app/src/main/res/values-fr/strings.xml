@@ -230,4 +230,8 @@
     <string name="about_measurements_body">Les dBm Wi-Fi indiquent la puissance du signal, et non la distance physique. Les résultats des tests de débit sont des estimations ponctuelles influencées par l’appareil et les conditions du réseau.</string>
     <string name="about_terms">Conditions d’utilisation</string>
     <string name="about_terms_body">Le scanner de ports, ping/traceroute, la recherche WHOIS et le scanner du réseau local envoient du trafic vers les hôtes et appareils que vous spécifiez. Utilisez ces outils uniquement sur des systèmes et réseaux que vous possédez ou pour lesquels vous disposez d’une autorisation. Vous êtes seul responsable du respect des lois applicables et des conditions des tiers ; le développeur décline toute responsabilité en cas de mauvaise utilisation.</string>
+    <string name="update_required_title">Mise à jour requise</string>
+    <string name="update_required_body">Cette version de Debug Toolkit n’est plus prise en charge. Mettez l’application à jour pour continuer.</string>
+    <string name="update_required_action">Mettre à jour</string>
+    <string name="update_open_store_failed">Impossible d’ouvrir la page de mise à jour. Installez la dernière version depuis votre boutique d’applications.</string>
 </resources>

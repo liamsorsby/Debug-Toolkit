@@ -229,4 +229,8 @@
     <string name="about_measurements_body">Wi-Fi-dBm geeft signaalsterkte aan, niet de fysieke afstand. Snelheidsresultaten zijn momentopnamen die worden beïnvloed door apparaat- en netwerkomstandigheden.</string>
     <string name="about_terms">Gebruiksvoorwaarden</string>
     <string name="about_terms_body">De poortscanner, ping/traceroute, WHOIS-opzoeking en lokale netwerkscanner sturen verkeer naar hosts en apparaten die je opgeeft. Gebruik deze hulpmiddelen alleen tegen systemen en netwerken die je bezit of waarvoor je toestemming hebt om ze te testen. Je bent zelf verantwoordelijk voor naleving van toepasselijke wetgeving en voorwaarden van derden; de ontwikkelaar aanvaardt geen aansprakelijkheid voor misbruik.</string>
+    <string name="update_required_title">Update vereist</string>
+    <string name="update_required_body">Deze versie van Debug Toolkit wordt niet meer ondersteund. Werk de app bij om door te gaan.</string>
+    <string name="update_required_action">Nu updaten</string>
+    <string name="update_open_store_failed">De updatepagina kan niet worden geopend. Installeer de nieuwste versie via je appwinkel.</string>
 </resources>

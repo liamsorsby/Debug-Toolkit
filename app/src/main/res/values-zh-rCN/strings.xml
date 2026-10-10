@@ -229,4 +229,8 @@
     <string name="about_measurements_body">Wi-Fi dBm 表示信号强度，而不是物理距离。速度结果是特定时间点的估算值，会受到设备和网络状况的影响。</string>
     <string name="about_terms">使用条款</string>
     <string name="about_terms_body">端口扫描器、Ping/Traceroute、WHOIS 查询和局域网扫描器会向你指定的主机和设备发送流量。仅在你拥有或获准测试的系统和网络上使用这些工具。你需自行负责遵守适用法律和第三方条款；开发者不对误用承担责任。</string>
+    <string name="update_required_title">需要更新</string>
+    <string name="update_required_body">此版本的 Debug Toolkit 已不再受支持。请更新应用后继续使用。</string>
+    <string name="update_required_action">立即更新</string>
+    <string name="update_open_store_failed">无法打开更新页面。请从应用商店安装最新版本。</string>
 </resources>

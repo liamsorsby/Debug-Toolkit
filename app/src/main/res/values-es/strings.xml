@@ -230,4 +230,8 @@
     <string name="about_measurements_body">Los dBm de Wi-Fi indican la intensidad de la señal, no la distancia física. Los resultados de velocidad son estimaciones puntuales afectadas por el dispositivo y las condiciones de la red.</string>
     <string name="about_terms">Condiciones de uso</string>
     <string name="about_terms_body">El escáner de puertos, ping/traceroute, la consulta WHOIS y el escáner de red local envían tráfico a los hosts y dispositivos que especifiques. Utiliza estas herramientas únicamente en sistemas y redes que sean de tu propiedad o para los que tengas permiso de prueba. Eres el único responsable de cumplir las leyes aplicables y las condiciones de terceros; el desarrollador no acepta ninguna responsabilidad por un uso indebido.</string>
+    <string name="update_required_title">Actualización obligatoria</string>
+    <string name="update_required_body">Esta versión de Debug Toolkit ya no es compatible. Actualiza la aplicación para continuar.</string>
+    <string name="update_required_action">Actualizar ahora</string>
+    <string name="update_open_store_failed">No se pudo abrir el destino de actualización. Instala la última versión desde tu tienda de aplicaciones.</string>
 </resources>

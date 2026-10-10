@@ -229,4 +229,8 @@
     <string name="about_measurements_body">Wi-Fi dBm değeri fiziksel mesafeyi değil sinyal gücünü gösterir. Hız sonuçları cihaz ve ağ koşullarından etkilenen anlık tahminlerdir.</string>
     <string name="about_terms">Kullanım şartları</string>
     <string name="about_terms_body">Port tarayıcı, ping/traceroute, WHOIS sorgusu ve yerel ağ tarayıcı, belirttiğin ana bilgisayarlara ve cihazlara trafik gönderir. Bu araçları yalnızca sahibi olduğun veya test etme iznine sahip olduğun sistem ve ağlarda kullan. Yürürlükteki yasalara ve üçüncü taraf koşullarına uymaktan tamamen sen sorumlusun; geliştirici kötüye kullanımdan sorumlu değildir.</string>
+    <string name="update_required_title">Güncelleme gerekli</string>
+    <string name="update_required_body">Debug Toolkit\'in bu sürümü artık desteklenmiyor. Devam etmek için uygulamayı güncelle.</string>
+    <string name="update_required_action">Şimdi güncelle</string>
+    <string name="update_open_store_failed">Güncelleme sayfası açılamadı. Uygulama mağazandan en son sürümü yükle.</string>
 </resources>

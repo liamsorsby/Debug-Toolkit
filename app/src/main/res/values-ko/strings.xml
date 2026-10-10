@@ -229,4 +229,8 @@
     <string name="about_measurements_body">Wi-Fi dBm은 신호 강도를 나타내며 물리적 거리를 나타내지 않습니다. 속도 결과는 특정 시점의 추정값이며 기기 및 네트워크 상태의 영향을 받습니다.</string>
     <string name="about_terms">이용약관</string>
     <string name="about_terms_body">포트 스캐너, Ping/Traceroute, WHOIS 조회 및 로컬 네트워크 스캐너는 지정한 호스트와 장치로 트래픽을 전송합니다. 이러한 도구는 본인이 소유하거나 테스트 권한을 가진 시스템 및 네트워크에서만 사용하세요. 관련 법률과 제3자 약관을 준수할 책임은 전적으로 사용자에게 있으며, 개발자는 오용에 대해 어떠한 책임도 지지 않습니다.</string>
+    <string name="update_required_title">업데이트 필요</string>
+    <string name="update_required_body">이 Debug Toolkit 버전은 더 이상 지원되지 않습니다. 계속하려면 앱을 업데이트하세요.</string>
+    <string name="update_required_action">지금 업데이트</string>
+    <string name="update_open_store_failed">업데이트 페이지를 열 수 없습니다. 앱 스토어에서 최신 버전을 설치하세요.</string>
 </resources>
