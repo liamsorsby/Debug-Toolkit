@@ -21,6 +21,7 @@ import co.sorsby.debugtoolkit.BuildConfig
 import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
 import co.sorsby.debugtoolkit.core.model.ThemeMode
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
+import co.sorsby.debugtoolkit.review.ReviewPromptCoordinator
 import co.sorsby.debugtoolkit.update.SoftUpdatePolicy
 import co.sorsby.debugtoolkit.update.SoftUpdatePromptStore
 import co.sorsby.debugtoolkit.update.VersionPolicy
@@ -39,6 +40,12 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import org.koin.android.ext.android.inject
@@ -48,6 +55,8 @@ import org.koin.androidx.compose.koinViewModel
 class MainActivity : ComponentActivity() {
     private val updateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(this) }
     private val versionPolicyRepository: VersionPolicyRepository by inject()
+    private val reviewPromptCoordinator: ReviewPromptCoordinator by inject()
+    private val reviewManager: ReviewManager by lazy { ReviewManagerFactory.create(this) }
     private val softUpdatePromptStore by lazy { SoftUpdatePromptStore(this) }
     private val updateLauncher: ActivityResultLauncher<IntentSenderRequest> =
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
@@ -79,6 +88,7 @@ class MainActivity : ComponentActivity() {
         // Removing the view immediately is a safe no-op visually, since disabled-animation
         // environments would have skipped the animation anyway.
         splashScreen.setOnExitAnimationListener { splashScreenView -> splashScreenView.remove() }
+        observeReviewRequests()
         setContent {
             val versionPolicyRepository: VersionPolicyRepository = koinInject()
             val versionPolicy by versionPolicyRepository.policy.collectAsStateWithLifecycle()
@@ -128,6 +138,27 @@ class MainActivity : ComponentActivity() {
         super.onStart()
         updateManager.registerListener(installStateListener)
         checkForSoftUpdate()
+    }
+
+    private fun observeReviewRequests() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                reviewPromptCoordinator.requests.collect { launchReview() }
+            }
+        }
+    }
+
+    private fun launchReview() {
+        reviewManager.requestReviewFlow().addOnCompleteListener(this) { request ->
+            if (!request.isSuccessful) {
+                // Expected for non-Play installs or when Play is unavailable.
+                Log.d(TAG, "In-app review unavailable", request.exception)
+                return@addOnCompleteListener
+            }
+            // Play doesn't report whether a dialog was shown or a review left, so the app
+            // carries on regardless of the outcome.
+            reviewManager.launchReviewFlow(this, request.result)
+        }
     }
 
     override fun onStop() {
