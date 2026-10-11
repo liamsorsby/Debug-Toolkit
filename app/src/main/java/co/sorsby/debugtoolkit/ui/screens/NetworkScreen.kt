@@ -81,7 +81,10 @@ fun NetworkRoute(viewModel: NetworkViewModel = koinViewModel()) {
     }
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
-    ) { grants -> permissionGranted = permissions.all { grants[it] == true } }
+    ) { grants ->
+        permissionGranted = permissions.all { grants[it] == true }
+        if (permissionGranted) viewModel.refresh()
+    }
     val snapshot by viewModel.snapshot.collectAsStateWithLifecycle()
 
     NetworkScreen(

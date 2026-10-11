@@ -17,11 +17,16 @@ import androidx.core.content.ContextCompat
 import co.sorsby.debugtoolkit.core.model.NetworkSnapshot
 import co.sorsby.debugtoolkit.core.model.NetworkTransport
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 
 interface NetworkMonitor {
     val snapshots: Flow<NetworkSnapshot>
+
+    /** Re-reads the current state, e.g. after a permission grant that no callback reports. */
+    fun refresh() {}
 }
 
 class AndroidNetworkMonitor(
@@ -29,6 +34,12 @@ class AndroidNetworkMonitor(
     private val connectivityManager: ConnectivityManager,
     private val wifiManager: WifiManager,
 ) : NetworkMonitor {
+    private val refreshRequests = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
+    override fun refresh() {
+        refreshRequests.tryEmit(Unit)
+    }
+
     override val snapshots: Flow<NetworkSnapshot> = callbackFlow {
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
@@ -55,6 +66,7 @@ class AndroidNetworkMonitor(
         }
         connectivityManager.registerDefaultNetworkCallback(callback)
         trySend(snapshot())
+        launch { refreshRequests.collect { trySend(snapshot()) } }
 
         // Wi-Fi signal strength does not reliably trigger onCapabilitiesChanged on every
         // OEM skin, so this broadcast receiver provides genuinely event-driven RSSI updates:
