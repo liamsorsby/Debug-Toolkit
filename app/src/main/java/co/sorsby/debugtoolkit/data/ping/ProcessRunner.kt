@@ -28,7 +28,16 @@ class SystemProcessRunner : ProcessRunner {
             val process = ProcessBuilder(command)
                 .redirectErrorStream(true)
                 .start()
-            val output = BufferedReader(InputStreamReader(process.inputStream)).use { it.readText() }
+            val output = BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                val text = StringBuilder()
+                val chunk = CharArray(CHUNK_CHARS)
+                while (text.length < MAX_OUTPUT_CHARS) {
+                    val read = reader.read(chunk, 0, minOf(chunk.size, MAX_OUTPUT_CHARS - text.length))
+                    if (read == -1) break
+                    text.append(chunk, 0, read)
+                }
+                text.toString()
+            }
             val finished = process.waitFor(timeoutSeconds, TimeUnit.SECONDS)
             if (!finished) {
                 process.destroyForcibly()
@@ -36,4 +45,10 @@ class SystemProcessRunner : ProcessRunner {
             }
             ProcessOutput(process.exitValue(), output)
         }
+
+    private companion object {
+        // Ping and traceroute print a few KB; the cap only guards against runaway output.
+        const val MAX_OUTPUT_CHARS = 256 * 1024
+        const val CHUNK_CHARS = 4_096
+    }
 }

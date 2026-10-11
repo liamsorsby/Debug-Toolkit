@@ -26,12 +26,24 @@ class SocketWhoisTransport : WhoisTransport {
                     write("$queryText\r\n".toByteArray(StandardCharsets.US_ASCII))
                     flush()
                 }
-                socket.getInputStream().bufferedReader(StandardCharsets.UTF_8).readText()
+                socket.getInputStream().bufferedReader(StandardCharsets.UTF_8).use { reader ->
+                    val response = StringBuilder()
+                    val chunk = CharArray(CHUNK_CHARS)
+                    while (response.length < MAX_RESPONSE_CHARS) {
+                        val read = reader.read(chunk, 0, minOf(chunk.size, MAX_RESPONSE_CHARS - response.length))
+                        if (read == -1) break
+                        response.append(chunk, 0, read)
+                    }
+                    response.toString()
+                }
             }
         }
 
     private companion object {
         const val CONNECT_TIMEOUT_MS = 8_000
         const val READ_TIMEOUT_MS = 8_000
+        // A misbehaving server could stream indefinitely; real WHOIS replies are a few KB.
+        const val MAX_RESPONSE_CHARS = 256 * 1024
+        const val CHUNK_CHARS = 4_096
     }
 }
