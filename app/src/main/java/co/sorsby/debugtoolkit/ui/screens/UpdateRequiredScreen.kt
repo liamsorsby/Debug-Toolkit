@@ -1,6 +1,7 @@
 package co.sorsby.debugtoolkit.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,16 +20,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import co.sorsby.debugtoolkit.BuildConfig
 import co.sorsby.debugtoolkit.R
 import co.sorsby.debugtoolkit.ui.theme.DebugToolkitTheme
 
 @Composable
-fun UpdateRequiredScreen(onUpdate: () -> Unit) {
+fun UpdateRequiredScreen(onUpdate: () -> Unit, versionName: String = BuildConfig.VERSION_NAME) {
     Scaffold { padding ->
+        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
                 .padding(24.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -57,6 +59,13 @@ fun UpdateRequiredScreen(onUpdate: () -> Unit) {
             ) {
                 Text(stringResource(R.string.update_required_action))
             }
+        }
+        Text(
+            text = "v$versionName",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+        )
         }
     }
 }
