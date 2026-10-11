@@ -40,6 +40,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -100,6 +103,14 @@ fun DebugToolkitApp(
     LaunchedEffect(route) {
         journeyTracker.trackScreen(route)
     }
+    var previousRoute by remember { mutableStateOf<String?>(null) }
+    var navigationSource by remember { mutableStateOf("start") }
+    LaunchedEffect(route) {
+        if (previousRoute != route) {
+            journeyTracker.trackNavigation(previousRoute, route, navigationSource)
+        }
+        previousRoute = route
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -107,6 +118,7 @@ fun DebugToolkitApp(
             AppDrawer(
                 selectedRoute = route,
                 onDestinationSelected = { destination ->
+                    navigationSource = "drawer"
                     navController.navigateSingle(destination.route)
                     scope.launch { drawerState.close() }
                 },
@@ -119,7 +131,12 @@ fun DebugToolkitApp(
                     CenterAlignedTopAppBar(
                         title = { Text(stringResource(title)) },
                         navigationIcon = {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            IconButton(
+                                onClick = {
+                                    journeyTracker.trackAction("open_drawer", route)
+                                    scope.launch { drawerState.open() }
+                                },
+                            ) {
                                 Icon(
                                     Icons.Default.Menu,
                                     contentDescription = stringResource(R.string.navigation_open),
@@ -137,7 +154,10 @@ fun DebugToolkitApp(
             bottomBar = {
                 AppBottomBar(
                     selectedRoute = route,
-                    onDestinationSelected = { navController.navigateSingle(it.route) },
+                    onDestinationSelected = {
+                        navigationSource = "bottom_bar"
+                        navController.navigateSingle(it.route)
+                    },
                 )
             },
         ) { padding ->
