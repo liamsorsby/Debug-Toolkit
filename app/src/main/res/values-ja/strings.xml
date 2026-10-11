@@ -233,4 +233,21 @@
     <string name="update_required_body">このバージョンのDebug Toolkitはサポートされなくなりました。続行するにはアプリを更新してください。</string>
     <string name="update_required_action">今すぐ更新</string>
     <string name="update_open_store_failed">更新先を開けませんでした。アプリストアから最新バージョンをインストールしてください。</string>
+    <string name="nav_cidr">CIDR 計算ツール</string>
+    <string name="nav_cidr_description">サブネット範囲とマスクを計算</string>
+    <string name="cidr_intro">192.168.1.10/24 や 2001:db8::/32 のように、IPv4 または IPv6 アドレスとプレフィックス長を入力すると、範囲、マスク、使用可能なホスト数を確認できます。</string>
+    <string name="cidr_input_label">CIDR ブロック</string>
+    <string name="cidr_error">IPv4 アドレスと 0〜32 のプレフィックス（192.168.1.0/24）、または IPv6 アドレスと 0〜128 のプレフィックス（2001:db8::/32）を入力してください。</string>
+    <string name="cidr_network_label">ネットワークアドレス</string>
+    <string name="cidr_broadcast_label">ブロードキャストアドレス</string>
+    <string name="cidr_mask_label">サブネットマスク</string>
+    <string name="cidr_wildcard_label">ワイルドカードマスク</string>
+    <string name="cidr_first_host_label">最初の使用可能ホスト</string>
+    <string name="cidr_last_host_label">最後の使用可能ホスト</string>
+    <string name="cidr_total_label">アドレス総数</string>
+    <string name="cidr_hosts_label">使用可能なホスト数</string>
+    <string name="cidr_notation_label">CIDR 表記</string>
+    <string name="cidr_not_applicable">該当なし</string>
+    <string name="cidr_last_address_label">最後のアドレス</string>
+    <string name="cidr_subnets64_label">/64 サブネット数</string>
 </resources>

@@ -3,6 +3,7 @@ package co.sorsby.debugtoolkit.ui.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.DeviceHub
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material.icons.filled.Domain
@@ -78,6 +79,13 @@ object AppDestinations {
         Icons.Default.Public,
         DiagnosticsSection.CONNECTIVITY,
     )
+    val Cidr = AppDestination(
+        "cidr",
+        R.string.nav_cidr,
+        R.string.nav_cidr_description,
+        Icons.Default.Calculate,
+        DiagnosticsSection.CONNECTIVITY,
+    )
     val Tls = AppDestination(
         "tls",
         R.string.nav_tls,
@@ -136,7 +144,7 @@ object AppDestinations {
     val bottom = listOf(Overview, Network, Tools)
 
     /** Every diagnostic tool, ordered within its section. Used by the Overview and Tools screens. */
-    val diagnostics = listOf(Speed, Ping, PublicIp, Tls, PortScanner, Dns, Whois, Http, LanScanner)
+    val diagnostics = listOf(Speed, Ping, PublicIp, Cidr, Tls, PortScanner, Dns, Whois, Http, LanScanner)
 
     /** Diagnostic tools grouped by section, in display order, for the drawer and Tools screen. */
     val diagnosticsBySection: List<Pair<DiagnosticsSection, List<AppDestination>>> =

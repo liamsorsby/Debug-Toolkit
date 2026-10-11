@@ -233,4 +233,21 @@
     <string name="update_required_body">Esta versão do Debug Toolkit não é mais compatível. Atualize o app para continuar.</string>
     <string name="update_required_action">Atualizar agora</string>
     <string name="update_open_store_failed">Não foi possível abrir a página de atualização. Instale a versão mais recente pela loja de aplicativos.</string>
+    <string name="nav_cidr">Calculadora CIDR</string>
+    <string name="nav_cidr_description">Calcule intervalos de sub-rede e máscaras</string>
+    <string name="cidr_intro">Insira um endereço IPv4 ou IPv6 com o tamanho do prefixo, como 192.168.1.10/24 ou 2001:db8::/32, para ver o intervalo, as máscaras e os hosts utilizáveis.</string>
+    <string name="cidr_input_label">Bloco CIDR</string>
+    <string name="cidr_error">Insira um endereço IPv4 e um prefixo de 0 a 32 (192.168.1.0/24), ou um endereço IPv6 e um prefixo de 0 a 128 (2001:db8::/32).</string>
+    <string name="cidr_network_label">Endereço de rede</string>
+    <string name="cidr_broadcast_label">Endereço de broadcast</string>
+    <string name="cidr_mask_label">Máscara de sub-rede</string>
+    <string name="cidr_wildcard_label">Máscara curinga</string>
+    <string name="cidr_first_host_label">Primeiro host utilizável</string>
+    <string name="cidr_last_host_label">Último host utilizável</string>
+    <string name="cidr_total_label">Total de endereços</string>
+    <string name="cidr_hosts_label">Hosts utilizáveis</string>
+    <string name="cidr_notation_label">Notação CIDR</string>
+    <string name="cidr_not_applicable">Não se aplica</string>
+    <string name="cidr_last_address_label">Último endereço</string>
+    <string name="cidr_subnets64_label">Sub-redes /64</string>
 </resources>

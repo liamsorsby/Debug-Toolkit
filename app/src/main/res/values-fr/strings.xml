@@ -234,4 +234,21 @@
     <string name="update_required_body">Cette version de Debug Toolkit n’est plus prise en charge. Mettez l’application à jour pour continuer.</string>
     <string name="update_required_action">Mettre à jour</string>
     <string name="update_open_store_failed">Impossible d’ouvrir la page de mise à jour. Installez la dernière version depuis votre boutique d’applications.</string>
+    <string name="nav_cidr">Calculateur CIDR</string>
+    <string name="nav_cidr_description">Calculez les plages de sous-réseau et les masques</string>
+    <string name="cidr_intro">Saisissez une adresse IPv4 ou IPv6 avec sa longueur de préfixe, comme 192.168.1.10/24 ou 2001:db8::/32, pour voir sa plage, ses masques et ses hôtes utilisables.</string>
+    <string name="cidr_input_label">Bloc CIDR</string>
+    <string name="cidr_error">Saisissez une adresse IPv4 et un préfixe de 0 à 32 (192.168.1.0/24), ou une adresse IPv6 et un préfixe de 0 à 128 (2001:db8::/32).</string>
+    <string name="cidr_network_label">Adresse réseau</string>
+    <string name="cidr_broadcast_label">Adresse de diffusion</string>
+    <string name="cidr_mask_label">Masque de sous-réseau</string>
+    <string name="cidr_wildcard_label">Masque générique</string>
+    <string name="cidr_first_host_label">Premier hôte utilisable</string>
+    <string name="cidr_last_host_label">Dernier hôte utilisable</string>
+    <string name="cidr_total_label">Nombre total d’adresses</string>
+    <string name="cidr_hosts_label">Hôtes utilisables</string>
+    <string name="cidr_notation_label">Notation CIDR</string>
+    <string name="cidr_not_applicable">Sans objet</string>
+    <string name="cidr_last_address_label">Dernière adresse</string>
+    <string name="cidr_subnets64_label">Sous-réseaux /64</string>
 </resources>

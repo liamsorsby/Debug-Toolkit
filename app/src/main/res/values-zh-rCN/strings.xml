@@ -233,4 +233,21 @@
     <string name="update_required_body">此版本的 Debug Toolkit 已不再受支持。请更新应用后继续使用。</string>
     <string name="update_required_action">立即更新</string>
     <string name="update_open_store_failed">无法打开更新页面。请从应用商店安装最新版本。</string>
+    <string name="nav_cidr">CIDR 计算器</string>
+    <string name="nav_cidr_description">计算子网范围和掩码</string>
+    <string name="cidr_intro">输入带前缀长度的 IPv4 或 IPv6 地址（如 192.168.1.10/24 或 2001:db8::/32），即可查看范围、掩码和可用主机数。</string>
+    <string name="cidr_input_label">CIDR 块</string>
+    <string name="cidr_error">请输入 IPv4 地址和 0 到 32 的前缀（192.168.1.0/24），或 IPv6 地址和 0 到 128 的前缀（2001:db8::/32）。</string>
+    <string name="cidr_network_label">网络地址</string>
+    <string name="cidr_broadcast_label">广播地址</string>
+    <string name="cidr_mask_label">子网掩码</string>
+    <string name="cidr_wildcard_label">通配符掩码</string>
+    <string name="cidr_first_host_label">第一个可用主机</string>
+    <string name="cidr_last_host_label">最后一个可用主机</string>
+    <string name="cidr_total_label">地址总数</string>
+    <string name="cidr_hosts_label">可用主机数</string>
+    <string name="cidr_notation_label">CIDR 表示法</string>
+    <string name="cidr_not_applicable">不适用</string>
+    <string name="cidr_last_address_label">最后一个地址</string>
+    <string name="cidr_subnets64_label">/64 子网数</string>
 </resources>

@@ -234,4 +234,21 @@
     <string name="about_measurements_body">Wi-Fi dBm indicates signal strength, not physical distance. Speed results are point-in-time estimates affected by device and network conditions.</string>
     <string name="about_terms">Terms of use</string>
     <string name="about_terms_body">The port scanner, ping/traceroute, WHOIS lookup, and local network scanner send traffic to hosts and devices you specify. Only use these tools against systems and networks you own or have permission to test. You are solely responsible for complying with applicable laws and third-party terms; the developer accepts no liability for misuse.</string>
+    <string name="nav_cidr">CIDR calculator</string>
+    <string name="nav_cidr_description">Work out subnet ranges and masks</string>
+    <string name="cidr_intro">Enter an IPv4 or IPv6 address with a prefix length, such as 192.168.1.10/24 or 2001:db8::/32, to see its range, masks and usable hosts.</string>
+    <string name="cidr_input_label">CIDR block</string>
+    <string name="cidr_error">Enter an IPv4 address and a prefix from 0 to 32 (192.168.1.0/24), or an IPv6 address and a prefix from 0 to 128 (2001:db8::/32).</string>
+    <string name="cidr_network_label">Network address</string>
+    <string name="cidr_broadcast_label">Broadcast address</string>
+    <string name="cidr_mask_label">Subnet mask</string>
+    <string name="cidr_wildcard_label">Wildcard mask</string>
+    <string name="cidr_first_host_label">First usable host</string>
+    <string name="cidr_last_host_label">Last usable host</string>
+    <string name="cidr_total_label">Total addresses</string>
+    <string name="cidr_hosts_label">Usable hosts</string>
+    <string name="cidr_notation_label">CIDR notation</string>
+    <string name="cidr_not_applicable">Not applicable</string>
+    <string name="cidr_last_address_label">Last address</string>
+    <string name="cidr_subnets64_label">/64 subnets</string>
 </resources>
