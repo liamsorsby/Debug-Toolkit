@@ -9,6 +9,11 @@ updates:
       gradle-dependencies:
         patterns:
           - "*"
+    ignore:
+      # v10 needs conventional-changelog-writer 9, which semantic-release's
+      # release-notes-generator (still on writer 8) can't load; this breaks releases.
+      - dependency-name: "conventional-changelog-conventionalcommits"
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "fix"
       include: scope
@@ -24,6 +29,11 @@ updates:
       npm-dependencies:
         patterns:
           - "*"
+    ignore:
+      # v10 needs conventional-changelog-writer 9, which semantic-release's
+      # release-notes-generator (still on writer 8) can't load; this breaks releases.
+      - dependency-name: "conventional-changelog-conventionalcommits"
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "fix"
       include: scope
