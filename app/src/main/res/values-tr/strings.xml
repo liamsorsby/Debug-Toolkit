@@ -233,4 +233,21 @@
     <string name="update_required_body">Debug Toolkit\'in bu sürümü artık desteklenmiyor. Devam etmek için uygulamayı güncelle.</string>
     <string name="update_required_action">Şimdi güncelle</string>
     <string name="update_open_store_failed">Güncelleme sayfası açılamadı. Uygulama mağazandan en son sürümü yükle.</string>
+    <string name="nav_cidr">CIDR hesaplayıcı</string>
+    <string name="nav_cidr_description">Alt ağ aralıklarını ve maskeleri hesapla</string>
+    <string name="cidr_intro">Aralığı, maskeleri ve kullanılabilir ana bilgisayarları görmek için 192.168.1.10/24 veya 2001:db8::/32 gibi önek uzunluğuyla bir IPv4 ya da IPv6 adresi gir.</string>
+    <string name="cidr_input_label">CIDR bloğu</string>
+    <string name="cidr_error">0 ile 32 arasında önekli bir IPv4 adresi (192.168.1.0/24) veya 0 ile 128 arasında önekli bir IPv6 adresi (2001:db8::/32) gir.</string>
+    <string name="cidr_network_label">Ağ adresi</string>
+    <string name="cidr_broadcast_label">Yayın adresi</string>
+    <string name="cidr_mask_label">Alt ağ maskesi</string>
+    <string name="cidr_wildcard_label">Joker karakter maskesi</string>
+    <string name="cidr_first_host_label">İlk kullanılabilir ana bilgisayar</string>
+    <string name="cidr_last_host_label">Son kullanılabilir ana bilgisayar</string>
+    <string name="cidr_total_label">Toplam adres</string>
+    <string name="cidr_hosts_label">Kullanılabilir ana bilgisayar</string>
+    <string name="cidr_notation_label">CIDR gösterimi</string>
+    <string name="cidr_not_applicable">Uygulanamaz</string>
+    <string name="cidr_last_address_label">Son adres</string>
+    <string name="cidr_subnets64_label">/64 alt ağları</string>
 </resources>

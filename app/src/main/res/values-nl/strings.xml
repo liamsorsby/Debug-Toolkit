@@ -233,4 +233,21 @@
     <string name="update_required_body">Deze versie van Debug Toolkit wordt niet meer ondersteund. Werk de app bij om door te gaan.</string>
     <string name="update_required_action">Nu updaten</string>
     <string name="update_open_store_failed">De updatepagina kan niet worden geopend. Installeer de nieuwste versie via je appwinkel.</string>
+    <string name="nav_cidr">CIDR-calculator</string>
+    <string name="nav_cidr_description">Bereken subnetbereiken en maskers</string>
+    <string name="cidr_intro">Voer een IPv4- of IPv6-adres met prefixlengte in, zoals 192.168.1.10/24 of 2001:db8::/32, om het bereik, de maskers en bruikbare hosts te zien.</string>
+    <string name="cidr_input_label">CIDR-blok</string>
+    <string name="cidr_error">Voer een IPv4-adres en een prefix van 0 tot 32 (192.168.1.0/24) in, of een IPv6-adres en een prefix van 0 tot 128 (2001:db8::/32).</string>
+    <string name="cidr_network_label">Netwerkadres</string>
+    <string name="cidr_broadcast_label">Broadcastadres</string>
+    <string name="cidr_mask_label">Subnetmasker</string>
+    <string name="cidr_wildcard_label">Wildcardmasker</string>
+    <string name="cidr_first_host_label">Eerste bruikbare host</string>
+    <string name="cidr_last_host_label">Laatste bruikbare host</string>
+    <string name="cidr_total_label">Totaal aantal adressen</string>
+    <string name="cidr_hosts_label">Bruikbare hosts</string>
+    <string name="cidr_notation_label">CIDR-notatie</string>
+    <string name="cidr_not_applicable">Niet van toepassing</string>
+    <string name="cidr_last_address_label">Laatste adres</string>
+    <string name="cidr_subnets64_label">/64-subnets</string>
 </resources>

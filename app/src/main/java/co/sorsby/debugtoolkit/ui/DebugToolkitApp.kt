@@ -62,6 +62,7 @@ import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import co.sorsby.debugtoolkit.ui.navigation.AppDestination
 import co.sorsby.debugtoolkit.ui.navigation.AppDestinations
 import co.sorsby.debugtoolkit.ui.screens.AboutScreen
+import co.sorsby.debugtoolkit.ui.screens.CidrCalculatorRoute
 import co.sorsby.debugtoolkit.ui.screens.DnsRoute
 import co.sorsby.debugtoolkit.ui.components.SectionLabel
 import co.sorsby.debugtoolkit.ui.components.LocalAdsEnabled
@@ -282,6 +283,7 @@ private fun AppNavHost(
         composable(AppDestinations.Speed.route) { SpeedRoute(settingsViewModel) }
         composable(AppDestinations.Ping.route) { PingRoute() }
         composable(AppDestinations.PublicIp.route) { PublicIpRoute() }
+        composable(AppDestinations.Cidr.route) { CidrCalculatorRoute() }
         composable(AppDestinations.Tls.route) { TlsRoute() }
         composable(AppDestinations.PortScanner.route) { PortScanRoute() }
         composable(AppDestinations.Dns.route) { DnsRoute() }

@@ -233,4 +233,21 @@
     <string name="update_required_body">Ta wersja Debug Toolkit nie jest już obsługiwana. Zaktualizuj aplikację, aby kontynuować.</string>
     <string name="update_required_action">Aktualizuj teraz</string>
     <string name="update_open_store_failed">Nie można otworzyć strony aktualizacji. Zainstaluj najnowszą wersję ze sklepu z aplikacjami.</string>
+    <string name="nav_cidr">Kalkulator CIDR</string>
+    <string name="nav_cidr_description">Oblicz zakresy podsieci i maski</string>
+    <string name="cidr_intro">Wpisz adres IPv4 lub IPv6 z długością prefiksu, np. 192.168.1.10/24 lub 2001:db8::/32, aby zobaczyć zakres, maski i użyteczne hosty.</string>
+    <string name="cidr_input_label">Blok CIDR</string>
+    <string name="cidr_error">Wpisz adres IPv4 i prefiks od 0 do 32 (192.168.1.0/24) albo adres IPv6 i prefiks od 0 do 128 (2001:db8::/32).</string>
+    <string name="cidr_network_label">Adres sieci</string>
+    <string name="cidr_broadcast_label">Adres rozgłoszeniowy</string>
+    <string name="cidr_mask_label">Maska podsieci</string>
+    <string name="cidr_wildcard_label">Maska wildcard</string>
+    <string name="cidr_first_host_label">Pierwszy użyteczny host</string>
+    <string name="cidr_last_host_label">Ostatni użyteczny host</string>
+    <string name="cidr_total_label">Łączna liczba adresów</string>
+    <string name="cidr_hosts_label">Użyteczne hosty</string>
+    <string name="cidr_notation_label">Notacja CIDR</string>
+    <string name="cidr_not_applicable">Nie dotyczy</string>
+    <string name="cidr_last_address_label">Ostatni adres</string>
+    <string name="cidr_subnets64_label">Podsieci /64</string>
 </resources>

@@ -233,4 +233,21 @@
     <string name="update_required_body">이 Debug Toolkit 버전은 더 이상 지원되지 않습니다. 계속하려면 앱을 업데이트하세요.</string>
     <string name="update_required_action">지금 업데이트</string>
     <string name="update_open_store_failed">업데이트 페이지를 열 수 없습니다. 앱 스토어에서 최신 버전을 설치하세요.</string>
+    <string name="nav_cidr">CIDR 계산기</string>
+    <string name="nav_cidr_description">서브넷 범위와 마스크 계산</string>
+    <string name="cidr_intro">192.168.1.10/24 또는 2001:db8::/32처럼 IPv4 또는 IPv6 주소와 접두사 길이를 입력하면 범위, 마스크, 사용 가능한 호스트를 확인할 수 있습니다.</string>
+    <string name="cidr_input_label">CIDR 블록</string>
+    <string name="cidr_error">IPv4 주소와 0~32 접두사(192.168.1.0/24) 또는 IPv6 주소와 0~128 접두사(2001:db8::/32)를 입력하세요.</string>
+    <string name="cidr_network_label">네트워크 주소</string>
+    <string name="cidr_broadcast_label">브로드캐스트 주소</string>
+    <string name="cidr_mask_label">서브넷 마스크</string>
+    <string name="cidr_wildcard_label">와일드카드 마스크</string>
+    <string name="cidr_first_host_label">첫 번째 사용 가능 호스트</string>
+    <string name="cidr_last_host_label">마지막 사용 가능 호스트</string>
+    <string name="cidr_total_label">전체 주소 수</string>
+    <string name="cidr_hosts_label">사용 가능한 호스트</string>
+    <string name="cidr_notation_label">CIDR 표기</string>
+    <string name="cidr_not_applicable">해당 없음</string>
+    <string name="cidr_last_address_label">마지막 주소</string>
+    <string name="cidr_subnets64_label">/64 서브넷 수</string>
 </resources>

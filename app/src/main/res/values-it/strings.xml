@@ -233,4 +233,21 @@
     <string name="update_required_body">Questa versione di Debug Toolkit non è più supportata. Aggiorna l’app per continuare.</string>
     <string name="update_required_action">Aggiorna ora</string>
     <string name="update_open_store_failed">Impossibile aprire la pagina di aggiornamento. Installa la versione più recente dal tuo store di app.</string>
+    <string name="nav_cidr">Calcolatore CIDR</string>
+    <string name="nav_cidr_description">Calcola intervalli di sottorete e maschere</string>
+    <string name="cidr_intro">Inserisci un indirizzo IPv4 o IPv6 con la lunghezza del prefisso, ad esempio 192.168.1.10/24 o 2001:db8::/32, per vedere intervallo, maschere e host utilizzabili.</string>
+    <string name="cidr_input_label">Blocco CIDR</string>
+    <string name="cidr_error">Inserisci un indirizzo IPv4 e un prefisso da 0 a 32 (192.168.1.0/24), oppure un indirizzo IPv6 e un prefisso da 0 a 128 (2001:db8::/32).</string>
+    <string name="cidr_network_label">Indirizzo di rete</string>
+    <string name="cidr_broadcast_label">Indirizzo di broadcast</string>
+    <string name="cidr_mask_label">Subnet mask</string>
+    <string name="cidr_wildcard_label">Wildcard mask</string>
+    <string name="cidr_first_host_label">Primo host utilizzabile</string>
+    <string name="cidr_last_host_label">Ultimo host utilizzabile</string>
+    <string name="cidr_total_label">Indirizzi totali</string>
+    <string name="cidr_hosts_label">Host utilizzabili</string>
+    <string name="cidr_notation_label">Notazione CIDR</string>
+    <string name="cidr_not_applicable">Non applicabile</string>
+    <string name="cidr_last_address_label">Ultimo indirizzo</string>
+    <string name="cidr_subnets64_label">Sottoreti /64</string>
 </resources>
