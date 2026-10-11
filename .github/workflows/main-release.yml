@@ -1,8 +1,7 @@
 name: Main release
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,6 +13,8 @@ concurrency:
 jobs:
   commit-policy:
     name: Conventional commit
+    # Releases only ever come from main, even when the workflow is started from another ref.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
