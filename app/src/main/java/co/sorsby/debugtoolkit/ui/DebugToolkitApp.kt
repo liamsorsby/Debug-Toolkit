@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -267,7 +269,13 @@ private fun AppNavHost(
     NavHost(
         navController = navController,
         startDestination = AppDestinations.Overview.route,
-        modifier = Modifier.padding(padding),
+        // With edge-to-edge the window no longer resizes for the keyboard, so the content has to
+        // make room itself. Consuming the Scaffold padding first stops the bottom bar and
+        // navigation bar being counted twice.
+        modifier = Modifier
+            .padding(padding)
+            .consumeWindowInsets(padding)
+            .imePadding(),
         enterTransition = {
             fadeIn(tween(220)) + slideInHorizontally(tween(220)) { it / 6 }
         },
