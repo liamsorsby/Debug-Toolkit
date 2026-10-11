@@ -20,12 +20,13 @@ class UpdateRequiredScreenTest {
     fun updateRequiredScreenOnlyOffersUpdateAction() {
         var updateRequested = false
         composeRule.setContent {
-            UpdateRequiredScreen(onUpdate = { updateRequested = true })
+            UpdateRequiredScreen(onUpdate = { updateRequested = true }, versionName = "1.2.3")
         }
 
         composeRule.onNodeWithText("Update required").assertIsDisplayed()
         composeRule.onNodeWithText("This version of Debug Toolkit is no longer supported. Update the app to continue.")
             .assertIsDisplayed()
+        composeRule.onNodeWithText("v1.2.3").assertIsDisplayed()
         composeRule.onNodeWithText("Update now").assertIsDisplayed().performClick()
         composeRule.onNodeWithText("Continue without updating").assertDoesNotExist()
 
