@@ -4,6 +4,13 @@ import co.sorsby.debugtoolkit.core.model.ToolError
 
 interface JourneyTracker {
     fun trackScreen(route: String)
+
+    /** A move between two screens, so funnels and drop-off can be analysed. */
+    fun trackNavigation(from: String?, to: String, source: String) = Unit
+
+    /** A user action such as a tap. Use short snake_case names and never include user input. */
+    fun trackAction(action: String, screen: String? = null) = Unit
+
     fun startTool(tool: DiagnosticTool): ToolJourney
 }
 

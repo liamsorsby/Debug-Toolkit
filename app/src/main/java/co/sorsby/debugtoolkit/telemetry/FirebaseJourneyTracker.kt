@@ -49,7 +49,33 @@ class FirebaseJourneyTracker(
                 FirebaseAnalytics.Event.SCREEN_VIEW,
                 Bundle().apply {
                     putString(FirebaseAnalytics.Param.SCREEN_NAME, route)
-                    putString(FirebaseAnalytics.Param.SCREEN_CLASS, "compose")
+                    // Compose has one Activity, so the class would otherwise be a constant.
+                    putString(FirebaseAnalytics.Param.SCREEN_CLASS, route)
+                },
+            )
+        }
+    }
+
+    override fun trackNavigation(from: String?, to: String, source: String) {
+        withJourneyCollection {
+            analytics?.logEvent(
+                "navigate",
+                Bundle().apply {
+                    from?.let { putString("from_screen", it) }
+                    putString("to_screen", to)
+                    putString("source", source)
+                },
+            )
+        }
+    }
+
+    override fun trackAction(action: String, screen: String?) {
+        withJourneyCollection {
+            analytics?.logEvent(
+                "ui_action",
+                Bundle().apply {
+                    putString("action", action)
+                    screen?.let { putString("screen", it) }
                 },
             )
         }
