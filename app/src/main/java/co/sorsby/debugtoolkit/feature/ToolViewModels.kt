@@ -72,12 +72,14 @@ class SettingsViewModel(private val repository: SettingsRepository) : ViewModel(
     }
 }
 
-class NetworkViewModel(monitor: NetworkMonitor) : ViewModel() {
+class NetworkViewModel(private val monitor: NetworkMonitor) : ViewModel() {
     val snapshot: StateFlow<NetworkSnapshot> = monitor.snapshots.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = NetworkSnapshot(),
     )
+
+    fun refresh() = monitor.refresh()
 }
 
 class SpeedViewModel(
