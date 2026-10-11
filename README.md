@@ -104,7 +104,7 @@ required check passes, same-repository pull
 requests distribute a debug APK through Firebase App Distribution. Fork pull requests
 never receive deployment credentials and are not distributed.
 
-Pushes to `main` repeat the deterministic release gates and then run semantic-release.
+The release workflow is started manually (Actions → Main release → Run workflow, on `main`). It repeats the deterministic release gates and then runs semantic-release.
 Emulator tests are not repeated because protected `main` accepts only pull requests
 that passed the required integration check. Fastlane builds
 a signed release APK and AAB during release preparation. After semantic-release creates
