@@ -164,6 +164,12 @@ To roll back a sunset, lower `MIN_SUPPORTED_VERSION_CODE` in Worker configuratio
 This is a client-side compatibility gate, not a tamper-proof security boundary or a
 way to disable code already installed.
 
+Separately, Play installs that are still supported are offered an optional
+(flexible) Play update on start once Play has known about the update for at least
+2 days, at most once every 3 days. When the download finishes, a "Restart"
+snackbar installs it. Test this with Play internal app sharing or an internal test
+track, as in-app updates only work for Play-installed builds.
+
 Configure these repository or environment variables:
 
 - `SONAR_PROJECT_KEY` and `SONAR_ORGANIZATION`.

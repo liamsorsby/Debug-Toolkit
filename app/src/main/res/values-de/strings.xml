@@ -233,6 +233,8 @@
     <string name="update_required_body">Diese Version von Debug Toolkit wird nicht mehr unterstützt. Aktualisieren Sie die App, um fortzufahren.</string>
     <string name="update_required_action">Jetzt aktualisieren</string>
     <string name="update_open_store_failed">Das Update-Ziel konnte nicht geöffnet werden. Installieren Sie die aktuelle Version über Ihren App-Store.</string>
+    <string name="update_downloaded_message">Ein Update wurde heruntergeladen.</string>
+    <string name="update_downloaded_action">Neu starten</string>
     <string name="nav_cidr">CIDR-Rechner</string>
     <string name="nav_cidr_description">Subnetzbereiche und Masken berechnen</string>
     <string name="cidr_intro">Gib eine IPv4- oder IPv6-Adresse mit Präfixlänge ein, z. B. 192.168.1.10/24 oder 2001:db8::/32, um Bereich, Masken und nutzbare Hosts zu sehen.</string>
