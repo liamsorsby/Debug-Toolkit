@@ -7,7 +7,7 @@ with clear results.
 [Get it on Google Play](https://play.google.com/store/apps/details?id=co.sorsby.debugtoolkit)
 
 Requires Android 10 or later. Available in English, Chinese (Simplified and
-Traditional), Dutch, French, German, Italian, Japanese, Korean, Polish, Portuguese
+Traditional), Danish, Dutch, French, German, Italian, Japanese, Korean, Polish, Portuguese
 (Brazil), Spanish, and Turkish.
 
 ## What you can do
