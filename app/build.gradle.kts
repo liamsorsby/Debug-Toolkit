@@ -163,6 +163,7 @@ dependencies {
     implementation(libs.newrelic.android.agent)
     implementation(libs.gms.play.services.ads)
     implementation(libs.play.app.update.ktx)
+    implementation(libs.play.review)
 
     baselineProfile(project(":baselineprofile"))
 
@@ -214,6 +215,9 @@ val coverageClasses = fileTree(
     // adapter whose collaborators are all SDK singletons that cannot be constructed on the
     // unit test JVM, so covering it would assert nothing.
     include("co/sorsby/debugtoolkit/telemetry/AnalyticsConsentPolicy*")
+    include("co/sorsby/debugtoolkit/review/**")
+    // Reads and writes SharedPreferences only; the logic it feeds is covered via a fake store.
+    exclude("**/SharedPreferencesReviewPromptStore*")
     exclude("**/*\$\$serializer*")
     exclude("**/*\$Companion*")
     exclude("**/*UiState*")

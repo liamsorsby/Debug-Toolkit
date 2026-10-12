@@ -233,6 +233,8 @@
     <string name="update_required_body">Debug Toolkit\'in bu sürümü artık desteklenmiyor. Devam etmek için uygulamayı güncelle.</string>
     <string name="update_required_action">Şimdi güncelle</string>
     <string name="update_open_store_failed">Güncelleme sayfası açılamadı. Uygulama mağazandan en son sürümü yükle.</string>
+    <string name="update_downloaded_message">Bir güncelleme indirildi.</string>
+    <string name="update_downloaded_action">Yeniden başlat</string>
     <string name="nav_cidr">CIDR hesaplayıcı</string>
     <string name="nav_cidr_description">Alt ağ aralıklarını ve maskeleri hesapla</string>
     <string name="cidr_intro">Aralığı, maskeleri ve kullanılabilir ana bilgisayarları görmek için 192.168.1.10/24 veya 2001:db8::/32 gibi önek uzunluğuyla bir IPv4 ya da IPv6 adresi gir.</string>

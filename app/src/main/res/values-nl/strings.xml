@@ -233,6 +233,8 @@
     <string name="update_required_body">Deze versie van Debug Toolkit wordt niet meer ondersteund. Werk de app bij om door te gaan.</string>
     <string name="update_required_action">Nu updaten</string>
     <string name="update_open_store_failed">De updatepagina kan niet worden geopend. Installeer de nieuwste versie via je appwinkel.</string>
+    <string name="update_downloaded_message">Er is een update gedownload.</string>
+    <string name="update_downloaded_action">Opnieuw starten</string>
     <string name="nav_cidr">CIDR-calculator</string>
     <string name="nav_cidr_description">Bereken subnetbereiken en maskers</string>
     <string name="cidr_intro">Voer een IPv4- of IPv6-adres met prefixlengte in, zoals 192.168.1.10/24 of 2001:db8::/32, om het bereik, de maskers en bruikbare hosts te zien.</string>

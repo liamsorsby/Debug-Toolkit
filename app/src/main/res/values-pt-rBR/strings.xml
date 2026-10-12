@@ -233,6 +233,8 @@
     <string name="update_required_body">Esta versão do Debug Toolkit não é mais compatível. Atualize o app para continuar.</string>
     <string name="update_required_action">Atualizar agora</string>
     <string name="update_open_store_failed">Não foi possível abrir a página de atualização. Instale a versão mais recente pela loja de aplicativos.</string>
+    <string name="update_downloaded_message">Uma atualização foi baixada.</string>
+    <string name="update_downloaded_action">Reiniciar</string>
     <string name="nav_cidr">Calculadora CIDR</string>
     <string name="nav_cidr_description">Calcule intervalos de sub-rede e máscaras</string>
     <string name="cidr_intro">Insira um endereço IPv4 ou IPv6 com o tamanho do prefixo, como 192.168.1.10/24 ou 2001:db8::/32, para ver o intervalo, as máscaras e os hosts utilizáveis.</string>

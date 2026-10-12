@@ -227,6 +227,8 @@
     <string name="update_required_body">This version of Debug Toolkit is no longer supported. Update the app to continue.</string>
     <string name="update_required_action">Update now</string>
     <string name="update_open_store_failed">Couldn’t open the update destination. Try installing the latest version from your app store.</string>
+    <string name="update_downloaded_message">An update has been downloaded.</string>
+    <string name="update_downloaded_action">Restart</string>
 
     <string name="about_privacy">Privacy</string>
     <string name="about_privacy_body">Debug Toolkit stores only theme and consent preferences. Crash and performance monitoring are collected at all times to diagnose failures and keep the app reliable. Analytics require explicit consent and never include entered endpoints or diagnostic results. DNS and speed tests contact Cloudflare; certificate and HTTP tools contact the endpoint you enter.</string>

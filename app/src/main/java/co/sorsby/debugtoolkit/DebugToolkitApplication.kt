@@ -44,6 +44,9 @@ import co.sorsby.debugtoolkit.feature.TlsViewModel
 import co.sorsby.debugtoolkit.feature.WhoisViewModel
 import co.sorsby.debugtoolkit.telemetry.FirebaseJourneyTracker
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
+import co.sorsby.debugtoolkit.review.ReviewPromptCoordinator
+import co.sorsby.debugtoolkit.review.ReviewTrackingJourneyTracker
+import co.sorsby.debugtoolkit.review.SharedPreferencesReviewPromptStore
 import co.sorsby.debugtoolkit.update.VersionPolicyRepository
 import com.newrelic.agent.android.NewRelic
 import kotlinx.coroutines.CoroutineScope
@@ -103,11 +106,15 @@ val appModule = module {
             endpoint = BuildConfig.APP_UPDATE_POLICY_URL,
         )
     }
+    single { ReviewPromptCoordinator(SharedPreferencesReviewPromptStore(androidContext())) }
     single<JourneyTracker>(createdAtStart = true) {
-        FirebaseJourneyTracker(
-            context = androidContext(),
-            settingsRepository = get(),
-            scope = get(),
+        ReviewTrackingJourneyTracker(
+            delegate = FirebaseJourneyTracker(
+                context = androidContext(),
+                settingsRepository = get(),
+                scope = get(),
+            ),
+            coordinator = get(),
         )
     }
     single {

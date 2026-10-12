@@ -233,6 +233,8 @@
     <string name="update_required_body">此版本的 Debug Toolkit 已不再受支持。请更新应用后继续使用。</string>
     <string name="update_required_action">立即更新</string>
     <string name="update_open_store_failed">无法打开更新页面。请从应用商店安装最新版本。</string>
+    <string name="update_downloaded_message">更新已下载。</string>
+    <string name="update_downloaded_action">重新启动</string>
     <string name="nav_cidr">CIDR 计算器</string>
     <string name="nav_cidr_description">计算子网范围和掩码</string>
     <string name="cidr_intro">输入带前缀长度的 IPv4 或 IPv6 地址（如 192.168.1.10/24 或 2001:db8::/32），即可查看范围、掩码和可用主机数。</string>

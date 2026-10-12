@@ -233,6 +233,8 @@
     <string name="update_required_body">このバージョンのDebug Toolkitはサポートされなくなりました。続行するにはアプリを更新してください。</string>
     <string name="update_required_action">今すぐ更新</string>
     <string name="update_open_store_failed">更新先を開けませんでした。アプリストアから最新バージョンをインストールしてください。</string>
+    <string name="update_downloaded_message">アップデートをダウンロードしました。</string>
+    <string name="update_downloaded_action">再起動</string>
     <string name="nav_cidr">CIDR 計算ツール</string>
     <string name="nav_cidr_description">サブネット範囲とマスクを計算</string>
     <string name="cidr_intro">192.168.1.10/24 や 2001:db8::/32 のように、IPv4 または IPv6 アドレスとプレフィックス長を入力すると、範囲、マスク、使用可能なホスト数を確認できます。</string>

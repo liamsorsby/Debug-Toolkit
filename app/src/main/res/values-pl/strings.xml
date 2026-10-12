@@ -233,6 +233,8 @@
     <string name="update_required_body">Ta wersja Debug Toolkit nie jest już obsługiwana. Zaktualizuj aplikację, aby kontynuować.</string>
     <string name="update_required_action">Aktualizuj teraz</string>
     <string name="update_open_store_failed">Nie można otworzyć strony aktualizacji. Zainstaluj najnowszą wersję ze sklepu z aplikacjami.</string>
+    <string name="update_downloaded_message">Aktualizacja została pobrana.</string>
+    <string name="update_downloaded_action">Uruchom ponownie</string>
     <string name="nav_cidr">Kalkulator CIDR</string>
     <string name="nav_cidr_description">Oblicz zakresy podsieci i maski</string>
     <string name="cidr_intro">Wpisz adres IPv4 lub IPv6 z długością prefiksu, np. 192.168.1.10/24 lub 2001:db8::/32, aby zobaczyć zakres, maski i użyteczne hosty.</string>

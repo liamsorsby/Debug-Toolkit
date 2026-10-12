@@ -234,6 +234,8 @@
     <string name="update_required_body">Cette version de Debug Toolkit n’est plus prise en charge. Mettez l’application à jour pour continuer.</string>
     <string name="update_required_action">Mettre à jour</string>
     <string name="update_open_store_failed">Impossible d’ouvrir la page de mise à jour. Installez la dernière version depuis votre boutique d’applications.</string>
+    <string name="update_downloaded_message">Une mise à jour a été téléchargée.</string>
+    <string name="update_downloaded_action">Redémarrer</string>
     <string name="nav_cidr">Calculateur CIDR</string>
     <string name="nav_cidr_description">Calculez les plages de sous-réseau et les masques</string>
     <string name="cidr_intro">Saisissez une adresse IPv4 ou IPv6 avec sa longueur de préfixe, comme 192.168.1.10/24 ou 2001:db8::/32, pour voir sa plage, ses masques et ses hôtes utilisables.</string>
