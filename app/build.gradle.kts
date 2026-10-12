@@ -108,6 +108,12 @@ android {
             optimization {
                 enable = true
             }
+            // Packages native symbol tables into the AAB when a bundled library carries a
+            // build ID and symbols. The current AndroidX libraries don't, so Play still shows
+            // its native-symbols warning; it is advisory and there is nothing to upload.
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
         }
         create("benchmark") {
             initWith(getByName("release"))
