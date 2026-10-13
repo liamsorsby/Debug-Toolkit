@@ -21,3 +21,10 @@
 -keep class com.google.ads.mediation.admob.AdMobAdapter {
     *;
 }
+
+# Protobuf-lite messages (Firebase Performance) resolve their fields reflectively by name
+# (e.g. packageName_), so R8 must not rename or remove them.
+-keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite {
+    <fields>;
+}
+-keep class com.google.firebase.perf.v1.** { *; }
