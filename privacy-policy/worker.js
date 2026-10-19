@@ -1,5 +1,6 @@
 import privacyPolicyHtml from "./index.html";
 import termsOfUseHtml from "./terms-of-use.html";
+import appAdsTxt from "./app-ads.txt";
 
 const POLICY_PATH = "/version-policy";
 const PLAY_STORE_URL =
@@ -80,6 +81,15 @@ export default {
 
     if (path === POLICY_PATH) {
       return handleVersionPolicy(request, env);
+    }
+
+    if (path === "/app-ads.txt") {
+      return new Response(appAdsTxt, {
+        headers: {
+          "content-type": "text/plain; charset=utf-8",
+          "cache-control": "public, max-age=3600",
+        },
+      });
     }
 
     const html = ROUTES[path];
