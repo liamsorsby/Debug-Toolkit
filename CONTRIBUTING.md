@@ -146,6 +146,9 @@ the endpoint is temporarily unavailable; if no valid policy has ever been receiv
 the app continues normally. An outdated Play install starts the immediate Play update
 flow when available, otherwise the app opens the policy's update URL.
 
+The Worker also serves AdMob's `/app-ads.txt` from `privacy-policy/app-ads.txt`.
+Its route must cover the root of the developer website listed on Google Play.
+
 To roll back a sunset, lower `MIN_SUPPORTED_VERSION_CODE` in Worker configuration.
 This is a client-side compatibility gate, not a tamper-proof security boundary or a
 way to disable code already installed.
