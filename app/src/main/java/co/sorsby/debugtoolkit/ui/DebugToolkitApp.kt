@@ -59,6 +59,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import co.sorsby.debugtoolkit.R
+import co.sorsby.debugtoolkit.AdsConsentManager
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.telemetry.JourneyTracker
 import co.sorsby.debugtoolkit.ui.navigation.AppDestination
@@ -89,10 +90,16 @@ import org.koin.compose.koinInject
 @Composable
 fun DebugToolkitApp(
     settingsViewModel: SettingsViewModel,
+    onShowPrivacyOptions: () -> Unit,
     journeyTracker: JourneyTracker = koinInject(),
 ) {
     val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
     val settingsReady by settingsViewModel.isReady.collectAsStateWithLifecycle()
+    val adsConsentManager: AdsConsentManager = koinInject()
+    val consentAllowsAds by adsConsentManager.canRequestAds.collectAsStateWithLifecycle()
+    val adsSdkInitialized by adsConsentManager.mobileAdsInitialized.collectAsStateWithLifecycle()
+    val privacyOptionsRequired by
+        adsConsentManager.privacyOptionsRequired.collectAsStateWithLifecycle()
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -164,8 +171,17 @@ fun DebugToolkitApp(
                 )
             },
         ) { padding ->
-            CompositionLocalProvider(LocalAdsEnabled provides (settingsReady && settings.adsEnabled)) {
-                AppNavHost(navController, padding, settingsViewModel)
+            CompositionLocalProvider(
+                LocalAdsEnabled provides
+                    (settingsReady && settings.adsEnabled && consentAllowsAds && adsSdkInitialized),
+            ) {
+                AppNavHost(
+                    navController = navController,
+                    padding = padding,
+                    settingsViewModel = settingsViewModel,
+                    privacyOptionsRequired = privacyOptionsRequired,
+                    onShowPrivacyOptions = onShowPrivacyOptions,
+                )
             }
         }
     }
@@ -264,6 +280,8 @@ private fun AppNavHost(
     navController: NavHostController,
     padding: PaddingValues,
     settingsViewModel: SettingsViewModel,
+    privacyOptionsRequired: Boolean,
+    onShowPrivacyOptions: () -> Unit,
 ) {
     val navigate: (String) -> Unit = navController::navigateSingle
     NavHost(
@@ -298,7 +316,13 @@ private fun AppNavHost(
         composable(AppDestinations.Whois.route) { WhoisRoute() }
         composable(AppDestinations.Http.route) { HttpRoute() }
         composable(AppDestinations.LanScanner.route) { LanScanRoute() }
-        composable(AppDestinations.Settings.route) { SettingsRoute(settingsViewModel) }
+        composable(AppDestinations.Settings.route) {
+            SettingsRoute(
+                viewModel = settingsViewModel,
+                privacyOptionsRequired = privacyOptionsRequired,
+                onShowPrivacyOptions = onShowPrivacyOptions,
+            )
+        }
         composable(AppDestinations.About.route) { AboutScreen() }
     }
 }

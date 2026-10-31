@@ -99,6 +99,7 @@ val appModule = module {
         }
     }
     single<SettingsRepository> { DataStoreSettingsRepository(androidContext()) }
+    single { AdsConsentManager(androidContext()) }
     single(createdAtStart = true) {
         VersionPolicyRepository(
             context = androidContext(),
@@ -135,7 +136,9 @@ val appModule = module {
             nameserverResolver = get(),
         )
     }
-    single(createdAtStart = true) { AdsInitializer.initialize(androidContext(), get(), get()) }
+    single(createdAtStart = true) {
+        AdsInitializer.initialize(androidContext(), get(), get(), get())
+    }
     single<TlsInspector> { SocketTlsInspector() }
     single<HttpInspector> { OkHttpInspector(get()) }
     single<PingRunner> { ShellPingRunner() }
@@ -145,7 +148,8 @@ val appModule = module {
     single<PublicIpLookup> {
         CloudflareTraceLookup(
             client = get(),
-            endpoint = "https://1.1.1.1/cdn-cgi/trace".toHttpUrl(),
+            // Cloudflare's public anycast address, so the lookup needs no DNS resolution.
+            endpoint = "https://1.1.1.1/cdn-cgi/trace".toHttpUrl(), // NOSONAR
         )
     }
     single<LanScanner> {

@@ -4,7 +4,7 @@ import co.sorsby.debugtoolkit.core.model.WhoisResult
 import co.sorsby.debugtoolkit.domain.InputValidation
 import kotlin.time.TimeSource
 
-interface WhoisClient {
+fun interface WhoisClient {
     suspend fun lookup(domain: String): WhoisResult
 }
 

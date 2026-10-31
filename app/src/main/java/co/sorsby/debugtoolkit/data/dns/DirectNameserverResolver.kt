@@ -21,7 +21,7 @@ import kotlin.time.TimeSource
  * intermediate server would give, rather than the fully-resolved answer a recursive resolver like
  * Cloudflare would return.
  */
-interface DirectNameserverResolver {
+fun interface DirectNameserverResolver {
     suspend fun query(nameserver: String, input: String, type: DnsRecordType): DnsResult
 }
 

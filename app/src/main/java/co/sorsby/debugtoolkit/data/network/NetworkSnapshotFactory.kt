@@ -28,8 +28,7 @@ object NetworkSnapshotFactory {
         notMetered: Boolean,
         localAddresses: List<String>,
         wifiRssiDbm: Int?,
-        linkDownstreamKbps: Int,
-        linkUpstreamKbps: Int,
+        linkBandwidth: LinkBandwidth,
     ): NetworkSnapshot {
         val rssi = usableRssi(wifiRssiDbm)
         return NetworkSnapshot(
@@ -41,8 +40,8 @@ object NetworkSnapshotFactory {
             localAddresses = localAddresses.filter(String::isNotEmpty),
             wifiRssiDbm = rssi,
             wifiSignal = SignalQuality.fromRssi(rssi),
-            estimatedDownstreamKbps = positiveKbps(linkDownstreamKbps),
-            estimatedUpstreamKbps = positiveKbps(linkUpstreamKbps),
+            estimatedDownstreamKbps = positiveKbps(linkBandwidth.downstreamKbps),
+            estimatedUpstreamKbps = positiveKbps(linkBandwidth.upstreamKbps),
         )
     }
 
@@ -52,3 +51,6 @@ object NetworkSnapshotFactory {
     /** Android reports an unknown link bandwidth as zero, which is not worth showing. */
     fun positiveKbps(kbps: Int): Int? = kbps.takeIf { it > 0 }
 }
+
+/** The platform's raw link bandwidth estimates, where zero means unknown. */
+data class LinkBandwidth(val downstreamKbps: Int, val upstreamKbps: Int)

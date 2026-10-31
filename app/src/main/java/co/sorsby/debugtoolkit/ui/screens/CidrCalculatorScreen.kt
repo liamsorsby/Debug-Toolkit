@@ -53,7 +53,7 @@ fun CidrCalculatorScreen(input: String, onInputChanged: (String) -> Unit) {
                     value = input,
                     onValueChange = onInputChanged,
                     label = { Text(stringResource(R.string.cidr_input_label)) },
-                    placeholder = { Text("192.168.1.0/24") },
+                    placeholder = { Text(stringResource(R.string.cidr_input_placeholder)) },
                     singleLine = true,
                     isError = block?.isFailure == true,
                     supportingText = if (block?.isFailure == true) {
@@ -124,6 +124,6 @@ private fun Ipv6ResultView(block: Ipv6Block) {
 @Composable
 private fun CidrCalculatorScreenPreview() {
     DebugToolkitTheme {
-        CidrCalculatorScreen(input = "192.168.1.10/24", onInputChanged = {})
+        CidrCalculatorScreen(input = "192.0.2.10/24", onInputChanged = {})
     }
 }

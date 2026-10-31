@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import kotlin.time.TimeSource
 
-interface PublicIpLookup {
+fun interface PublicIpLookup {
     suspend fun lookup(): PublicIpResult
 }
 

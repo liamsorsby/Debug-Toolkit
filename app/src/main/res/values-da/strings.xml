@@ -209,6 +209,8 @@
     <string name="settings_ads">Annoncer</string>
     <string name="settings_ads_supporting">Vis annoncer i appen. Når annoncerne er slået til, støtter du udviklingen af appen. Hvis du slår dem fra, sendes der ingen annonceforespørgsler. Dette er adskilt fra samtykke til analyse.</string>
     <string name="settings_ads_switch">Vis annoncer</string>
+    <string name="settings_ads_privacy_options_supporting">Gennemgå eller rediger indstillinger for annoncebeskyttelse, der administreres af Google.</string>
+    <string name="settings_ads_privacy_options">Privatlivsindstillinger for annoncer</string>
     <string name="settings_analytics_supporting">Tillad privatlivsvenlige skærmforløb og diagnoseresultater for at hjælpe med at forbedre appen. Indtastede endepunkter og diagnoseresultater medtages aldrig. Nedbruds- og ydeevneovervågning kører separat for at holde appen pålidelig, uanset dette valg.</string>
     <string name="theme_system">Systemstandard</string>
     <string name="theme_light">Lyst</string>

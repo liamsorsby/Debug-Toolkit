@@ -11,7 +11,7 @@ import javax.net.ssl.SSLSocket
 import javax.net.ssl.SSLSocketFactory
 import kotlin.time.TimeSource
 
-interface TlsInspector {
+fun interface TlsInspector {
     suspend fun inspect(input: String): TlsResult
 }
 

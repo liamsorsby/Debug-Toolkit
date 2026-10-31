@@ -13,12 +13,17 @@ internal object AdsInitializer {
     fun initialize(
         context: Context,
         settingsRepository: SettingsRepository,
+        consentManager: AdsConsentManager,
         scope: CoroutineScope,
     ): Boolean {
-        AdsStartupController(settingsRepository.settings.map { it.adsEnabled }) {
+        AdsStartupController(
+            settingsRepository.settings.map { it.adsEnabled },
+            consentManager.canRequestAds,
+        ) {
             withContext(Dispatchers.IO) {
                 MobileAds.initialize(context) {
                     Log.d("Ads", "Mobile Ads initialized")
+                    consentManager.onMobileAdsInitialized()
                 }
             }
         }.start(scope)
