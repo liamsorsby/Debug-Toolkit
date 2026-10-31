@@ -14,6 +14,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -114,18 +115,26 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-            DebugToolkitTheme(
-                darkTheme = when (settings.themeMode) {
-                    ThemeMode.SYSTEM -> null
-                    ThemeMode.LIGHT -> false
-                    ThemeMode.DARK -> true
-                },
-            ) {
-                val policy = versionPolicy
-                val requiresUpdate = VersionPolicyDecoder.isUpdateRequired(
-                    installedVersionCode = BuildConfig.VERSION_CODE,
-                    policy = policy,
+            val useDarkTheme = when (settings.themeMode) {
+                ThemeMode.SYSTEM -> isSystemInDarkTheme()
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+            }
+            val policy = versionPolicy
+            val requiresUpdate = VersionPolicyDecoder.isUpdateRequired(
+                installedVersionCode = BuildConfig.VERSION_CODE,
+                policy = policy,
+            )
+            val showsBrandTopBar =
+                !requiresUpdate && settings.analyticsConsent != AnalyticsConsent.UNSET
+            LaunchedEffect(useDarkTheme, showsBrandTopBar) {
+                val styles = SystemBarStyles.forScreen(useDarkTheme, showsBrandTopBar)
+                enableEdgeToEdge(
+                    statusBarStyle = styles.statusBar,
+                    navigationBarStyle = styles.navigationBar,
                 )
+            }
+            DebugToolkitTheme(darkTheme = useDarkTheme) {
                 if (requiresUpdate && policy != null) {
                     UpdateRequiredScreen(onUpdate = { startUpdateOrOpenStore(policy) })
                 } else if (settings.analyticsConsent == AnalyticsConsent.UNSET) {
