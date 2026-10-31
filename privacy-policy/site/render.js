@@ -35,7 +35,7 @@ export const STRINGS = {
 export const SITE_ORIGIN = "https://debug-toolkit.sorsby.co";
 export const PACKAGE_NAME = "co.sorsby.debugtoolkit";
 // Bump when any file in site/assets changes, so the year-long immutable cache is busted.
-export const ASSET_VERSION = "2";
+export const ASSET_VERSION = "3";
 
 const TOOL_SECTIONS = {
   connectivity: ["network", "speed", "ping", "publicip", "cidr"],
@@ -44,8 +44,6 @@ const TOOL_SECTIONS = {
 };
 
 const SCREENSHOTS = ["01-overview", "02-network", "03-tools"];
-
-export const CONSENT_STORAGE_KEY = "dt_analytics_consent";
 
 const GA4_ID_PATTERN = /^G-[A-Z0-9]{4,20}$/;
 
@@ -182,14 +180,8 @@ h2{font-size:1.75rem;line-height:1.25;margin:0 0 8px}
 footer{padding:32px 0 48px;color:var(--muted);font-size:.95rem}
 footer nav ul{list-style:none;margin:8px 0 16px;padding:0;display:flex;flex-wrap:wrap;gap:8px 16px}
 footer a[aria-current]{font-weight:700;color:var(--fg)}
-.linkish{background:none;border:0;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;flex-direction:column;gap:8px;padding:0 12px calc(12px + env(safe-area-inset-bottom));pointer-events:none}
 .dock>*{pointer-events:auto;max-width:720px;width:100%;margin:0 auto;background:var(--card);color:var(--fg);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.2);padding:12px 14px}
-.consent p{margin:0 0 10px;font-size:.95rem}
-.consent .actions{display:flex;gap:8px;flex-wrap:wrap}
-.btn{border:0;border-radius:999px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer}
-.btn-primary{background:var(--accent);color:var(--on-accent)}
-.btn-tonal{background:transparent;color:var(--fg);border:1px solid var(--border)}
 .android-bar{display:flex;align-items:center;gap:12px}
 .android-bar img{border-radius:10px;flex:0 0 auto}
 .android-bar strong{flex:1;font-size:.95rem;line-height:1.3}
@@ -200,32 +192,19 @@ footer a[aria-current]{font-weight:700;color:var(--fg)}
 
 /**
  * Renders the landing page for [locale]. The HTML is identical for every visitor and crawler;
- * the Android-only download bar and the analytics consent banner are revealed client-side by
+ * the Android-only download bar is revealed client-side by
  * /assets/site.js, so responses stay cacheable and search engines index the full content.
  */
 /**
- * Google tag, inline in <head> so Google can detect it. Advanced Consent Mode: every signal
- * defaults to denied (Google only receives cookieless pings) until the visitor accepts, and ad
- * signals stay denied even then, mirroring the app's AnalyticsConsentPolicy. A visitor who
- * accepted earlier is granted analytics storage before the first hit.
+ * Standard Google tag, inline in <head> so Google can detect it.
  */
 function googleTag(gaId) {
   return `<!-- Google tag (gtag.js) -->
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
-var dtConsent = null;
-try { dtConsent = localStorage.getItem("${CONSENT_STORAGE_KEY}"); } catch (e) {}
-gtag("consent", "default", {
-  ad_storage: "denied",
-  ad_user_data: "denied",
-  ad_personalization: "denied",
-  analytics_storage: dtConsent === "granted" ? "granted" : "denied",
-  wait_for_update: 500
-});
-gtag("set", "ads_data_redaction", true);
 gtag("js", new Date());
-gtag("config", "${gaId}", { allow_google_signals: false, allow_ad_personalization_signals: false });
+gtag("config", "${gaId}");
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>`;
 }
@@ -236,15 +215,6 @@ export function renderLandingPage(locale, { measurementId } = {}) {
   const canonical = absolute(localePath(locale));
   const ogImage = absolute(asset("og-image.png"));
   const gaAttr = gaId ? ` data-ga4="${gaId}"` : "";
-  const consentBanner = gaId
-    ? `<div class="consent" id="consent" role="region" aria-label="${escapeHtml(strings.cookieSettings)}" hidden>
-<p>${escapeHtml(strings.consentText)} <a href="/privacy-policy">${escapeHtml(strings.privacyLink)}</a></p>
-<div class="actions"><button type="button" class="btn btn-primary" data-consent="granted">${escapeHtml(strings.accept)}</button><button type="button" class="btn btn-tonal" data-consent="denied">${escapeHtml(strings.decline)}</button></div>
-</div>`
-    : "";
-  const cookieSettingsLink = gaId
-    ? ` · <button type="button" class="linkish" id="cookie-settings">${escapeHtml(strings.cookieSettings)}</button>`
-    : "";
 
   return `<!DOCTYPE html>
 <html lang="${locale.hreflang}" data-locale="${locale.code}"${gaAttr}>
@@ -318,11 +288,10 @@ ${playLink(locale, strings, "hero", "cta")}
 <footer>
 <div class="wrap">
 <nav aria-label="${escapeHtml(strings.language)}"><strong>${escapeHtml(strings.language)}</strong><ul>${languageLinks(locale)}</ul></nav>
-<p>${playLink(locale, strings, "footer", "")} · <a href="/privacy-policy">${escapeHtml(strings.privacyPolicy)}</a> · <a href="/terms-of-use">${escapeHtml(strings.terms)}</a>${cookieSettingsLink}</p>
+<p>${playLink(locale, strings, "footer", "")} · <a href="/privacy-policy">${escapeHtml(strings.privacyPolicy)}</a> · <a href="/terms-of-use">${escapeHtml(strings.terms)}</a></p>
 </div>
 </footer>
 <div class="dock" id="dock">
-${consentBanner}
 <div class="android-bar" id="android-bar" role="region" aria-label="${escapeHtml(strings.barTitle)}" hidden>
 <img src="${asset("icon-192.webp")}" width="40" height="40" alt="">
 <strong>${escapeHtml(strings.barTitle)}</strong>
