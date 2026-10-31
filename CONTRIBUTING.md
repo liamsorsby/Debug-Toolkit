@@ -188,8 +188,9 @@ When set, the standard Google tag is rendered inline in `<head>` (so Google's ta
 checker detects it) using Advanced Consent Mode: every signal defaults to denied, so
 Google only receives cookieless pings until the visitor accepts the opt-in banner.
 **Accept** grants only `analytics_storage`; ad storage, ad personalisation and Google
-signals stay off, matching the app. The inline tag uses a per-response CSP nonce, which
-Cloudflare also applies to its bot-detection script. Events: `play_store_click` (mark it
+signals stay off, matching the app. The CSP allows `'unsafe-inline'` scripts (and so must
+not use a nonce, which would disable it) so Cloudflare's injected Google tag gateway and
+bot-detection scripts can run. Events: `play_store_click` (mark it
 as a key event in GA4), `download_prompt_shown`, `download_prompt_dismissed` and
 `language_selected`, each with `placement`/`locale` parameters.
 

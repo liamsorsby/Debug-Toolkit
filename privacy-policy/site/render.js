@@ -35,7 +35,7 @@ export const STRINGS = {
 export const SITE_ORIGIN = "https://debug-toolkit.sorsby.co";
 export const PACKAGE_NAME = "co.sorsby.debugtoolkit";
 // Bump when any file in site/assets changes, so the year-long immutable cache is busted.
-export const ASSET_VERSION = "1";
+export const ASSET_VERSION = "2";
 
 const TOOL_SECTIONS = {
   connectivity: ["network", "speed", "ping", "publicip", "cidr"],
@@ -209,10 +209,9 @@ footer a[aria-current]{font-weight:700;color:var(--fg)}
  * signals stay denied even then, mirroring the app's AnalyticsConsentPolicy. A visitor who
  * accepted earlier is granted analytics storage before the first hit.
  */
-function googleTag(gaId, nonce) {
-  const nonceAttr = nonce ? ` nonce="${escapeHtml(nonce)}"` : "";
+function googleTag(gaId) {
   return `<!-- Google tag (gtag.js) -->
-<script${nonceAttr}>
+<script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 var dtConsent = null;
@@ -231,7 +230,7 @@ gtag("config", "${gaId}", { allow_google_signals: false, allow_ad_personalizatio
 <script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>`;
 }
 
-export function renderLandingPage(locale, { measurementId, nonce } = {}) {
+export function renderLandingPage(locale, { measurementId } = {}) {
   const strings = STRINGS[locale.code];
   const gaId = validMeasurementId(measurementId);
   const canonical = absolute(localePath(locale));
@@ -251,7 +250,7 @@ export function renderLandingPage(locale, { measurementId, nonce } = {}) {
 <html lang="${locale.hreflang}" data-locale="${locale.code}"${gaAttr}>
 <head>
 <meta charset="utf-8">
-${gaId ? `${googleTag(gaId, nonce)}\n` : ""}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+${gaId ? `${googleTag(gaId)}\n` : ""}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${escapeHtml(strings.title)}</title>
 <meta name="description" content="${escapeHtml(strings.description)}">
 <link rel="canonical" href="${canonical}">

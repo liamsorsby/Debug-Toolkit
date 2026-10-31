@@ -12,13 +12,7 @@ const CONTENT_TYPES = {
   ".js": "text/javascript; charset=utf-8",
 };
 
-function newNonce() {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  return btoa(String.fromCharCode(...bytes));
-}
-
-function contentSecurityPolicy(measurementId, nonce) {
+function contentSecurityPolicy(measurementId) {
   const google = measurementId
     ? {
         script: " https://www.googletagmanager.com",
@@ -29,10 +23,9 @@ function contentSecurityPolicy(measurementId, nonce) {
     : { script: "", connect: "", img: "" };
   return [
     "default-src 'none'",
-    // The nonce covers the page's own inline Google tag and Cloudflare JavaScript Detections
-    // (Bot Fight Mode), which injects an inline script at the edge and copies the nonce from
-    // this header onto it.
-    `script-src 'self' 'nonce-${nonce}'${google.script}`,
+    // 'unsafe-inline' lets the inline Google tag and scripts Cloudflare injects at the edge
+    // (Google tag gateway, bot detection) run without nonces or hashes.
+    `script-src 'self' 'unsafe-inline'${google.script}`,
     "style-src 'unsafe-inline'",
     `img-src 'self' data:${google.img}`,
     `connect-src 'self'${google.connect}`,
@@ -42,9 +35,9 @@ function contentSecurityPolicy(measurementId, nonce) {
   ].join("; ");
 }
 
-function securityHeaders(measurementId, nonce) {
+function securityHeaders(measurementId) {
   return {
-    "content-security-policy": contentSecurityPolicy(measurementId, nonce),
+    "content-security-policy": contentSecurityPolicy(measurementId),
     "x-content-type-options": "nosniff",
     "referrer-policy": "strict-origin-when-cross-origin",
     "permissions-policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
@@ -66,14 +59,13 @@ function readCookie(request, name) {
 
 function page(locale, env, method, extraHeaders = {}) {
   const measurementId = validMeasurementId(env.GA4_MEASUREMENT_ID);
-  const nonce = newNonce();
-  const body = method === "HEAD" ? null : renderLandingPage(locale, { measurementId, nonce });
+  const body = method === "HEAD" ? null : renderLandingPage(locale, { measurementId });
   return new Response(body, {
     headers: {
       "content-type": "text/html; charset=utf-8",
       "cache-control": "public, max-age=600",
       "content-language": locale.hreflang,
-      ...securityHeaders(measurementId, nonce),
+      ...securityHeaders(measurementId),
       ...extraHeaders,
     },
   });
