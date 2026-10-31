@@ -45,6 +45,8 @@ const TOOL_SECTIONS = {
 
 const SCREENSHOTS = ["01-overview", "02-network", "03-tools"];
 
+export const CONSENT_STORAGE_KEY = "dt_analytics_consent";
+
 const GA4_ID_PATTERN = /^G-[A-Z0-9]{4,20}$/;
 
 /** Only a well-formed GA4 measurement ID is ever written into the page. */
@@ -201,7 +203,35 @@ footer a[aria-current]{font-weight:700;color:var(--fg)}
  * the Android-only download bar and the analytics consent banner are revealed client-side by
  * /assets/site.js, so responses stay cacheable and search engines index the full content.
  */
-export function renderLandingPage(locale, { measurementId } = {}) {
+/**
+ * Google tag, inline in <head> so Google can detect it. Advanced Consent Mode: every signal
+ * defaults to denied (Google only receives cookieless pings) until the visitor accepts, and ad
+ * signals stay denied even then, mirroring the app's AnalyticsConsentPolicy. A visitor who
+ * accepted earlier is granted analytics storage before the first hit.
+ */
+function googleTag(gaId, nonce) {
+  const nonceAttr = nonce ? ` nonce="${escapeHtml(nonce)}"` : "";
+  return `<!-- Google tag (gtag.js) -->
+<script${nonceAttr}>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+var dtConsent = null;
+try { dtConsent = localStorage.getItem("${CONSENT_STORAGE_KEY}"); } catch (e) {}
+gtag("consent", "default", {
+  ad_storage: "denied",
+  ad_user_data: "denied",
+  ad_personalization: "denied",
+  analytics_storage: dtConsent === "granted" ? "granted" : "denied",
+  wait_for_update: 500
+});
+gtag("set", "ads_data_redaction", true);
+gtag("js", new Date());
+gtag("config", "${gaId}", { allow_google_signals: false, allow_ad_personalization_signals: false });
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>`;
+}
+
+export function renderLandingPage(locale, { measurementId, nonce } = {}) {
   const strings = STRINGS[locale.code];
   const gaId = validMeasurementId(measurementId);
   const canonical = absolute(localePath(locale));
@@ -221,7 +251,7 @@ export function renderLandingPage(locale, { measurementId } = {}) {
 <html lang="${locale.hreflang}" data-locale="${locale.code}"${gaAttr}>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+${gaId ? `${googleTag(gaId, nonce)}\n` : ""}<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${escapeHtml(strings.title)}</title>
 <meta name="description" content="${escapeHtml(strings.description)}">
 <link rel="canonical" href="${canonical}">
