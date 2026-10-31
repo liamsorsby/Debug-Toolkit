@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit: Android용 네트워크 진단 앱",
+  "description": "무료 Android 앱 하나에 11가지 네트워크 도구: Wi-Fi 신호, 속도 테스트, Ping 및 Traceroute, DNS, TLS 인증서, HTTP, 포트 스캐너, WHOIS, LAN 스캐너.",
+  "heroTitle": "주머니 속 네트워크 진단 도구",
+  "heroLead": "Wi-Fi가 느린가요? 사이트가 열리지 않나요? API가 이상한가요? Debug Toolkit은 Android 휴대전화에서 11가지 네트워크 도구를 제공해 노트북 없이도 문제를 찾을 수 있습니다.",
+  "cta": "Google Play에서 다운로드",
+  "free": "Android용 무료 앱",
+  "toolsTitle": "11가지 도구, 하나의 앱",
+  "toolsLead": "개발자, IT 팀, 그리고 연결 상태에 대한 정확한 답을 원하는 모든 분을 위해 만들었습니다.",
+  "noRoot": "루팅이 필요 없습니다. 모든 도구가 일반 Android 기기에서 작동합니다.",
+  "screenshotsTitle": "실제 화면",
+  "screenshotAlts": [
+    "개요 화면",
+    "실시간 네트워크 모니터",
+    "진단 도구 목록"
+  ],
+  "privacyTitle": "개인정보 보호 중심 설계",
+  "privacyBody": "계정도 로그인도 필요 없습니다. 분석은 동의한 경우에만 수집되며, 확인한 호스트와 결과는 절대 수집되지 않습니다.",
+  "privacyLink": "개인정보처리방침 보기",
+  "privacyPolicy": "개인정보처리방침",
+  "barTitle": "Android용 Debug Toolkit",
+  "barCta": "지금 앱 다운로드",
+  "dismiss": "닫기",
+  "consentText": "방문자가 이 사이트를 어떻게 사용하는지 파악하기 위해 Google 애널리틱스 쿠키를 사용하고자 합니다. 동의하기 전에는 아무것도 저장되지 않습니다.",
+  "accept": "동의",
+  "decline": "거부",
+  "cookieSettings": "쿠키 설정",
+  "terms": "이용약관",
+  "language": "언어",
+  "tagline": "네트워크 진단",
+  "sections": {
+    "connectivity": "연결",
+    "security": "보안",
+    "discovery": "검색"
+  },
+  "tools": {
+    "network": {
+      "name": "네트워크",
+      "description": "실시간 연결 모니터"
+    },
+    "speed": {
+      "name": "속도 테스트",
+      "description": "지연 시간 및 처리량"
+    },
+    "ping": {
+      "name": "Ping 및 Traceroute",
+      "description": "도달 가능성 및 경로 홉"
+    },
+    "publicip": {
+      "name": "공인 IP 및 위치",
+      "description": "외부에서 확인되는 내 주소"
+    },
+    "cidr": {
+      "name": "CIDR 계산기",
+      "description": "서브넷 범위와 마스크 계산"
+    },
+    "tls": {
+      "name": "인증서 검사기",
+      "description": "TLS 체인 및 유효성"
+    },
+    "dns": {
+      "name": "DNS 조회",
+      "description": "개별 레코드 조회"
+    },
+    "http": {
+      "name": "HTTP 검사기",
+      "description": "헤더 및 응답"
+    },
+    "portscan": {
+      "name": "포트 스캐너",
+      "description": "호스트의 열린 TCP 포트 확인"
+    },
+    "whois": {
+      "name": "WHOIS 조회",
+      "description": "등록기관 및 만료 정보"
+    },
+    "lanscan": {
+      "name": "로컬 네트워크 스캐너",
+      "description": "이 네트워크의 장치 검색"
+    }
+  }
+}

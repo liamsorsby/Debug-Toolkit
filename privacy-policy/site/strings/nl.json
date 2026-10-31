@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit: netwerkdiagnose voor Android",
+  "description": "11 netwerktools in één gratis Android-app: wifisignaal, snelheidstest, ping en traceroute, DNS, TLS-certificaten, HTTP, poortscanner, WHOIS en LAN-scanner.",
+  "heroTitle": "Netwerkdiagnose in je broekzak",
+  "heroLead": "Trage wifi? Een site die niet laadt? Een API die raar doet? Debug Toolkit geeft je 11 netwerktools op je Android-telefoon, zodat je het probleem vindt zonder laptop.",
+  "cta": "Ontdek het op Google Play",
+  "free": "Gratis voor Android",
+  "toolsTitle": "11 tools, één app",
+  "toolsLead": "Gemaakt voor ontwikkelaars, IT-teams en iedereen die echte antwoorden over zijn verbinding wil.",
+  "noRoot": "Geen root nodig. Elke tool werkt op een gewoon Android-apparaat.",
+  "screenshotsTitle": "Zo ziet het eruit",
+  "screenshotAlts": [
+    "Overzichtsscherm",
+    "Live netwerkmonitor",
+    "Lijst met diagnosetools"
+  ],
+  "privacyTitle": "Privacy als uitgangspunt",
+  "privacyBody": "Geen account en geen login. Analytics zijn optioneel en de hosts en resultaten die je controleert worden nooit verzameld.",
+  "privacyLink": "Lees het privacybeleid",
+  "privacyPolicy": "Privacybeleid",
+  "barTitle": "Debug Toolkit voor Android",
+  "barCta": "Download de app nu",
+  "dismiss": "Sluiten",
+  "consentText": "We willen Google Analytics-cookies gebruiken om te begrijpen hoe bezoekers deze site gebruiken. Er wordt niets opgeslagen tenzij je akkoord gaat.",
+  "accept": "Accepteren",
+  "decline": "Weigeren",
+  "cookieSettings": "Cookie-instellingen",
+  "terms": "Gebruiksvoorwaarden",
+  "language": "Taal",
+  "tagline": "Netwerkdiagnostiek",
+  "sections": {
+    "connectivity": "Connectiviteit",
+    "security": "Beveiliging",
+    "discovery": "Detectie"
+  },
+  "tools": {
+    "network": {
+      "name": "Netwerk",
+      "description": "Live verbindingsmonitor"
+    },
+    "speed": {
+      "name": "Snelheidstest",
+      "description": "Latentie en doorvoersnelheid"
+    },
+    "ping": {
+      "name": "Ping en traceroute",
+      "description": "Bereikbaarheid en routeringshops"
+    },
+    "publicip": {
+      "name": "Publiek IP-adres en locatie",
+      "description": "Je adres zoals het extern wordt gezien"
+    },
+    "cidr": {
+      "name": "CIDR-calculator",
+      "description": "Bereken subnetbereiken en maskers"
+    },
+    "tls": {
+      "name": "Certificaatinspectie",
+      "description": "TLS-keten en geldigheid"
+    },
+    "dns": {
+      "name": "DNS-opzoeking",
+      "description": "Afzonderlijke records opvragen"
+    },
+    "http": {
+      "name": "HTTP-inspectie",
+      "description": "Headers en antwoorden"
+    },
+    "portscan": {
+      "name": "Poortscanner",
+      "description": "Open TCP-poorten op een host controleren"
+    },
+    "whois": {
+      "name": "WHOIS-opzoeking",
+      "description": "Registrar- en vervaldetails"
+    },
+    "lanscan": {
+      "name": "Scanner voor lokaal netwerk",
+      "description": "Apparaten op dit netwerk ontdekken"
+    }
+  }
+}

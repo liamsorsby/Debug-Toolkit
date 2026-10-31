@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit：Android 网络诊断工具",
+  "description": "一款免费 Android 应用集成 11 种网络工具：Wi-Fi 信号、测速、Ping 和 Traceroute、DNS、TLS 证书、HTTP、端口扫描、WHOIS 和局域网扫描。",
+  "heroTitle": "口袋里的网络诊断工具",
+  "heroLead": "Wi-Fi 很慢？网站打不开？API 表现异常？Debug Toolkit 在你的 Android 手机上提供 11 种网络工具，无需笔记本电脑也能找到问题所在。",
+  "cta": "在 Google Play 上获取",
+  "free": "Android 免费应用",
+  "toolsTitle": "11 种工具，一个应用",
+  "toolsLead": "专为开发者、IT 团队以及所有想真正了解自己网络连接的人打造。",
+  "noRoot": "无需 root。所有工具都可在普通 Android 设备上运行。",
+  "screenshotsTitle": "应用截图",
+  "screenshotAlts": [
+    "概览界面",
+    "实时网络监控",
+    "诊断工具列表"
+  ],
+  "privacyTitle": "以隐私为核心",
+  "privacyBody": "无需账户，无需登录。分析功能需经你同意才会启用，你检查的主机和结果绝不会被收集。",
+  "privacyLink": "阅读隐私政策",
+  "privacyPolicy": "隐私政策",
+  "barTitle": "Debug Toolkit Android 版",
+  "barCta": "立即下载应用",
+  "dismiss": "关闭",
+  "consentText": "我们希望使用 Google Analytics Cookie 来了解访客如何使用本网站。除非你同意，否则不会设置任何 Cookie。",
+  "accept": "接受",
+  "decline": "拒绝",
+  "cookieSettings": "Cookie 设置",
+  "terms": "使用条款",
+  "language": "语言",
+  "tagline": "网络诊断",
+  "sections": {
+    "connectivity": "连接",
+    "security": "安全",
+    "discovery": "发现"
+  },
+  "tools": {
+    "network": {
+      "name": "网络",
+      "description": "实时连接监控"
+    },
+    "speed": {
+      "name": "速度测试",
+      "description": "延迟和吞吐量"
+    },
+    "ping": {
+      "name": "Ping 和 Traceroute",
+      "description": "可达性和路由跳数"
+    },
+    "publicip": {
+      "name": "公网 IP 和位置",
+      "description": "外部看到的你的地址"
+    },
+    "cidr": {
+      "name": "CIDR 计算器",
+      "description": "计算子网范围和掩码"
+    },
+    "tls": {
+      "name": "证书检查器",
+      "description": "TLS 证书链和有效性"
+    },
+    "dns": {
+      "name": "DNS 查询",
+      "description": "查询单个记录"
+    },
+    "http": {
+      "name": "HTTP 检查器",
+      "description": "请求头和响应"
+    },
+    "portscan": {
+      "name": "端口扫描器",
+      "description": "检查主机上的开放 TCP 端口"
+    },
+    "whois": {
+      "name": "WHOIS 查询",
+      "description": "注册商和到期信息"
+    },
+    "lanscan": {
+      "name": "局域网扫描器",
+      "description": "发现此网络上的设备"
+    }
+  }
+}

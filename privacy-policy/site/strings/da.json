@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit: netværksdiagnostik til Android",
+  "description": "11 netværksværktøjer i én gratis Android-app: Wi-Fi-signal, hastighedstest, ping og traceroute, DNS, TLS-certifikater, HTTP, portscanner, WHOIS og LAN-scanner.",
+  "heroTitle": "Netværksdiagnostik i lommen",
+  "heroLead": "Langsomt Wi-Fi? En side, der ikke vil indlæse? Et API, der driller? Debug Toolkit giver dig 11 netværksværktøjer på din Android-telefon, så du kan finde problemet uden en bærbar.",
+  "cta": "Hent den på Google Play",
+  "free": "Gratis til Android",
+  "toolsTitle": "11 værktøjer, én app",
+  "toolsLead": "Lavet til udviklere, IT-teams og alle, der vil have rigtige svar om deres forbindelse.",
+  "noRoot": "Kræver ikke root. Alle værktøjer virker på en almindelig Android-enhed.",
+  "screenshotsTitle": "Se den i brug",
+  "screenshotAlts": [
+    "Oversigtsskærm",
+    "Live netværksovervågning",
+    "Liste over diagnoseværktøjer"
+  ],
+  "privacyTitle": "Privatliv som udgangspunkt",
+  "privacyBody": "Ingen konto og intet login. Analyse kræver dit samtykke, og de værter og resultater, du tjekker, indsamles aldrig.",
+  "privacyLink": "Læs privatlivspolitikken",
+  "privacyPolicy": "Privatlivspolitik",
+  "barTitle": "Debug Toolkit til Android",
+  "barCta": "Download appen nu",
+  "dismiss": "Luk",
+  "consentText": "Vi vil gerne bruge Google Analytics-cookies til at forstå, hvordan besøgende bruger siden. Der sættes intet, medmindre du accepterer.",
+  "accept": "Accepter",
+  "decline": "Afvis",
+  "cookieSettings": "Cookieindstillinger",
+  "terms": "Vilkår for brug",
+  "language": "Sprog",
+  "tagline": "Netværksdiagnostik",
+  "sections": {
+    "connectivity": "Forbindelse",
+    "security": "Sikkerhed",
+    "discovery": "Opdagelse"
+  },
+  "tools": {
+    "network": {
+      "name": "Netværk",
+      "description": "Live overvågning af forbindelsen"
+    },
+    "speed": {
+      "name": "Hastighedstest",
+      "description": "Latenstid og gennemløb"
+    },
+    "ping": {
+      "name": "Ping og traceroute",
+      "description": "Tilgængelighed og rutehop"
+    },
+    "publicip": {
+      "name": "Offentlig IP og placering",
+      "description": "Din adresse set udefra"
+    },
+    "cidr": {
+      "name": "CIDR-beregner",
+      "description": "Beregn undernetintervaller og masker"
+    },
+    "tls": {
+      "name": "Certifikatinspektør",
+      "description": "TLS-kæde og gyldighed"
+    },
+    "dns": {
+      "name": "DNS-opslag",
+      "description": "Forespørg enkelte poster"
+    },
+    "http": {
+      "name": "HTTP-inspektør",
+      "description": "Headere og svar"
+    },
+    "portscan": {
+      "name": "Portscanner",
+      "description": "Tjek åbne TCP-porte på en vært"
+    },
+    "whois": {
+      "name": "WHOIS-opslag",
+      "description": "Registrator og udløbsdato"
+    },
+    "lanscan": {
+      "name": "Scanner til lokalt netværk",
+      "description": "Find enheder på dette netværk"
+    }
+  }
+}

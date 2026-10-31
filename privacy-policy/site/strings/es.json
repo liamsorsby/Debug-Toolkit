@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit: diagnóstico de red para Android",
+  "description": "11 herramientas de red en una app Android gratis: señal Wi-Fi, prueba de velocidad, ping, DNS, certificados TLS, HTTP, escáner de puertos, WHOIS y escáner LAN.",
+  "heroTitle": "Diagnóstico de red en tu bolsillo",
+  "heroLead": "¿Wi-Fi lento? ¿Una web que no carga? ¿Una API que falla? Debug Toolkit te ofrece 11 herramientas de red en tu móvil Android para encontrar el problema sin necesidad de un portátil.",
+  "cta": "Disponible en Google Play",
+  "free": "Gratis para Android",
+  "toolsTitle": "11 herramientas, una app",
+  "toolsLead": "Pensada para desarrolladores, equipos de TI y cualquiera que quiera respuestas reales sobre su conexión.",
+  "noRoot": "No necesita root. Todas las herramientas funcionan en un dispositivo Android normal.",
+  "screenshotsTitle": "Así funciona",
+  "screenshotAlts": [
+    "Pantalla de resumen",
+    "Monitor de red en tiempo real",
+    "Lista de herramientas de diagnóstico"
+  ],
+  "privacyTitle": "Privacidad desde el diseño",
+  "privacyBody": "Sin cuenta ni inicio de sesión. Los análisis son opcionales y nunca se recopilan los hosts ni los resultados que consultas.",
+  "privacyLink": "Leer la política de privacidad",
+  "privacyPolicy": "Política de privacidad",
+  "barTitle": "Debug Toolkit para Android",
+  "barCta": "Descargar la app",
+  "dismiss": "Cerrar",
+  "consentText": "Queremos usar cookies de Google Analytics para entender cómo se usa este sitio. No se guarda nada a menos que lo aceptes.",
+  "accept": "Aceptar",
+  "decline": "Rechazar",
+  "cookieSettings": "Configuración de cookies",
+  "terms": "Condiciones de uso",
+  "language": "Idioma",
+  "tagline": "Diagnóstico de red",
+  "sections": {
+    "connectivity": "Conectividad",
+    "security": "Seguridad",
+    "discovery": "Descubrimiento"
+  },
+  "tools": {
+    "network": {
+      "name": "Red",
+      "description": "Monitorización de la conexión en tiempo real"
+    },
+    "speed": {
+      "name": "Prueba de velocidad",
+      "description": "Latencia y velocidad"
+    },
+    "ping": {
+      "name": "Ping y traceroute",
+      "description": "Accesibilidad y saltos de ruta"
+    },
+    "publicip": {
+      "name": "IP pública y ubicación",
+      "description": "Tu dirección tal como se ve desde el exterior"
+    },
+    "cidr": {
+      "name": "Calculadora CIDR",
+      "description": "Calcula rangos de subred y máscaras"
+    },
+    "tls": {
+      "name": "Inspector de certificados",
+      "description": "Cadena TLS y validez"
+    },
+    "dns": {
+      "name": "Consulta DNS",
+      "description": "Consultar registros individuales"
+    },
+    "http": {
+      "name": "Inspector HTTP",
+      "description": "Cabeceras y respuestas"
+    },
+    "portscan": {
+      "name": "Escáner de puertos",
+      "description": "Comprobar puertos TCP abiertos en un host"
+    },
+    "whois": {
+      "name": "Consulta WHOIS",
+      "description": "Detalles del registrador y de la caducidad"
+    },
+    "lanscan": {
+      "name": "Escáner de red local",
+      "description": "Descubrir dispositivos en esta red"
+    }
+  }
+}

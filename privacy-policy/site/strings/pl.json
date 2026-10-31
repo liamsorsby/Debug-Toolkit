@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit: diagnostyka sieci na Androida",
+  "description": "11 narzędzi sieciowych w darmowej aplikacji na Androida: sygnał Wi-Fi, test prędkości, ping, DNS, certyfikaty TLS, HTTP, skaner portów, WHOIS i skaner LAN.",
+  "heroTitle": "Diagnostyka sieci w kieszeni",
+  "heroLead": "Wolne Wi-Fi? Strona się nie ładuje? API działa dziwnie? Debug Toolkit daje Ci 11 narzędzi sieciowych na telefonie z Androidem, dzięki czemu znajdziesz problem bez laptopa.",
+  "cta": "Pobierz z Google Play",
+  "free": "Za darmo na Androida",
+  "toolsTitle": "11 narzędzi, jedna aplikacja",
+  "toolsLead": "Dla programistów, zespołów IT i każdego, kto chce rzetelnych odpowiedzi na temat swojego połączenia.",
+  "noRoot": "Bez roota. Każde narzędzie działa na zwykłym urządzeniu z Androidem.",
+  "screenshotsTitle": "Zobacz, jak działa",
+  "screenshotAlts": [
+    "Ekran przeglądu",
+    "Monitorowanie sieci na żywo",
+    "Lista narzędzi diagnostycznych"
+  ],
+  "privacyTitle": "Prywatność od podstaw",
+  "privacyBody": "Bez konta i bez logowania. Analityka wymaga Twojej zgody, a sprawdzane hosty i wyniki nigdy nie są zbierane.",
+  "privacyLink": "Przeczytaj politykę prywatności",
+  "privacyPolicy": "Polityka prywatności",
+  "barTitle": "Debug Toolkit na Androida",
+  "barCta": "Pobierz aplikację teraz",
+  "dismiss": "Zamknij",
+  "consentText": "Chcemy używać plików cookie Google Analytics, aby zrozumieć, jak odwiedzający korzystają z tej strony. Nic nie zostanie zapisane bez Twojej zgody.",
+  "accept": "Akceptuj",
+  "decline": "Odrzuć",
+  "cookieSettings": "Ustawienia plików cookie",
+  "terms": "Warunki korzystania",
+  "language": "Język",
+  "tagline": "Diagnostyka sieci",
+  "sections": {
+    "connectivity": "Łączność",
+    "security": "Bezpieczeństwo",
+    "discovery": "Wykrywanie"
+  },
+  "tools": {
+    "network": {
+      "name": "Sieć",
+      "description": "Monitorowanie połączenia na żywo"
+    },
+    "speed": {
+      "name": "Test prędkości",
+      "description": "Opóźnienie i przepustowość"
+    },
+    "ping": {
+      "name": "Ping i traceroute",
+      "description": "Dostępność i kolejne przeskoki trasy"
+    },
+    "publicip": {
+      "name": "Publiczny adres IP i lokalizacja",
+      "description": "Twój adres widziany z zewnątrz"
+    },
+    "cidr": {
+      "name": "Kalkulator CIDR",
+      "description": "Oblicz zakresy podsieci i maski"
+    },
+    "tls": {
+      "name": "Inspektor certyfikatów",
+      "description": "Łańcuch TLS i ważność"
+    },
+    "dns": {
+      "name": "Zapytanie DNS",
+      "description": "Sprawdzanie pojedynczych rekordów"
+    },
+    "http": {
+      "name": "Inspektor HTTP",
+      "description": "Nagłówki i odpowiedzi"
+    },
+    "portscan": {
+      "name": "Skaner portów",
+      "description": "Sprawdź otwarte porty TCP na hoście"
+    },
+    "whois": {
+      "name": "Zapytanie WHOIS",
+      "description": "Informacje o rejestratorze i wygaśnięciu"
+    },
+    "lanscan": {
+      "name": "Skaner sieci lokalnej",
+      "description": "Wykrywanie urządzeń w tej sieci"
+    }
+  }
+}

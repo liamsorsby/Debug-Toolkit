@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit: network diagnostics for Android",
+  "description": "11 network tools in one free Android app: Wi-Fi signal, speed test, ping and traceroute, DNS, TLS certificates, HTTP, port scanner, WHOIS and LAN scanner.",
+  "heroTitle": "Network diagnostics in your pocket",
+  "heroLead": "Slow Wi-Fi? A site that won't load? An API acting up? Debug Toolkit gives you 11 network tools on your Android phone, so you can find the problem without reaching for a laptop.",
+  "cta": "Get it on Google Play",
+  "free": "Free for Android",
+  "toolsTitle": "11 tools, one app",
+  "toolsLead": "Built for developers, IT teams and anyone who wants real answers about their connection.",
+  "noRoot": "No root needed. Every tool works on a standard Android device.",
+  "screenshotsTitle": "See it in action",
+  "screenshotAlts": [
+    "Overview screen",
+    "Live network monitor",
+    "List of diagnostic tools"
+  ],
+  "privacyTitle": "Private by design",
+  "privacyBody": "No account and no login. Analytics are opt-in, and the hosts and results you check are never collected.",
+  "privacyLink": "Read the privacy policy",
+  "privacyPolicy": "Privacy policy",
+  "barTitle": "Debug Toolkit for Android",
+  "barCta": "Download app now",
+  "dismiss": "Dismiss",
+  "consentText": "We'd like to use Google Analytics cookies to understand how visitors use this site. Nothing is set unless you accept.",
+  "accept": "Accept",
+  "decline": "Decline",
+  "cookieSettings": "Cookie settings",
+  "terms": "Terms of use",
+  "language": "Language",
+  "tagline": "Network diagnostics",
+  "sections": {
+    "connectivity": "Connectivity",
+    "security": "Security",
+    "discovery": "Discovery"
+  },
+  "tools": {
+    "network": {
+      "name": "Network",
+      "description": "Live connection monitor"
+    },
+    "speed": {
+      "name": "Speed test",
+      "description": "Latency and throughput"
+    },
+    "ping": {
+      "name": "Ping and traceroute",
+      "description": "Reachability and route hops"
+    },
+    "publicip": {
+      "name": "Public IP and location",
+      "description": "Your address as seen externally"
+    },
+    "cidr": {
+      "name": "CIDR calculator",
+      "description": "Work out subnet ranges and masks"
+    },
+    "tls": {
+      "name": "Certificate inspector",
+      "description": "TLS chain and validity"
+    },
+    "dns": {
+      "name": "DNS lookup",
+      "description": "Query individual records"
+    },
+    "http": {
+      "name": "HTTP inspector",
+      "description": "Headers and responses"
+    },
+    "portscan": {
+      "name": "Port scanner",
+      "description": "Check open TCP ports on a host"
+    },
+    "whois": {
+      "name": "WHOIS lookup",
+      "description": "Registrar and expiry details"
+    },
+    "lanscan": {
+      "name": "Local network scanner",
+      "description": "Discover devices on this network"
+    }
+  }
+}
