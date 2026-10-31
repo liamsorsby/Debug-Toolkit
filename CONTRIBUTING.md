@@ -182,11 +182,15 @@ JSON is stale. To add a language, add it to `site/locales.js` and `site/copy.js`
 Analytics are optional. Set `GA4_MEASUREMENT_ID` in `privacy-policy/wrangler.toml` (both
 `[vars]` and `[previews.vars]`) to a GA4 web data stream ID (`G-…`); variables in
 `wrangler.toml` replace dashboard values on deploy, so set it there rather than in the
-dashboard. When it is empty the site ships no analytics code or cookie banner. When set,
-visitors get an opt-in banner: Consent Mode v2 defaults are all denied, `gtag.js` is only
-loaded after **Accept**, and only `analytics_storage` is granted (ad storage, ad
-personalisation and Google signals stay off, matching the app). Events: `play_store_click`
-(mark it as a key event in GA4), `download_prompt_shown`, `download_prompt_dismissed`,
+dashboard. When it is empty the site ships no analytics code or cookie banner.
+
+When set, the standard Google tag is rendered inline in `<head>` (so Google's tag
+checker detects it) using Advanced Consent Mode: every signal defaults to denied, so
+Google only receives cookieless pings until the visitor accepts the opt-in banner.
+**Accept** grants only `analytics_storage`; ad storage, ad personalisation and Google
+signals stay off, matching the app. The inline tag uses a per-response CSP nonce, which
+Cloudflare also applies to its bot-detection script. Events: `play_store_click` (mark it
+as a key event in GA4), `download_prompt_shown`, `download_prompt_dismissed` and
 `language_selected`, each with `placement`/`locale` parameters.
 
 Preview locally with `npx wrangler dev --config privacy-policy/wrangler.toml`. Landing

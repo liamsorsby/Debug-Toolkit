@@ -25,47 +25,19 @@
     }
   }
 
-  // ---- Analytics (GA4, opt-in) ----
-  // Consent Mode v2 defaults to everything denied, and gtag.js is only fetched after the visitor
-  // accepts, so no Google request or cookie happens without consent. Ad signals stay denied even
-  // after Accept, mirroring the app's AnalyticsConsentPolicy.
-  window.dataLayer = window.dataLayer || [];
+  // ---- Analytics (GA4, Advanced Consent Mode) ----
+  // The inline Google tag in <head> loads gtag.js with every consent signal denied, so Google only
+  // receives cookieless pings until the visitor accepts. This script just updates consent and
+  // sends events. Ad signals are never granted, mirroring the app's AnalyticsConsentPolicy.
   function gtag() {
-    window.dataLayer.push(arguments);
-  }
-  var analyticsLoaded = false;
-
-  function loadAnalytics() {
-    if (!gaId || analyticsLoaded) return;
-    analyticsLoaded = true;
-    gtag("consent", "update", { analytics_storage: "granted" });
-    gtag("js", new Date());
-    gtag("config", gaId, {
-      allow_google_signals: false,
-      allow_ad_personalization_signals: false,
-      site_locale: locale,
-    });
-    var script = document.createElement("script");
-    script.async = true;
-    script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(gaId);
-    document.head.appendChild(script);
+    if (typeof window.gtag === "function") window.gtag.apply(window, arguments);
   }
 
   function track(name, params) {
-    if (!analyticsLoaded) return;
+    if (!gaId) return;
     params = params || {};
     params.locale = locale;
     gtag("event", name, params);
-  }
-
-  if (gaId) {
-    gtag("consent", "default", {
-      ad_storage: "denied",
-      ad_user_data: "denied",
-      ad_personalization: "denied",
-      analytics_storage: "denied",
-      wait_for_update: 500,
-    });
   }
 
   // ---- Bottom dock: consent banner + Android download bar ----
@@ -81,11 +53,10 @@
     write(CONSENT_KEY, choice);
     if (consent) consent.hidden = true;
     if (choice === "granted") {
-      loadAnalytics();
-    } else if (analyticsLoaded) {
-      // Withdrawing consent mid-session: stop collection and clear the GA cookies.
+      gtag("consent", "update", { analytics_storage: "granted" });
+    } else {
+      // Declining or withdrawing: back to cookieless pings and remove any GA cookies.
       gtag("consent", "update", { analytics_storage: "denied" });
-      window["ga-disable-" + gaId] = true;
       document.cookie.split(";").forEach(function (cookie) {
         var name = cookie.split("=")[0].trim();
         if (name === "_ga" || name.indexOf("_ga_") === 0) {
@@ -100,10 +71,9 @@
   }
 
   if (gaId && consent) {
+    // The stored choice was already applied by the inline tag; only ask if there is none.
     var stored = read(CONSENT_KEY);
-    if (stored === "granted") {
-      loadAnalytics();
-    } else if (stored !== "denied") {
+    if (stored !== "granted" && stored !== "denied") {
       consent.hidden = false;
     }
     consent.addEventListener("click", function (event) {

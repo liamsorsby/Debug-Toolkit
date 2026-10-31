@@ -129,13 +129,21 @@ describe("renderLandingPage", () => {
     assert.equal(validMeasurementId("G-ABC123XYZ"), "G-ABC123XYZ");
   });
 
-  it("adds the consent banner, hidden by default, when a measurement ID is set", () => {
-    const html = renderLandingPage(LOCALES[0], { measurementId: "G-ABC123XYZ" });
+  it("puts the Google tag in <head> with consent denied by default when a measurement ID is set", () => {
+    const html = renderLandingPage(LOCALES[0], { measurementId: "G-ABC123XYZ", nonce: "abc123" });
+    const head = html.slice(0, html.indexOf("</head>"));
+    assert.ok(head.includes('<script async src="https://www.googletagmanager.com/gtag/js?id=G-ABC123XYZ">'));
+    assert.match(head, /<script nonce="abc123">[\s\S]*gtag\("config", "G-ABC123XYZ"/);
+    assert.ok(head.indexOf('gtag("consent", "default"') < head.indexOf('gtag("config"'));
+    for (const signal of ["ad_storage", "ad_user_data", "ad_personalization"]) {
+      assert.match(head, new RegExp(`${signal}: "denied"`));
+    }
+    assert.match(head, /analytics_storage: dtConsent === "granted" \? "granted" : "denied"/);
+    assert.match(head, /allow_google_signals: false, allow_ad_personalization_signals: false/);
     assert.match(html, /data-ga4="G-ABC123XYZ"/);
     assert.match(html, /id="consent"[^>]*hidden>/);
     assert.ok(html.includes('data-consent="granted"'));
     assert.ok(html.includes('data-consent="denied"'));
-    assert.ok(!html.includes("googletagmanager.com"), "gtag.js must only load after consent");
   });
 });
 
@@ -195,6 +203,12 @@ describe("handleSite", () => {
     const first = nonceOf();
     assert.ok(first, "nonce missing from script-src");
     assert.notEqual(nonceOf(), first);
+  });
+
+  it("uses the same nonce in the CSP header and the inline Google tag", async () => {
+    const response = handleSite(request("/de/"), { GA4_MEASUREMENT_ID: "G-ABC123XYZ" }, ASSETS);
+    const nonce = /'nonce-([^']+)'/.exec(response.headers.get("content-security-policy"))[1];
+    assert.ok((await response.text()).includes(`<script nonce="${nonce}">`));
   });
 
   it("allows Google Analytics in the CSP only when configured", () => {

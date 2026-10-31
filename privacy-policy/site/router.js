@@ -29,9 +29,9 @@ function contentSecurityPolicy(measurementId, nonce) {
     : { script: "", connect: "", img: "" };
   return [
     "default-src 'none'",
-    // The page has no inline scripts of its own. The per-response nonce exists for Cloudflare
-    // JavaScript Detections (Bot Fight Mode), which injects an inline script at the edge and
-    // copies the nonce from this header onto it.
+    // The nonce covers the page's own inline Google tag and Cloudflare JavaScript Detections
+    // (Bot Fight Mode), which injects an inline script at the edge and copies the nonce from
+    // this header onto it.
     `script-src 'self' 'nonce-${nonce}'${google.script}`,
     "style-src 'unsafe-inline'",
     `img-src 'self' data:${google.img}`,
@@ -42,9 +42,9 @@ function contentSecurityPolicy(measurementId, nonce) {
   ].join("; ");
 }
 
-function securityHeaders(measurementId) {
+function securityHeaders(measurementId, nonce) {
   return {
-    "content-security-policy": contentSecurityPolicy(measurementId, newNonce()),
+    "content-security-policy": contentSecurityPolicy(measurementId, nonce),
     "x-content-type-options": "nosniff",
     "referrer-policy": "strict-origin-when-cross-origin",
     "permissions-policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
@@ -66,13 +66,14 @@ function readCookie(request, name) {
 
 function page(locale, env, method, extraHeaders = {}) {
   const measurementId = validMeasurementId(env.GA4_MEASUREMENT_ID);
-  const body = method === "HEAD" ? null : renderLandingPage(locale, { measurementId });
+  const nonce = newNonce();
+  const body = method === "HEAD" ? null : renderLandingPage(locale, { measurementId, nonce });
   return new Response(body, {
     headers: {
       "content-type": "text/html; charset=utf-8",
       "cache-control": "public, max-age=600",
       "content-language": locale.hreflang,
-      ...securityHeaders(measurementId),
+      ...securityHeaders(measurementId, nonce),
       ...extraHeaders,
     },
   });
