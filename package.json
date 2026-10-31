@@ -8,7 +8,9 @@
   "scripts": {
     "commitlint": "commitlint",
     "release": "semantic-release",
-    "release:preview": "node .github/scripts/version-preview.mjs"
+    "release:preview": "node .github/scripts/version-preview.mjs",
+    "site:strings": "node privacy-policy/site/scripts/generate-strings.mjs",
+    "test:site": "node privacy-policy/site/scripts/generate-strings.mjs --check && node --test \"privacy-policy/site/test/*.test.js\""
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.3",

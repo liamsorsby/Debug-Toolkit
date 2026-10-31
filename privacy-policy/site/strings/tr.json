@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit: Android için ağ tanılama",
+  "description": "Ücretsiz bir Android uygulamasında 11 ağ aracı: Wi-Fi sinyali, hız testi, ping, DNS, TLS sertifikaları, HTTP, port tarayıcı, WHOIS ve LAN tarayıcı.",
+  "heroTitle": "Ağ tanılama cebinizde",
+  "heroLead": "Wi-Fi yavaş mı? Bir site açılmıyor mu? Bir API tuhaf mı davranıyor? Debug Toolkit, Android telefonunuza 11 ağ aracı getirir; böylece dizüstü bilgisayara gerek kalmadan sorunu bulabilirsiniz.",
+  "cta": "Google Play'den edinin",
+  "free": "Android için ücretsiz",
+  "toolsTitle": "11 araç, tek uygulama",
+  "toolsLead": "Geliştiriciler, BT ekipleri ve bağlantısı hakkında gerçek yanıtlar isteyen herkes için.",
+  "noRoot": "Root gerekmez. Tüm araçlar standart bir Android cihazda çalışır.",
+  "screenshotsTitle": "Uygulamayı görün",
+  "screenshotAlts": [
+    "Genel bakış ekranı",
+    "Canlı ağ izleme",
+    "Tanılama araçları listesi"
+  ],
+  "privacyTitle": "Gizlilik odaklı tasarım",
+  "privacyBody": "Hesap ve giriş gerekmez. Analiz isteğe bağlıdır ve kontrol ettiğiniz ana bilgisayarlar ile sonuçlar asla toplanmaz.",
+  "privacyLink": "Gizlilik politikasını okuyun",
+  "privacyPolicy": "Gizlilik politikası",
+  "barTitle": "Android için Debug Toolkit",
+  "barCta": "Uygulamayı şimdi indir",
+  "dismiss": "Kapat",
+  "consentText": "Ziyaretçilerin bu siteyi nasıl kullandığını anlamak için Google Analytics çerezlerini kullanmak istiyoruz. Kabul etmediğiniz sürece hiçbir şey kaydedilmez.",
+  "accept": "Kabul et",
+  "decline": "Reddet",
+  "cookieSettings": "Çerez ayarları",
+  "terms": "Kullanım koşulları",
+  "language": "Dil",
+  "tagline": "Ağ tanılama",
+  "sections": {
+    "connectivity": "Bağlantı",
+    "security": "Güvenlik",
+    "discovery": "Keşif"
+  },
+  "tools": {
+    "network": {
+      "name": "Ağ",
+      "description": "Canlı bağlantı izleme"
+    },
+    "speed": {
+      "name": "Hız testi",
+      "description": "Gecikme ve aktarım hızı"
+    },
+    "ping": {
+      "name": "Ping ve traceroute",
+      "description": "Erişilebilirlik ve rota atlamaları"
+    },
+    "publicip": {
+      "name": "Genel IP ve konum",
+      "description": "Dışarıdan görülen adresin"
+    },
+    "cidr": {
+      "name": "CIDR hesaplayıcı",
+      "description": "Alt ağ aralıklarını ve maskeleri hesapla"
+    },
+    "tls": {
+      "name": "Sertifika denetleyicisi",
+      "description": "TLS zinciri ve geçerlilik"
+    },
+    "dns": {
+      "name": "DNS sorgusu",
+      "description": "Tek tek kayıtları sorgula"
+    },
+    "http": {
+      "name": "HTTP denetleyicisi",
+      "description": "Üstbilgiler ve yanıtlar"
+    },
+    "portscan": {
+      "name": "Port tarayıcı",
+      "description": "Bir ana bilgisayardaki açık TCP portlarını kontrol et"
+    },
+    "whois": {
+      "name": "WHOIS sorgusu",
+      "description": "Kayıt kuruluşu ve sona erme bilgileri"
+    },
+    "lanscan": {
+      "name": "Yerel ağ tarayıcı",
+      "description": "Bu ağdaki cihazları keşfet"
+    }
+  }
+}

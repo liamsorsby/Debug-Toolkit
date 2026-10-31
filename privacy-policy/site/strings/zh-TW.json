@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit：Android 網路診斷工具",
+  "description": "一款免費 Android 應用程式整合 11 種網路工具：Wi-Fi 訊號、速度測試、Ping 與 Traceroute、DNS、TLS 憑證、HTTP、連接埠掃描、WHOIS 與區域網路掃描。",
+  "heroTitle": "口袋裡的網路診斷工具",
+  "heroLead": "Wi-Fi 很慢？網站打不開？API 行為異常？Debug Toolkit 在您的 Android 手機上提供 11 種網路工具，不需要筆電也能找出問題。",
+  "cta": "立即前往 Google Play 下載",
+  "free": "Android 免費應用程式",
+  "toolsTitle": "11 種工具，一個應用程式",
+  "toolsLead": "專為開發人員、IT 團隊，以及所有想真正了解自己網路連線的人打造。",
+  "noRoot": "不需要 root。所有工具都能在一般 Android 裝置上執行。",
+  "screenshotsTitle": "應用程式畫面",
+  "screenshotAlts": [
+    "總覽畫面",
+    "即時網路監控",
+    "診斷工具清單"
+  ],
+  "privacyTitle": "以隱私為核心",
+  "privacyBody": "無需帳戶，無需登入。分析功能需經您同意才會啟用，您檢查的主機與結果絕不會被收集。",
+  "privacyLink": "閱讀隱私權政策",
+  "privacyPolicy": "隱私權政策",
+  "barTitle": "Debug Toolkit Android 版",
+  "barCta": "立即下載應用程式",
+  "dismiss": "關閉",
+  "consentText": "我們希望使用 Google Analytics Cookie 來了解訪客如何使用本網站。除非您同意，否則不會設定任何 Cookie。",
+  "accept": "接受",
+  "decline": "拒絕",
+  "cookieSettings": "Cookie 設定",
+  "terms": "使用條款",
+  "language": "語言",
+  "tagline": "網路診斷",
+  "sections": {
+    "connectivity": "連線",
+    "security": "安全性",
+    "discovery": "探索"
+  },
+  "tools": {
+    "network": {
+      "name": "網路",
+      "description": "即時連線監控"
+    },
+    "speed": {
+      "name": "速度測試",
+      "description": "延遲與吞吐量"
+    },
+    "ping": {
+      "name": "Ping 與 Traceroute",
+      "description": "可達性與路由躍點"
+    },
+    "publicip": {
+      "name": "公用 IP 與位置",
+      "description": "外部所看到的您的位址"
+    },
+    "cidr": {
+      "name": "CIDR 計算機",
+      "description": "計算子網路範圍與遮罩"
+    },
+    "tls": {
+      "name": "憑證檢查器",
+      "description": "TLS 憑證鏈與有效性"
+    },
+    "dns": {
+      "name": "DNS 查詢",
+      "description": "查詢個別記錄"
+    },
+    "http": {
+      "name": "HTTP 檢查器",
+      "description": "標頭與回應"
+    },
+    "portscan": {
+      "name": "連接埠掃描器",
+      "description": "檢查主機上的開放 TCP 連接埠"
+    },
+    "whois": {
+      "name": "WHOIS 查詢",
+      "description": "註冊商與到期詳細資訊"
+    },
+    "lanscan": {
+      "name": "區域網路掃描器",
+      "description": "探索此網路上的裝置"
+    }
+  }
+}

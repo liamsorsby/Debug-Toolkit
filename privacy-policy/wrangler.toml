@@ -3,7 +3,8 @@ main = "worker.js"
 compatibility_date = "2026-09-24"
 
 rules = [
-  { type = "Text", globs = ["**/*.html", "**/*.txt"], fallthrough = true }
+  { type = "Text", globs = ["**/*.html", "**/*.txt", "**/*.client.js"], fallthrough = true },
+  { type = "Data", globs = ["**/*.webp", "**/*.png"], fallthrough = true }
 ]
 
 [vars]
@@ -11,9 +12,13 @@ SKIP_DEPENDENCY_INSTALL = "true"
 MIN_SUPPORTED_VERSION_CODE = "0"
 PLAY_UPDATE_URL = "https://play.google.com/store/apps/details?id=co.sorsby.debugtoolkit"
 OTHER_UPDATE_URL = "https://play.google.com/store/apps/details?id=co.sorsby.debugtoolkit"
+# GA4 web data stream measurement ID (G-XXXXXXXXXX). Leave empty to serve the site without analytics.
+GA4_MEASUREMENT_ID = "G-LVN9GFMV03"
 
 [previews.vars]
 SKIP_DEPENDENCY_INSTALL = "true"
 MIN_SUPPORTED_VERSION_CODE = "0"
 PLAY_UPDATE_URL = "https://play.google.com/store/apps/details?id=co.sorsby.debugtoolkit"
 OTHER_UPDATE_URL = "https://play.google.com/store/apps/details?id=co.sorsby.debugtoolkit"
+# GA4 web data stream measurement ID (G-XXXXXXXXXX). Leave empty to serve the site without analytics.
+GA4_MEASUREMENT_ID = "G-LVN9GFMV03"

@@ -149,6 +149,50 @@ flow when available, otherwise the app opens the policy's update URL.
 The Worker also serves AdMob's `/app-ads.txt` from `privacy-policy/app-ads.txt`.
 Its route must cover the root of the developer website listed on Google Play.
 
+### Landing page
+
+The same Worker serves a multilingual landing page from `privacy-policy/site/`:
+
+- `/` is English. Browsers whose `Accept-Language` prefers another app language get a
+  302 to `/<slug>/` (for example `/de/`, `/pt-br/`, `/zh-tw/`) unless the visitor chose a
+  language (`?lang=en` or the `dt_lang` cookie set by the footer language list).
+- Every page has a canonical URL, `hreflang` alternates (with `x-default` → `/`), Open
+  Graph/Twitter tags and `SoftwareApplication` JSON-LD. `/sitemap.xml` and `/robots.txt`
+  are generated from the same locale list.
+- Android visitors see a dismissible "download the app" bar (hidden again for 14 days
+  after dismissal). Play links are localised with `hl` and carry a
+  `utm_source=website&utm_medium=landing&utm_campaign=<locale>&utm_content=<placement>`
+  install referrer.
+- Images live in `privacy-policy/site/assets/` and are served from `/assets/` with a
+  one-year immutable cache. Bump `ASSET_VERSION` in `site/render.js` whenever an asset
+  changes. The browser script is `site/assets/site.client.js` (bundled as text and served
+  as `/assets/site.js`).
+
+Page text comes from two places, merged by `npm run site:strings` into
+`privacy-policy/site/strings/<locale>.json` (committed):
+
+- `site/copy.js`: marketing copy written for the site, one entry per locale.
+- The app's `strings.xml` files: tagline, section names and the 11 tool names and
+  descriptions, so the site always matches the app.
+
+Run `npm run site:strings` after editing `copy.js` or any of those app strings, and
+`npm run test:site` before pushing. CI runs `test:site`, which fails if the committed
+JSON is stale. To add a language, add it to `site/locales.js` and `site/copy.js`.
+
+Analytics are optional. Set `GA4_MEASUREMENT_ID` in `privacy-policy/wrangler.toml` (both
+`[vars]` and `[previews.vars]`) to a GA4 web data stream ID (`G-…`); variables in
+`wrangler.toml` replace dashboard values on deploy, so set it there rather than in the
+dashboard. When it is empty the site ships no analytics code or cookie banner. When set,
+visitors get an opt-in banner: Consent Mode v2 defaults are all denied, `gtag.js` is only
+loaded after **Accept**, and only `analytics_storage` is granted (ad storage, ad
+personalisation and Google signals stay off, matching the app). Events: `play_store_click`
+(mark it as a key event in GA4), `download_prompt_shown`, `download_prompt_dismissed`,
+`language_selected`, each with `placement`/`locale` parameters.
+
+Preview locally with `npx wrangler dev --config privacy-policy/wrangler.toml`. Landing
+page changes are not part of the app, so use a `docs:` (or `ci:`) commit type to avoid
+cutting an app release.
+
 To roll back a sunset, lower `MIN_SUPPORTED_VERSION_CODE` in Worker configuration.
 This is a client-side compatibility gate, not a tamper-proof security boundary or a
 way to disable code already installed.

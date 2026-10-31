@@ -1,6 +1,15 @@
 import privacyPolicyHtml from "./index.html";
 import termsOfUseHtml from "./terms-of-use.html";
 import appAdsTxt from "./app-ads.txt";
+import { handleSite } from "./site/router.js";
+import siteScript from "./site/assets/site.client.js";
+import screenshotOverview from "./site/assets/screenshot-01-overview.webp";
+import screenshotNetwork from "./site/assets/screenshot-02-network.webp";
+import screenshotTools from "./site/assets/screenshot-03-tools.webp";
+import icon192 from "./site/assets/icon-192.webp";
+import appleTouchIcon from "./site/assets/apple-touch-icon.png";
+import favicon from "./site/assets/favicon.png";
+import ogImage from "./site/assets/og-image.png";
 
 const POLICY_PATH = "/version-policy";
 const PLAY_STORE_URL =
@@ -69,6 +78,17 @@ function handleVersionPolicy(request, env) {
   return jsonResponse(policy);
 }
 
+const SITE_ASSETS = {
+  "site.js": siteScript,
+  "screenshot-01-overview.webp": screenshotOverview,
+  "screenshot-02-network.webp": screenshotNetwork,
+  "screenshot-03-tools.webp": screenshotTools,
+  "icon-192.webp": icon192,
+  "apple-touch-icon.png": appleTouchIcon,
+  "favicon.png": favicon,
+  "og-image.png": ogImage,
+};
+
 const ROUTES = {
   "/privacy-policy": privacyPolicyHtml,
   "/terms-of-use": termsOfUseHtml,
@@ -76,6 +96,11 @@ const ROUTES = {
 
 export default {
   async fetch(request, env) {
+    const siteResponse = handleSite(request, env, SITE_ASSETS);
+    if (siteResponse) {
+      return siteResponse;
+    }
+
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, "") || "/";
 

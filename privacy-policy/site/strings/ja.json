@@ -1,0 +1,82 @@
+{
+  "title": "Debug Toolkit：Android 向けネットワーク診断アプリ",
+  "description": "無料の Android アプリに 11 のネットワークツール：Wi-Fi 信号、速度テスト、Ping と Traceroute、DNS、TLS 証明書、HTTP、ポートスキャナー、WHOIS、LAN スキャナー。",
+  "heroTitle": "ネットワーク診断をポケットに",
+  "heroLead": "Wi-Fi が遅い？サイトが開かない？API の挙動がおかしい？Debug Toolkit なら Android スマートフォンで 11 のネットワークツールが使え、ノート PC がなくても原因を見つけられます。",
+  "cta": "Google Play で入手",
+  "free": "Android 向け・無料",
+  "toolsTitle": "11 のツールを 1 つのアプリに",
+  "toolsLead": "開発者、IT チーム、そして接続について確かな答えが欲しいすべての人のために。",
+  "noRoot": "root 化は不要です。すべてのツールが通常の Android デバイスで動作します。",
+  "screenshotsTitle": "画面イメージ",
+  "screenshotAlts": [
+    "概要画面",
+    "リアルタイムのネットワークモニター",
+    "診断ツールの一覧"
+  ],
+  "privacyTitle": "プライバシーを重視した設計",
+  "privacyBody": "アカウントもログインも不要です。分析はオプトイン方式で、確認したホストや結果が収集されることはありません。",
+  "privacyLink": "プライバシーポリシーを読む",
+  "privacyPolicy": "プライバシーポリシー",
+  "barTitle": "Android 版 Debug Toolkit",
+  "barCta": "今すぐダウンロード",
+  "dismiss": "閉じる",
+  "consentText": "サイトの利用状況を把握するために Google アナリティクスの Cookie を使用したいと考えています。同意いただくまで何も保存されません。",
+  "accept": "同意する",
+  "decline": "拒否する",
+  "cookieSettings": "Cookie 設定",
+  "terms": "利用規約",
+  "language": "言語",
+  "tagline": "ネットワーク診断",
+  "sections": {
+    "connectivity": "接続",
+    "security": "セキュリティ",
+    "discovery": "検出"
+  },
+  "tools": {
+    "network": {
+      "name": "ネットワーク",
+      "description": "リアルタイム接続モニター"
+    },
+    "speed": {
+      "name": "速度テスト",
+      "description": "レイテンシとスループット"
+    },
+    "ping": {
+      "name": "PingとTraceroute",
+      "description": "到達性と経路のホップ"
+    },
+    "publicip": {
+      "name": "パブリックIPと位置情報",
+      "description": "外部から確認できるあなたのアドレス"
+    },
+    "cidr": {
+      "name": "CIDR 計算ツール",
+      "description": "サブネット範囲とマスクを計算"
+    },
+    "tls": {
+      "name": "証明書インスペクター",
+      "description": "TLSチェーンと有効性"
+    },
+    "dns": {
+      "name": "DNS検索",
+      "description": "個別のレコードを照会"
+    },
+    "http": {
+      "name": "HTTPインスペクター",
+      "description": "ヘッダーとレスポンス"
+    },
+    "portscan": {
+      "name": "ポートスキャナー",
+      "description": "ホスト上の開いているTCPポートを確認"
+    },
+    "whois": {
+      "name": "WHOIS検索",
+      "description": "レジストラと有効期限の詳細"
+    },
+    "lanscan": {
+      "name": "ローカルネットワークスキャナー",
+      "description": "このネットワーク上のデバイスを検出"
+    }
+  }
+}
