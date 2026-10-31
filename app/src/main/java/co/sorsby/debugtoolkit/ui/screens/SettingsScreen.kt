@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -34,13 +35,19 @@ import co.sorsby.debugtoolkit.ui.components.ScreenList
 import co.sorsby.debugtoolkit.ui.theme.DebugToolkitTheme
 
 @Composable
-fun SettingsRoute(viewModel: SettingsViewModel) {
+fun SettingsRoute(
+    viewModel: SettingsViewModel,
+    privacyOptionsRequired: Boolean,
+    onShowPrivacyOptions: () -> Unit,
+) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
     SettingsScreen(
         settings = settings,
         onThemeModeSelected = viewModel::setThemeMode,
         onConsentSelected = viewModel::setConsent,
         onAdsEnabledChanged = viewModel::setAdsEnabled,
+        privacyOptionsRequired = privacyOptionsRequired,
+        onShowPrivacyOptions = onShowPrivacyOptions,
     )
 }
 
@@ -50,6 +57,8 @@ fun SettingsScreen(
     onThemeModeSelected: (ThemeMode) -> Unit,
     onConsentSelected: (AnalyticsConsent) -> Unit,
     onAdsEnabledChanged: (Boolean) -> Unit,
+    privacyOptionsRequired: Boolean = false,
+    onShowPrivacyOptions: () -> Unit = {},
 ) {
     ScreenList {
         item {
@@ -99,6 +108,19 @@ fun SettingsScreen(
                 ) {
                     Text(stringResource(R.string.settings_ads_switch))
                     Switch(checked = settings.adsEnabled, onCheckedChange = null)
+                }
+                if (privacyOptionsRequired) {
+                    Text(
+                        stringResource(R.string.settings_ads_privacy_options_supporting),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+                    )
+                    OutlinedButton(
+                        onClick = onShowPrivacyOptions,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Text(stringResource(R.string.settings_ads_privacy_options))
+                    }
                 }
             }
         }

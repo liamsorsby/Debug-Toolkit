@@ -99,6 +99,7 @@ val appModule = module {
         }
     }
     single<SettingsRepository> { DataStoreSettingsRepository(androidContext()) }
+    single { AdsConsentManager(androidContext()) }
     single(createdAtStart = true) {
         VersionPolicyRepository(
             context = androidContext(),
@@ -135,7 +136,9 @@ val appModule = module {
             nameserverResolver = get(),
         )
     }
-    single(createdAtStart = true) { AdsInitializer.initialize(androidContext(), get(), get()) }
+    single(createdAtStart = true) {
+        AdsInitializer.initialize(androidContext(), get(), get(), get())
+    }
     single<TlsInspector> { SocketTlsInspector() }
     single<HttpInspector> { OkHttpInspector(get()) }
     single<PingRunner> { ShellPingRunner() }

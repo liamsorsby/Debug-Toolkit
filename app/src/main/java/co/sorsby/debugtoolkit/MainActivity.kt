@@ -1,7 +1,9 @@
 package co.sorsby.debugtoolkit
 
 import android.app.Activity
+import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -20,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.sorsby.debugtoolkit.BuildConfig
 import co.sorsby.debugtoolkit.core.model.AnalyticsConsent
 import co.sorsby.debugtoolkit.core.model.ThemeMode
+import co.sorsby.debugtoolkit.AdsConsentManager
 import co.sorsby.debugtoolkit.feature.SettingsViewModel
 import co.sorsby.debugtoolkit.review.ReviewPromptCoordinator
 import co.sorsby.debugtoolkit.update.SoftUpdatePolicy
@@ -53,6 +56,7 @@ import org.koin.compose.koinInject
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
+    private val adsConsentManager: AdsConsentManager by inject()
     private val updateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(this) }
     private val versionPolicyRepository: VersionPolicyRepository by inject()
     private val reviewPromptCoordinator: ReviewPromptCoordinator by inject()
@@ -102,6 +106,14 @@ class MainActivity : ComponentActivity() {
             // loaded, so a returning user's saved consent choice is never replaced for a frame
             // by the first-launch gate while AppSettings()'s placeholder default is showing.
             splashScreen.setKeepOnScreenCondition { !isReady }
+            LaunchedEffect(isReady, settings.analyticsConsent) {
+                if (isReady) {
+                    adsConsentManager.requestConsent(
+                        activity = this@MainActivity,
+                        showForm = settings.analyticsConsent != AnalyticsConsent.UNSET,
+                    )
+                }
+            }
             DebugToolkitTheme(
                 darkTheme = when (settings.themeMode) {
                     ThemeMode.SYSTEM -> null
@@ -126,12 +138,36 @@ class MainActivity : ComponentActivity() {
                         visible = updateDownloaded,
                         onRestart = { updateManager.completeUpdate() },
                     ) {
-                        DebugToolkitApp(settingsViewModel)
+                        DebugToolkitApp(
+                            settingsViewModel = settingsViewModel,
+                            onShowPrivacyOptions = {
+                                adsConsentManager.showPrivacyOptions(this@MainActivity)
+                            },
+                        )
                     }
                 }
             }
 
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (CallKeyGuard.shouldIntercept(Build.VERSION.SDK_INT, keyCode)) return true
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+        if (!CallKeyGuard.shouldIntercept(Build.VERSION.SDK_INT, keyCode)) {
+            return super.onKeyUp(keyCode, event)
+        }
+        if (!event.isCanceled) {
+            try {
+                startActivity(Intent(Intent.ACTION_CALL_BUTTON))
+            } catch (exception: ActivityNotFoundException) {
+                Log.d(TAG, "No app handles the call button", exception)
+            }
+        }
+        return true
     }
 
     override fun onStart() {

@@ -162,6 +162,7 @@ dependencies {
     implementation(libs.firebase.performance)
     implementation(libs.newrelic.android.agent)
     implementation(libs.gms.play.services.ads)
+    implementation(libs.ump)
     implementation(libs.play.app.update.ktx)
     implementation(libs.play.review)
 

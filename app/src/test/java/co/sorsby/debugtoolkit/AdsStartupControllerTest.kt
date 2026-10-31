@@ -10,32 +10,52 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class AdsStartupControllerTest {
     @Test
-    fun `disabled on startup does not initialize until enabled`() = runTest {
+    fun `ads do not initialize until both the setting and consent allow requests`() = runTest {
         val enabled = MutableStateFlow(false)
+        val consentAllowsAds = MutableStateFlow(false)
         var starts = 0
-        val job = AdsStartupController(enabled) { starts++ }.start(this)
+        val job = AdsStartupController(enabled, consentAllowsAds) { starts++ }.start(this)
 
         advanceUntilIdle()
         assertEquals(0, starts)
 
         enabled.value = true
         advanceUntilIdle()
+        assertEquals(0, starts)
+
+        consentAllowsAds.value = true
+        advanceUntilIdle()
         assertEquals(1, starts)
 
         enabled.value = false
         enabled.value = true
+        consentAllowsAds.value = false
+        consentAllowsAds.value = true
         advanceUntilIdle()
         assertEquals(1, starts)
         job.cancel()
     }
 
     @Test
-    fun `enabled on startup initializes once`() = runTest {
+    fun `enabled and consented on startup initializes once`() = runTest {
         val enabled = MutableStateFlow(true)
+        val consentAllowsAds = MutableStateFlow(true)
         var starts = 0
-        AdsStartupController(enabled) { starts++ }.start(this)
+        AdsStartupController(enabled, consentAllowsAds) { starts++ }.start(this)
 
         advanceUntilIdle()
         assertEquals(1, starts)
+    }
+
+    @Test
+    fun `consent alone does not initialize ads when the app setting is disabled`() = runTest {
+        val enabled = MutableStateFlow(false)
+        val consentAllowsAds = MutableStateFlow(true)
+        var starts = 0
+        val job = AdsStartupController(enabled, consentAllowsAds) { starts++ }.start(this)
+
+        advanceUntilIdle()
+        assertEquals(0, starts)
+        job.cancel()
     }
 }

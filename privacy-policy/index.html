@@ -104,9 +104,14 @@
   <ul>
     <li>Your selected theme (light, dark, or system default)</li>
     <li>Your analytics and cookie consent choice</li>
+    <li>Your advertising preference and advertising privacy choices managed by Google's User Messaging Platform (UMP)</li>
     <li>Your acknowledgement of the Cloudflare network tools disclosure described below</li>
   </ul>
-  <p>None of this local data is transmitted anywhere by the app itself.</p>
+  <p>
+    The app's theme, analytics preference, advertising preference, and disclosure acknowledgement
+    remain on the device. UMP stores advertising consent information and may communicate relevant
+    consent signals to Google to apply your advertising privacy choices.
+  </p>
 
   <h2>Data you choose to enter</h2>
   <p>
@@ -215,9 +220,11 @@
     about the app and device to serve, measure, and protect ads. Google's
     <a href="https://policies.google.com/privacy">Privacy Policy</a> explains how Google handles
     this data. The app does not send information you enter into its diagnostic tools to AdMob.
-    The analytics consent choice described above controls Firebase Analytics, not AdMob.
-    You can disable ads at any time in the app's Settings. This hides ad banners and stops
-    further ad requests; on later launches the ads SDK is not initialized while ads remain disabled.
+    Advertising privacy choices are managed separately from the app's analytics consent through
+    Google's User Messaging Platform (UMP). Where required, UMP presents a privacy message and
+    provides a privacy-options form that can be reopened from Settings. The app also stores a
+    separate preference to show or hide ads. Turning ads off in Settings hides ad banners and
+    stops ad requests; ads are requested only when the preference is on and UMP permits requests.
   </p>
 
   <h2>Children's privacy</h2>
