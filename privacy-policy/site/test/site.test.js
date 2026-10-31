@@ -123,27 +123,18 @@ describe("renderLandingPage", () => {
     for (const measurementId of [undefined, "", "UA-123", 'G-1"><script>']) {
       const html = renderLandingPage(LOCALES[0], { measurementId });
       assert.ok(!html.includes("data-ga4"), String(measurementId));
-      assert.ok(!html.includes('id="consent"'), String(measurementId));
-      assert.ok(!html.includes("cookie-settings"), String(measurementId));
+      assert.ok(!html.includes("googletagmanager"), String(measurementId));
     }
     assert.equal(validMeasurementId("G-ABC123XYZ"), "G-ABC123XYZ");
   });
 
-  it("puts the Google tag in <head> with consent denied by default when a measurement ID is set", () => {
+  it("puts the standard Google tag in <head> with no consent gate when a measurement ID is set", () => {
     const html = renderLandingPage(LOCALES[0], { measurementId: "G-ABC123XYZ" });
     const head = html.slice(0, html.indexOf("</head>"));
     assert.ok(head.includes('<script async src="https://www.googletagmanager.com/gtag/js?id=G-ABC123XYZ">'));
-    assert.match(head, /<script>[\s\S]*gtag\("config", "G-ABC123XYZ"/);
-    assert.ok(head.indexOf('gtag("consent", "default"') < head.indexOf('gtag("config"'));
-    for (const signal of ["ad_storage", "ad_user_data", "ad_personalization"]) {
-      assert.match(head, new RegExp(`${signal}: "denied"`));
-    }
-    assert.match(head, /analytics_storage: dtConsent === "granted" \? "granted" : "denied"/);
-    assert.match(head, /allow_google_signals: false, allow_ad_personalization_signals: false/);
+    assert.match(head, /<script>[\s\S]*gtag\("config", "G-ABC123XYZ"\);/);
+    assert.ok(!html.includes("consent"));
     assert.match(html, /data-ga4="G-ABC123XYZ"/);
-    assert.match(html, /id="consent"[^>]*hidden>/);
-    assert.ok(html.includes('data-consent="granted"'));
-    assert.ok(html.includes('data-consent="denied"'));
   });
 });
 
@@ -206,7 +197,7 @@ describe("handleSite", () => {
     assert.ok(!off.includes("google"));
     const configured = { GA4_MEASUREMENT_ID: "G-ABC123XYZ" };
     const on = handleSite(request("/de/"), configured, ASSETS).headers.get("content-security-policy");
-    assert.ok(on.includes("https://www.googletagmanager.com"));
+    assert.ok(on.includes("https://*.googletagmanager.com"));
   });
 
   it("serves known assets with immutable caching and 404s unknown ones", () => {

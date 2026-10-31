@@ -15,10 +15,12 @@ const CONTENT_TYPES = {
 function contentSecurityPolicy(measurementId) {
   const google = measurementId
     ? {
-        script: " https://www.googletagmanager.com",
+        script: " https://*.googletagmanager.com",
         connect:
-          " https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
-        img: " https://*.google-analytics.com https://www.googletagmanager.com",
+          " https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com",
+        // Google signals pings go to country-specific domains (google.co.uk, google.de, ...),
+        // which can't be listed individually, so any HTTPS image is allowed.
+        img: " https:",
       }
     : { script: "", connect: "", img: "" };
   return [

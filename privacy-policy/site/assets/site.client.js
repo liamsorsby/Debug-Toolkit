@@ -5,7 +5,6 @@
   var root = document.documentElement;
   var locale = root.getAttribute("data-locale") || "en";
   var gaId = root.getAttribute("data-ga4");
-  var CONSENT_KEY = "dt_analytics_consent";
   var BAR_KEY = "dt_download_bar_dismissed_at";
   var BAR_SNOOZE_MS = 14 * 24 * 60 * 60 * 1000;
 
@@ -25,10 +24,8 @@
     }
   }
 
-  // ---- Analytics (GA4, Advanced Consent Mode) ----
-  // The inline Google tag in <head> loads gtag.js with every consent signal denied, so Google only
-  // receives cookieless pings until the visitor accepts. This script just updates consent and
-  // sends events. Ad signals are never granted, mirroring the app's AnalyticsConsentPolicy.
+  // ---- Analytics (GA4) ----
+  // The inline Google tag in <head> loads gtag.js; this script only sends events.
   function gtag() {
     if (typeof window.gtag === "function") window.gtag.apply(window, arguments);
   }
@@ -40,55 +37,12 @@
     gtag("event", name, params);
   }
 
-  // ---- Bottom dock: consent banner + Android download bar ----
+  // ---- Bottom dock: Android download bar ----
   var dock = document.getElementById("dock");
-  var consent = document.getElementById("consent");
   var bar = document.getElementById("android-bar");
 
   function syncDockPadding() {
     document.body.style.paddingBottom = dock ? dock.offsetHeight + "px" : "";
-  }
-
-  function setConsent(choice) {
-    write(CONSENT_KEY, choice);
-    if (consent) consent.hidden = true;
-    if (choice === "granted") {
-      gtag("consent", "update", { analytics_storage: "granted" });
-    } else {
-      // Declining or withdrawing: back to cookieless pings and remove any GA cookies.
-      gtag("consent", "update", { analytics_storage: "denied" });
-      document.cookie.split(";").forEach(function (cookie) {
-        var name = cookie.split("=")[0].trim();
-        if (name === "_ga" || name.indexOf("_ga_") === 0) {
-          var host = location.hostname;
-          document.cookie = name + "=; Max-Age=0; path=/";
-          document.cookie = name + "=; Max-Age=0; path=/; domain=" + host;
-          document.cookie = name + "=; Max-Age=0; path=/; domain=." + host.split(".").slice(-2).join(".");
-        }
-      });
-    }
-    syncDockPadding();
-  }
-
-  if (gaId && consent) {
-    // The stored choice was already applied by the inline tag; only ask if there is none.
-    var stored = read(CONSENT_KEY);
-    if (stored !== "granted" && stored !== "denied") {
-      consent.hidden = false;
-    }
-    consent.addEventListener("click", function (event) {
-      var choice = event.target.getAttribute && event.target.getAttribute("data-consent");
-      if (choice) setConsent(choice);
-    });
-    var settings = document.getElementById("cookie-settings");
-    if (settings) {
-      settings.addEventListener("click", function () {
-        consent.hidden = false;
-        syncDockPadding();
-        var first = consent.querySelector("button");
-        if (first) first.focus();
-      });
-    }
   }
 
   function isAndroid() {
