@@ -22,3 +22,7 @@ PLAY_UPDATE_URL = "https://play.google.com/store/apps/details?id=co.sorsby.debug
 OTHER_UPDATE_URL = "https://play.google.com/store/apps/details?id=co.sorsby.debugtoolkit"
 # GA4 web data stream measurement ID (G-XXXXXXXXXX). Leave empty to serve the site without analytics.
 GA4_MEASUREMENT_ID = "G-LVN9GFMV03"
+
+[observability.logs]
+enabled = false
+invocation_logs = true
