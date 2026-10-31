@@ -26,7 +26,9 @@ interface NetworkMonitor {
     val snapshots: Flow<NetworkSnapshot>
 
     /** Re-reads the current state, e.g. after a permission grant that no callback reports. */
-    fun refresh() {}
+    fun refresh() {
+        // Most monitors push every change through [snapshots], so there is nothing to re-read.
+    }
 }
 
 class AndroidNetworkMonitor(
@@ -109,8 +111,10 @@ class AndroidNetworkMonitor(
                 .orEmpty()
                 .map { it.address.hostAddress.orEmpty() },
             wifiRssiDbm = wifiRssi(capabilities),
-            linkDownstreamKbps = capabilities.linkDownstreamBandwidthKbps,
-            linkUpstreamKbps = capabilities.linkUpstreamBandwidthKbps,
+            linkBandwidth = LinkBandwidth(
+                downstreamKbps = capabilities.linkDownstreamBandwidthKbps,
+                upstreamKbps = capabilities.linkUpstreamBandwidthKbps,
+            ),
         )
     }
 

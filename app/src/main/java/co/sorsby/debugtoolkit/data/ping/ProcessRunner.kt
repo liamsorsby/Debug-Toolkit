@@ -18,7 +18,7 @@ data class ProcessOutput(
  * traceroute logic can be unit tested without depending on a real `ping` binary being present
  * on the test JVM's PATH.
  */
-interface ProcessRunner {
+fun interface ProcessRunner {
     suspend fun run(command: List<String>, timeoutSeconds: Long): ProcessOutput
 }
 

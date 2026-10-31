@@ -242,6 +242,7 @@
     <string name="nav_cidr_description">Work out subnet ranges and masks</string>
     <string name="cidr_intro">Enter an IPv4 or IPv6 address with a prefix length, such as 192.168.1.10/24 or 2001:db8::/32, to see its range, masks and usable hosts.</string>
     <string name="cidr_input_label">CIDR block</string>
+    <string name="cidr_input_placeholder" translatable="false">192.168.1.0/24</string>
     <string name="cidr_error">Enter an IPv4 address and a prefix from 0 to 32 (192.168.1.0/24), or an IPv6 address and a prefix from 0 to 128 (2001:db8::/32).</string>
     <string name="cidr_network_label">Network address</string>
     <string name="cidr_broadcast_label">Broadcast address</string>

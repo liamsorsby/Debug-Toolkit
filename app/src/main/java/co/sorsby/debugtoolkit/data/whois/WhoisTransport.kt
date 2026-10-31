@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets
  * the query followed by a CRLF, and reads whatever free text the server sends back until it
  * closes the connection.
  */
-interface WhoisTransport {
+fun interface WhoisTransport {
     suspend fun query(server: String, port: Int, queryText: String): String
 }
 

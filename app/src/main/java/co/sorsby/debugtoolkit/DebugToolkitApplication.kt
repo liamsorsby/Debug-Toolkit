@@ -148,7 +148,8 @@ val appModule = module {
     single<PublicIpLookup> {
         CloudflareTraceLookup(
             client = get(),
-            endpoint = "https://1.1.1.1/cdn-cgi/trace".toHttpUrl(),
+            // Cloudflare's public anycast address, so the lookup needs no DNS resolution.
+            endpoint = "https://1.1.1.1/cdn-cgi/trace".toHttpUrl(), // NOSONAR
         )
     }
     single<LanScanner> {

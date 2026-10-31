@@ -17,7 +17,7 @@ import java.net.Socket
 import java.net.SocketTimeoutException
 import kotlin.time.TimeSource
 
-interface PortScanner {
+fun interface PortScanner {
     suspend fun scan(host: String, ports: List<Int>): PortScanResult
 }
 

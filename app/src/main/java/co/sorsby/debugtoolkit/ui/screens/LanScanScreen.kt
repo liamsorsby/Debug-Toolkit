@@ -94,10 +94,10 @@ private fun LanScanScreenPreview() {
             state = LanScanUiState(
                 result = ToolState.Success(
                     LanScanResult(
-                        subnetCidr = "192.168.1.0/24",
+                        subnetCidr = "192.0.2.0/24",
                         devices = listOf(
-                            LanDevice("192.168.1.1", "router.local", 4),
-                            LanDevice("192.168.1.42", null, 12),
+                            LanDevice("192.0.2.1", "router.local", 4),
+                            LanDevice("192.0.2.42", null, 12),
                         ),
                         addressesScanned = 253,
                         elapsedMs = 6200,

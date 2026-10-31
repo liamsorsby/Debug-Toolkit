@@ -7,13 +7,15 @@ import co.sorsby.debugtoolkit.core.network.await
 import co.sorsby.debugtoolkit.domain.InputValidation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okio.Buffer
+import okio.BufferedSource
 import kotlin.time.TimeSource
 
-interface HttpInspector {
+fun interface HttpInspector {
     suspend fun inspect(input: String, method: HttpMethod): HttpInspection
 }
 
@@ -25,18 +27,8 @@ class OkHttpInspector(private val client: OkHttpClient) : HttpInspector {
             val mark = TimeSource.Monotonic.markNow()
             client.newCall(request).await().use { response ->
                 val contentType = response.body.contentType()
-                val textual = contentType?.type == "text" ||
-                    contentType?.subtype?.contains("json", ignoreCase = true) == true ||
-                    contentType?.subtype?.contains("xml", ignoreCase = true) == true
-                val previewBytes = if (method == HttpMethod.GET && textual) {
-                    val source = response.body.source()
-                    val buffer = Buffer()
-                    while (buffer.size <= MAX_PREVIEW_BYTES) {
-                        val remaining = MAX_PREVIEW_BYTES + 1L - buffer.size
-                        val read = source.read(buffer, minOf(8_192L, remaining))
-                        if (read == -1L) break
-                    }
-                    buffer.readByteArray()
+                val previewBytes = if (method == HttpMethod.GET && contentType.isTextual()) {
+                    response.body.source().readPreview()
                 } else {
                     null
                 }
@@ -56,6 +48,24 @@ class OkHttpInspector(private val client: OkHttpClient) : HttpInspector {
                 )
             }
         }
+
+    private fun MediaType?.isTextual(): Boolean =
+        this != null && (
+            type == "text" ||
+                subtype.contains("json", ignoreCase = true) ||
+                subtype.contains("xml", ignoreCase = true)
+            )
+
+    /** Reads at most one byte past the preview limit, so callers can tell it was truncated. */
+    private fun BufferedSource.readPreview(): ByteArray {
+        val buffer = Buffer()
+        while (buffer.size <= MAX_PREVIEW_BYTES) {
+            val remaining = MAX_PREVIEW_BYTES + 1L - buffer.size
+            val read = read(buffer, minOf(8_192L, remaining))
+            if (read == -1L) break
+        }
+        return buffer.readByteArray()
+    }
 
     private fun Response.redirects(): List<RedirectStep> {
         val responses = generateSequence(priorResponse) { it.priorResponse }.toList().asReversed()

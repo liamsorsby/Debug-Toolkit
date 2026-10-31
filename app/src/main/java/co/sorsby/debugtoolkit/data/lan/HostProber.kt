@@ -7,7 +7,7 @@ import java.net.InetAddress
 import kotlin.time.TimeSource
 
 /** Probes a single host to see whether it answers on the local network. */
-interface HostProber {
+fun interface HostProber {
     suspend fun probe(host: String): LanDevice?
 }
 

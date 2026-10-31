@@ -3,7 +3,7 @@ package co.sorsby.debugtoolkit.data.ping
 import co.sorsby.debugtoolkit.core.model.TracerouteResult
 import co.sorsby.debugtoolkit.domain.InputValidation
 
-interface TracerouteRunner {
+fun interface TracerouteRunner {
     suspend fun traceroute(host: String, maxHops: Int): TracerouteResult
 }
 

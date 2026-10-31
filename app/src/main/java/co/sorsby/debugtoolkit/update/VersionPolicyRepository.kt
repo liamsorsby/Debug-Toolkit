@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -51,31 +52,35 @@ class VersionPolicyRepository(
                 client.newCall(request).apply {
                     timeout().timeout(REQUEST_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 }.execute().use { response ->
-                    if (!response.isSuccessful) {
-                        Log.w(TAG, "Version policy request failed with HTTP ${response.code}")
-                        return@withContext
-                    }
-                    val body = response.body
-                    if (body.contentLength() > MAX_POLICY_BYTES) {
-                        Log.w(TAG, "Version policy response body is too large")
-                        return@withContext
-                    }
-                    val payload = readPolicyPayload(body)
-                    if (payload == null) {
-                        Log.w(TAG, "Version policy response body exceeds the size limit")
-                        return@withContext
-                    }
-                    val decoded = VersionPolicyDecoder.decode(payload)
-                    if (decoded == null) {
-                        Log.w(TAG, "Version policy response is invalid")
-                        return@withContext
-                    }
-                    cache(decoded)
+                    decodePolicy(response)?.let(::cache)
                 }
             }
         } catch (exception: IOException) {
             Log.w(TAG, "Version policy refresh failed; retaining cached policy", exception)
         }
+    }
+
+    /** Returns the policy in [response], or null (after logging why) if it can't be used. */
+    private fun decodePolicy(response: Response): VersionPolicy? {
+        if (!response.isSuccessful) {
+            Log.w(TAG, "Version policy request failed with HTTP ${response.code}")
+            return null
+        }
+        val body = response.body
+        if (body.contentLength() > MAX_POLICY_BYTES) {
+            Log.w(TAG, "Version policy response body is too large")
+            return null
+        }
+        val payload = readPolicyPayload(body)
+        if (payload == null) {
+            Log.w(TAG, "Version policy response body exceeds the size limit")
+            return null
+        }
+        val decoded = VersionPolicyDecoder.decode(payload)
+        if (decoded == null) {
+            Log.w(TAG, "Version policy response is invalid")
+        }
+        return decoded
     }
 
     private fun Context.installingPackageName(): String? =

@@ -8,7 +8,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlin.time.TimeSource
 
-interface LanScanner {
+fun interface LanScanner {
     suspend fun scan(): LanScanResult
 }
 

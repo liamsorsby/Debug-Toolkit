@@ -17,7 +17,7 @@ import java.time.Instant
 import kotlin.coroutines.coroutineContext
 import kotlin.time.TimeSource
 
-interface SpeedTestRepository {
+fun interface SpeedTestRepository {
     suspend fun run(): SpeedResult
 }
 

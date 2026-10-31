@@ -3,7 +3,7 @@ package co.sorsby.debugtoolkit.data.ping
 import co.sorsby.debugtoolkit.core.model.PingResult
 import co.sorsby.debugtoolkit.domain.InputValidation
 
-interface PingRunner {
+fun interface PingRunner {
     suspend fun ping(host: String, count: Int): PingResult
 }
 

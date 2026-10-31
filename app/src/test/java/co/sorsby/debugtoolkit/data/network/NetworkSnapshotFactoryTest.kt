@@ -112,7 +112,6 @@ class NetworkSnapshotFactoryTest {
         notMetered = notMetered,
         localAddresses = localAddresses,
         wifiRssiDbm = wifiRssiDbm,
-        linkDownstreamKbps = linkDownstreamKbps,
-        linkUpstreamKbps = linkUpstreamKbps,
+        linkBandwidth = LinkBandwidth(linkDownstreamKbps, linkUpstreamKbps),
     )
 }

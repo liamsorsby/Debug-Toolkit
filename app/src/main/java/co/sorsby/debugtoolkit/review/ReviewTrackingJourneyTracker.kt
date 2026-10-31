@@ -9,16 +9,11 @@ import co.sorsby.debugtoolkit.telemetry.ToolJourney
 class ReviewTrackingJourneyTracker(
     private val delegate: JourneyTracker,
     private val coordinator: ReviewPromptCoordinator,
-) : JourneyTracker {
-    override fun trackScreen(route: String) = delegate.trackScreen(route)
-
+) : JourneyTracker by delegate {
     override fun trackNavigation(from: String?, to: String, source: String) {
         delegate.trackNavigation(from, to, source)
         coordinator.onNavigation()
     }
-
-    override fun trackAction(action: String, screen: String?) =
-        delegate.trackAction(action, screen)
 
     override fun startTool(tool: DiagnosticTool): ToolJourney {
         val journey = delegate.startTool(tool)
