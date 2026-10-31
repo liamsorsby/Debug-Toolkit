@@ -12,7 +12,13 @@ const CONTENT_TYPES = {
   ".js": "text/javascript; charset=utf-8",
 };
 
-function contentSecurityPolicy(measurementId) {
+function newNonce() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return btoa(String.fromCharCode(...bytes));
+}
+
+function contentSecurityPolicy(measurementId, nonce) {
   const google = measurementId
     ? {
         script: " https://www.googletagmanager.com",
@@ -23,8 +29,10 @@ function contentSecurityPolicy(measurementId) {
     : { script: "", connect: "", img: "" };
   return [
     "default-src 'none'",
-    // The only inline <script> is JSON-LD, a non-executed data block that CSP does not block.
-    `script-src 'self'${google.script}`,
+    // The page has no inline scripts of its own. The per-response nonce exists for Cloudflare
+    // JavaScript Detections (Bot Fight Mode), which injects an inline script at the edge and
+    // copies the nonce from this header onto it.
+    `script-src 'self' 'nonce-${nonce}'${google.script}`,
     "style-src 'unsafe-inline'",
     `img-src 'self' data:${google.img}`,
     `connect-src 'self'${google.connect}`,
@@ -36,7 +44,7 @@ function contentSecurityPolicy(measurementId) {
 
 function securityHeaders(measurementId) {
   return {
-    "content-security-policy": contentSecurityPolicy(measurementId),
+    "content-security-policy": contentSecurityPolicy(measurementId, newNonce()),
     "x-content-type-options": "nosniff",
     "referrer-policy": "strict-origin-when-cross-origin",
     "permissions-policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",

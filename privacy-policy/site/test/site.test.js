@@ -187,6 +187,16 @@ describe("handleSite", () => {
     assert.equal(handleSite(request("/en/"), env, ASSETS).headers.get("location"), "/?lang=en");
   });
 
+  it("sends a fresh script nonce for Cloudflare's injected bot-detection script", () => {
+    const nonceOf = () =>
+      /script-src 'self' 'nonce-([A-Za-z0-9+/=]{20,})'/.exec(
+        handleSite(request("/de/"), env, ASSETS).headers.get("content-security-policy"),
+      )?.[1];
+    const first = nonceOf();
+    assert.ok(first, "nonce missing from script-src");
+    assert.notEqual(nonceOf(), first);
+  });
+
   it("allows Google Analytics in the CSP only when configured", () => {
     const off = handleSite(request("/de/"), env, ASSETS).headers.get("content-security-policy");
     assert.ok(!off.includes("google"));
